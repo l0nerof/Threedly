@@ -26,7 +26,7 @@ export default function Home() {
                   кращих дизайнерів світу.
                 </p>
               </div>
-              <div className="w-full max-w-md space-y-2">
+              {/* <div className="w-full max-w-md space-y-2">
                 <div className="flex space-x-2">
                   <Input
                     placeholder="Пошук 3D-моделей..."
@@ -37,7 +37,7 @@ export default function Home() {
                 <p className="text-xs text-muted-foreground">
                   Спробуйте шукати: архітектура, персонажі, транспорт
                 </p>
-              </div>
+              </div> */}
               <div className="flex flex-wrap justify-center gap-4">
                 <Button asChild variant="outline" className="group">
                   <Link href="/catalog">
