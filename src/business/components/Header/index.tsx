@@ -5,11 +5,9 @@ import ThemeSwitcher from "@/business/components/ThemeSwitcher";
 // import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 
 import { Button } from "@/shared/components/Button";
-import { Input } from "@/shared/components/Input";
 import Logo from "@/shared/components/Logo";
-import { Sheet, SheetContent, SheetTrigger } from "@/shared/components/Sheet";
-import { Menu, Search, User } from "lucide-react";
 import Link from "next/link";
+import BurgerMenu from "./components/BurgerMenu";
 
 // import {
 //   DropdownMenu,
@@ -95,7 +93,7 @@ function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
           <Logo />
-          <nav className="hidden gap-6 md:flex">
+          <nav className="hidden gap-6 lg:flex">
             <Link
               href="/catalog"
               className="text-sm font-medium transition-colors hover:text-primary"
@@ -123,17 +121,6 @@ function Header() {
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          <div className="relative w-full max-w-sm items-center">
-            <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Пошук моделі..."
-              className="h-9 w-full rounded-full bg-background py-1 pl-8 pr-4 md:w-[300px] lg:w-[300px]"
-            />
-          </div>
-          <div className="hidden items-center gap-2 md:flex">
-            <ThemeSwitcher />
-          </div>
           <div className="hidden items-center gap-2 md:flex">
             {/* {!loading && (
               <>
@@ -172,80 +159,10 @@ function Header() {
               </>
             )} */}
           </div>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="md:hidden">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <div className="flex flex-col gap-4 py-4">
-                <Logo />
-                <div className="flex items-center gap-2">
-                  <ThemeSwitcher />
-                </div>
-                <nav className="flex flex-col gap-2">
-                  <Link
-                    href="/catalog"
-                    className="py-2 text-sm font-medium transition-colors hover:text-primary"
-                  >
-                    Каталог
-                  </Link>
-                  <Link
-                    href="/categories"
-                    className="py-2 text-sm font-medium transition-colors hover:text-primary"
-                  >
-                    Категорії
-                  </Link>
-                  <Link
-                    href="/artists"
-                    className="py-2 text-sm font-medium transition-colors hover:text-primary"
-                  >
-                    Артисти
-                  </Link>
-                  <Link
-                    href="/pricing"
-                    className="py-2 text-sm font-medium transition-colors hover:text-primary"
-                  >
-                    Ціни
-                  </Link>
-                </nav>
-                {/* <div className="flex flex-col gap-2 mt-4">
-                  {!loading && (
-                    <>
-                      {isLoggedIn ? (
-                        <>
-                          <div className="font-medium mb-2">Привіт, {userName}</div>
-                          <Button variant="outline" asChild className="w-full">
-                            <Link href="/profile">Мій профіль</Link>
-                          </Button>
-                          <Button variant="outline" asChild className="w-full">
-                            <Link href="/profile?tab=favorites">Мої улюблені</Link>
-                          </Button>
-                          <Button variant="outline" asChild className="w-full">
-                            <Link href="/profile?tab=uploads">Мої моделі</Link>
-                          </Button>
-                          <Button variant="outline" className="w-full" onClick={handleSignOut}>
-                            Вийти
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button variant="outline" asChild className="w-full">
-                            <Link href="/login">Увійти</Link>
-                          </Button>
-                          <Button asChild className="w-full">
-                            <Link href="/register">Зареєструватися</Link>
-                          </Button>
-                        </>
-                      )}
-                    </>
-                  )}
-                </div>*/}
-              </div>
-            </SheetContent>
-          </Sheet>
+          <div className="hidden items-center gap-2 lg:flex">
+            <ThemeSwitcher />
+          </div>
+          <BurgerMenu />
         </div>
       </div>
     </header>
