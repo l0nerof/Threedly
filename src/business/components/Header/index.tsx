@@ -8,6 +8,7 @@ import { Button } from "@/shared/components/Button";
 import Logo from "@/shared/components/Logo";
 import Link from "next/link";
 import BurgerMenu from "./components/BurgerMenu";
+import Navigation from "./components/Navigation";
 
 // import {
 //   DropdownMenu,
@@ -93,32 +94,7 @@ function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
           <Logo />
-          <nav className="hidden gap-6 lg:flex">
-            <Link
-              href="/catalog"
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              Каталог
-            </Link>
-            <Link
-              href="/categories"
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              Категорії
-            </Link>
-            <Link
-              href="/artists"
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              Артисти
-            </Link>
-            <Link
-              href="/pricing"
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              Ціни
-            </Link>
-          </nav>
+          <Navigation />
         </div>
         <div className="flex items-center gap-4">
           <div className="hidden items-center gap-2 md:flex">
