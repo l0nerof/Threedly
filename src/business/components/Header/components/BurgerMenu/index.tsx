@@ -72,7 +72,7 @@ function BurgerMenu() {
                             <Link href="/login">Увійти</Link>
                           </Button>
                           <Button asChild className="w-full">
-                            <Link href="/register">Зареєструватися</Link>
+                            <Link href="/signup">Зареєструватися</Link>
                           </Button>
                         </>
                       )}

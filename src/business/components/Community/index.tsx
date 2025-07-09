@@ -17,7 +17,7 @@ function Community() {
         </div>
         <div className="flex flex-col justify-center gap-4 sm:flex-row">
           <Button asChild size="lg">
-            <Link href="/register">Приєднатися до спільноти</Link>
+            <Link href="/signup">Приєднатися до спільноти</Link>
           </Button>
           <Button asChild variant="outline" size="lg">
             <Link href="/designers">Подивитися наших дизайнерів</Link>

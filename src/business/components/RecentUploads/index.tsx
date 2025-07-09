@@ -66,7 +66,7 @@ function RecentUploads() {
           {recentUploads.map((model) => (
             <Card
               key={model.id}
-              className="group overflow-hidden transition-all duration-300 hover:shadow-lg"
+              className="group overflow-hidden shadow-sm shadow-black/10 transition-all duration-300 hover:shadow-lg dark:shadow-white/10"
             >
               <div className="relative">
                 <img

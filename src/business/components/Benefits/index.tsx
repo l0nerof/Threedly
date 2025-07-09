@@ -44,7 +44,7 @@ function Benefits() {
           {platformBenefits.map((benefit, index) => (
             <Card
               key={index}
-              className="group border-0 transition-all duration-300 hover:shadow-lg"
+              className="group border-0 shadow-sm shadow-black/10 transition-all duration-300 hover:shadow-lg dark:shadow-white/10"
             >
               <CardContent className="p-8 text-center">
                 <div className="space-y-4">

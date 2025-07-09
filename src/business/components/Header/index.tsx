@@ -128,7 +128,7 @@ function Header() {
               <Link href="/login">Увійти</Link>
             </Button>
             <Button asChild>
-              <Link href="/register">Зареєструватися</Link>
+              <Link href="/signup">Зареєструватися</Link>
             </Button>
             {/* </> */}
             {/* )}

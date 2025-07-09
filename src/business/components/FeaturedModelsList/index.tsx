@@ -73,7 +73,10 @@ function FeaturedModelsList() {
   return (
     <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {featuredModels.map((model) => (
-        <Card key={model.id} className="overflow-hidden">
+        <Card
+          key={model.id}
+          className="overflow-hidden shadow-sm shadow-black/10 transition-all duration-300 hover:shadow-lg dark:shadow-white/10"
+        >
           <CardHeader className="p-0">
             <div className="relative">
               <img

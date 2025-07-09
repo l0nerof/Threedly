@@ -48,7 +48,7 @@ function Hero() {
               </Link>
             </Button>
             <Button asChild>
-              <Link href="/register">Почати</Link>
+              <Link href="/signup">Почати</Link>
             </Button>
           </div>
         </div>
