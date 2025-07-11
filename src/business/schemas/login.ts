@@ -9,5 +9,4 @@ export const loginSchema = z.object({
     .string()
     .min(6, "Пароль повинен містити щонайменше 6 символів")
     .max(50, "Пароль не може перевищувати 50 символів"),
-  rememberMe: z.boolean(),
 });
