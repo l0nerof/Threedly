@@ -21,5 +21,6 @@ export async function signup(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/");
+  redirect(`/verify-email?email=${encodeURIComponent(data.email)}`);
+  // redirect("/verify-email");
 }

@@ -16,12 +16,17 @@ export async function GET(request: NextRequest) {
       type,
       token_hash,
     });
+
     if (!error) {
-      // redirect user to specified redirect URL or root of app
+      // Успішне підтвердження - перенаправляємо користувача
       redirect(next);
+    } else {
+      console.error("Email verification error:", error);
+      // Помилка підтвердження - перенаправляємо на сторінку з помилкою
+      redirect("/error?message=email-verification-failed");
     }
   }
 
-  // redirect the user to an error page with some instructions
-  redirect("/error");
+  // Неправильні параметри - перенаправляємо на сторінку з помилкою
+  redirect("/error?message=invalid-verification-link");
 }
