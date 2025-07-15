@@ -10,15 +10,13 @@ import Link from "next/link";
 // import { resendVerificationEmail } from "./actions";
 
 interface VerifyEmailPageProps {
-  searchParams: { email: string };
+  searchParams: Promise<{ email: string }>;
 }
 
 export default async function VerifyEmailPage({
   searchParams,
 }: VerifyEmailPageProps) {
-  console.log("searchParams", searchParams);
-
-  const email = searchParams.email;
+  const { email } = await searchParams;
 
   //   const searchParams = await useSearchParams();
   //   const email = searchParams.get("email");
