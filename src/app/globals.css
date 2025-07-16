@@ -56,4 +56,17 @@
   body {
     @apply bg-background text-foreground;
   }
+  .transition {
+    @apply transition-all duration-300 ease-in;
+  }
+}
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.wrapper > main {
+  flex: 1 1 auto;
 }
