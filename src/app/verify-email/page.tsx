@@ -50,52 +50,47 @@ export default async function VerifyEmailPage({
 
       <main className="flex-1">
         <section className="container flex h-full items-center justify-center px-4 py-12 md:py-24">
-          <div className="mx-auto w-full max-w-md space-y-6 rounded-lg border bg-card p-4 shadow-sm md:p-6">
-            <div className="space-y-4 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <Mail className="h-6 w-6 text-primary" />
-              </div>
-
-              <h1 className="text-2xl font-bold md:text-3xl">
-                Підтвердіть свою електронну пошту
-              </h1>
-
-              <p className="text-muted-foreground">
-                Ми надіслали посилання для підтвердження на вашу електронну
-                адресу
-                {email && (
-                  <span className="mt-1 block font-medium text-foreground">
-                    {email}
-                  </span>
-                )}
-                . Будь ласка, перевірте свою пошту та натисніть на посилання для
-                завершення реєстрації.
-              </p>
+          <div className="flex max-w-md flex-col items-center gap-6 rounded-lg border bg-card p-4 shadow-sm md:p-6">
+            <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
+              <Mail className="size-6 text-primary" />
             </div>
 
-            <div className="space-y-4">
-              <div className="rounded-lg border bg-muted/50 p-4">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium">Що робити далі:</p>
-                    <ul className="space-y-1 text-sm text-muted-foreground">
-                      <li>1. Перевірте свою поштову скриньку</li>
-                      <li>2. Знайдіть лист від Threedly</li>
-                      <li>3. Натисніть на посилання для підтвердження</li>
-                    </ul>
-                  </div>
+            <h1 className="text-center text-2xl font-bold md:text-3xl">
+              Підтвердіть свою електронну пошту
+            </h1>
+
+            <p className="text-center text-muted-foreground">
+              Ми надіслали посилання для підтвердження на вашу електронну адресу{" "}
+              {email && (
+                <span className="font-medium text-foreground">{email}</span>
+              )}
+              . Будь ласка, перевірте свою пошту та натисніть на посилання для
+              завершення реєстрації.
+            </p>
+
+            <div className="rounded-lg border bg-muted/50 p-4">
+              <div className="flex items-start gap-3">
+                <CheckCircle className="size-5 text-green-500" />
+                <div className="flex flex-col gap-3">
+                  <p className="text-sm font-medium">Що робити далі:</p>
+                  <ul className="flex list-decimal flex-col gap-1 text-sm text-muted-foreground">
+                    <li>Перевірте свою поштову скриньку</li>
+                    <li>Знайдіть лист від Threedly</li>
+                    <li>Натисніть на посилання для підтвердження</li>
+                  </ul>
                 </div>
               </div>
+            </div>
 
-              <div className="space-y-2 text-center">
-                <p className="text-sm text-muted-foreground">
-                  Не отримали листа?
-                </p>
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-sm text-muted-foreground">
+                Не отримали листа?
+              </p>
+              <div className="flex flex-col items-center gap-2">
                 {email && (
                   <Button
                     variant="outline"
-                    size="sm"
+                    className="w-full"
                     // onClick={handleResendEmail}
                     // disabled={isResending}
                   >
@@ -104,20 +99,18 @@ export default async function VerifyEmailPage({
                     {/* } */}
                   </Button>
                 )}
-                {/* {resendMessage && (
+
+                <Button variant="outline" asChild className="w-full">
+                  <Link href="/login">Повернутися до входу</Link>
+                </Button>
+              </div>
+              {/* {resendMessage && (
                   <p
                     className={`text-sm ${resendMessage.includes("надіслано") ? "text-green-600" : "text-red-600"}`}
                   >
                     {resendMessage}
                   </p>
                 )} */}
-              </div>
-            </div>
-
-            <div className="text-center">
-              <Button variant="ghost" asChild>
-                <Link href="/login">Повернутися до входу</Link>
-              </Button>
             </div>
           </div>
         </section>
