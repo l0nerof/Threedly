@@ -8,28 +8,28 @@ import { Bot, Home, Settings, User } from "lucide-react";
 
 const tabs = [
   {
-    name: "Home",
+    name: "Головна",
     value: "home",
     icon: Home,
   },
   {
-    name: "Profile",
+    name: "Профіль",
     value: "profile",
     icon: User,
   },
   {
-    name: "Messages",
+    name: "Повідомлення",
     value: "messages",
     icon: Bot,
   },
   {
-    name: "Settings",
+    name: "Налаштування",
     value: "settings",
     icon: Settings,
   },
 ];
 
-export default function ProfileTabs() {
+function ProfileTabs() {
   return (
     <div className="w-full">
       <div className="block md:hidden">
@@ -59,7 +59,7 @@ export default function ProfileTabs() {
                 value={tab.value}
                 className="flex h-full items-center justify-center"
               >
-                {tab.name} Content
+                {tab.name}
               </TabsContent>
             ))}
           </div>
@@ -94,7 +94,7 @@ export default function ProfileTabs() {
                 value={tab.value}
                 className="h-full w-full"
               >
-                {tab.name} Content
+                {tab.name}
               </TabsContent>
             ))}
           </div>
@@ -103,3 +103,5 @@ export default function ProfileTabs() {
     </div>
   );
 }
+
+export default ProfileTabs;
