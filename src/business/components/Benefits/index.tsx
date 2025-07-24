@@ -8,21 +8,21 @@ const platformBenefits = [
     title: "Якість на першому місці",
     description:
       "Кожна модель ретельно перевіряється для забезпечення високих стандартів та технічного досконалості.",
-    color: "bg-gradient-to-br from-blue-500 to-blue-600",
+    color: "bg-linear-to-br from-blue-500 to-blue-600",
   },
   {
     icon: <Users className="size-8" />,
     title: "Зростаюча спільнота",
     description:
       "Приєднуйтесь до нашої патріотичної спільноти 3D-дизайнерів та творців з усього світу.",
-    color: "bg-gradient-to-br from-green-500 to-green-600",
+    color: "bg-linear-to-br from-green-500 to-green-600",
   },
   {
     icon: <Palette className="size-8" />,
     title: "Дизайнери на першому місці",
     description:
       "Створено для дизайнерів. Ми розуміємо, що дизайнерам потрібно для успіху.",
-    color: "bg-gradient-to-br from-purple-500 to-purple-600",
+    color: "bg-linear-to-br from-purple-500 to-purple-600",
   },
 ];
 
@@ -44,7 +44,7 @@ function Benefits() {
           {platformBenefits.map((benefit, index) => (
             <Card
               key={index}
-              className="group border-0 shadow-sm shadow-black/10 transition-all duration-300 hover:shadow-lg dark:shadow-white/10"
+              className="group border-0 shadow-xs shadow-black/10 transition-all duration-300 hover:shadow-lg dark:shadow-white/10"
             >
               <CardContent className="p-8 text-center">
                 <div className="space-y-4">

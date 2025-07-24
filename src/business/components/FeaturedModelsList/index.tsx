@@ -75,14 +75,14 @@ function FeaturedModelsList() {
       {featuredModels.map((model) => (
         <Card
           key={model.id}
-          className="overflow-hidden shadow-sm shadow-black/10 transition-all duration-300 hover:shadow-lg dark:shadow-white/10"
+          className="overflow-hidden shadow-xs shadow-black/10 transition-all duration-300 hover:shadow-lg dark:shadow-white/10"
         >
           <CardHeader className="p-0">
             <div className="relative">
               <img
                 src={model.image || "/placeholder.svg"}
                 alt={model.title}
-                className="aspect-[4/3] w-full object-cover"
+                className="aspect-4/3 w-full object-cover"
               />
               <Badge className="absolute right-2 top-2">{model.category}</Badge>
             </div>

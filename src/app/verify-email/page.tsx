@@ -50,7 +50,7 @@ export default async function VerifyEmailPage({
 
       <main className="flex-1">
         <section className="container flex h-full items-center justify-center px-4 py-12 md:py-24">
-          <div className="flex max-w-md flex-col items-center gap-6 rounded-lg border bg-card p-4 shadow-sm md:p-6">
+          <div className="flex max-w-md flex-col items-center gap-6 rounded-lg border bg-card p-4 shadow-xs md:p-6">
             <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
               <Mail className="size-6 text-primary" />
             </div>

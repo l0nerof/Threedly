@@ -14,13 +14,13 @@ function Hero() {
         <div className="mx-auto flex max-w-3xl flex-col items-center space-y-8 text-center">
           <div className="space-y-4">
             <div className="mb-5 flex items-center justify-center gap-2">
-              <Badge className="border-0 bg-gradient-to-r from-purple-500 to-blue-500 text-white">
+              <Badge className="border-0 bg-linear-to-r from-purple-500 to-blue-500 text-white">
                 <Sparkles className="mr-1 size-4" />
                 Запуск нової платформи
               </Badge>
             </div>
 
-            <h1 className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-4xl font-bold tracking-tighter text-transparent sm:text-5xl md:text-6xl lg:text-7xl dark:from-primary dark:to-purple-400">
+            <h1 className="bg-linear-to-r from-primary to-purple-600 bg-clip-text text-4xl font-bold tracking-tighter text-transparent sm:text-5xl md:text-6xl lg:text-7xl dark:from-primary dark:to-purple-400">
               Знайдіть найкращі 3D моделі
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">

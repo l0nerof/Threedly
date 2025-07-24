@@ -78,7 +78,7 @@ export function CategoryList() {
           key={category.name}
           href={`/category/${category.name.toLowerCase()}`}
         >
-          <Card className="overflow-hidden shadow-sm shadow-black/10 transition-all duration-300 hover:shadow-lg dark:shadow-white/10">
+          <Card className="overflow-hidden shadow-xs shadow-black/10 transition-all duration-300 hover:shadow-lg dark:shadow-white/10">
             <CardContent className="p-6">
               <div className="flex flex-col items-center space-y-3 text-center">
                 <div className={`rounded-full p-3 ${category.color}`}>

@@ -78,7 +78,7 @@ function ErrorPage({
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
         <section className="container flex h-full items-center justify-center px-4 py-12 md:py-24">
-          <div className="mx-auto w-full max-w-md space-y-6 rounded-lg border bg-card p-4 shadow-sm md:p-6">
+          <div className="mx-auto w-full max-w-md space-y-6 rounded-lg border bg-card p-4 shadow-xs md:p-6">
             <div className="space-y-4 text-center">
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
                 {errorContent.icon}

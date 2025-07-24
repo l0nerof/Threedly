@@ -66,15 +66,15 @@ function RecentUploads() {
           {recentUploads.map((model) => (
             <Card
               key={model.id}
-              className="group overflow-hidden shadow-sm shadow-black/10 transition-all duration-300 hover:shadow-lg dark:shadow-white/10"
+              className="group overflow-hidden shadow-xs shadow-black/10 transition-all duration-300 hover:shadow-lg dark:shadow-white/10"
             >
               <div className="relative">
                 <img
                   src={model.image || "/placeholder.svg"}
                   alt={model.title}
-                  className="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="aspect-4/3 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                 <Badge className="absolute right-2 top-2">
                   {model.category}
                 </Badge>
