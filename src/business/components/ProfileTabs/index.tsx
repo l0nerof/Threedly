@@ -38,7 +38,7 @@ function ProfileTabs() {
           defaultValue={tabs[0].value}
           className="flex w-full flex-col gap-4"
         >
-          <TabsList className="w-full bg-background">
+          <TabsList className="bg-background w-full">
             {tabs.map((tab) => (
               <TabsTrigger
                 key={tab.value}
@@ -52,7 +52,7 @@ function ProfileTabs() {
               </TabsTrigger>
             ))}
           </TabsList>
-          <div className="flex h-full w-full items-center justify-center font-medium text-muted-foreground">
+          <div className="text-muted-foreground flex h-full w-full items-center justify-center font-medium">
             {tabs.map((tab) => (
               <TabsContent
                 key={tab.value}
@@ -73,7 +73,7 @@ function ProfileTabs() {
           defaultValue={tabs[0].value}
           className="flex w-full flex-row items-start justify-center gap-10"
         >
-          <TabsList className="basis-1/4 flex-col bg-background">
+          <TabsList className="bg-background h-full basis-1/4 flex-col rounded-none border-r">
             {tabs.map((tab) => (
               <TabsTrigger
                 key={tab.value}
@@ -87,7 +87,7 @@ function ProfileTabs() {
               </TabsTrigger>
             ))}
           </TabsList>
-          <div className="flex h-full w-full items-center justify-center font-medium text-muted-foreground">
+          <div className="text-muted-foreground flex h-full w-full items-center justify-center font-medium">
             {tabs.map((tab) => (
               <TabsContent
                 key={tab.value}

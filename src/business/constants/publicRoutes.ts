@@ -6,4 +6,7 @@ export const publicRoutes = [
   "/verify-email",
   "/auth/confirm",
   "/error",
+  "/catalog",
+  "/categories",
+  "/designers",
 ];

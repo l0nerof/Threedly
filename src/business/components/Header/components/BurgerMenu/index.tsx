@@ -24,25 +24,25 @@ function BurgerMenu() {
           <nav className="flex flex-col gap-2">
             <Link
               href="/catalog"
-              className="py-2 text-sm font-medium transition-colors hover:text-primary"
+              className="hover:text-primary py-2 text-sm font-medium transition-colors"
             >
               Каталог
             </Link>
             <Link
               href="/categories"
-              className="py-2 text-sm font-medium transition-colors hover:text-primary"
+              className="hover:text-primary py-2 text-sm font-medium transition-colors"
             >
               Категорії
             </Link>
             <Link
-              href="/artists"
-              className="py-2 text-sm font-medium transition-colors hover:text-primary"
+              href="/designers"
+              className="hover:text-primary py-2 text-sm font-medium transition-colors"
             >
-              Артисти
+              Дизайнери
             </Link>
             <Link
               href="/pricing"
-              className="py-2 text-sm font-medium transition-colors hover:text-primary"
+              className="hover:text-primary py-2 text-sm font-medium transition-colors"
             >
               Ціни
             </Link>

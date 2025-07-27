@@ -4,13 +4,13 @@ import React from "react";
 
 function Community() {
   return (
-    <section className="w-full bg-muted/30 py-12 md:py-16">
+    <section className="from-background to-muted-foreground w-full bg-gradient-to-br py-12 md:py-16">
       <div className="container px-4 md:px-6">
         <div className="mb-12 space-y-4 text-center">
           <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
             Приєднуйтесь до нашої спільноти
           </h2>
-          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+          <p className="text-muted-foreground mx-auto max-w-[700px] md:text-xl">
             Зв&apos;яжіться з іншими 3D-художниками, поділіться своєю роботою та
             зростіть разом
           </p>
