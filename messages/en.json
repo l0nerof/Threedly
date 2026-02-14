@@ -1,0 +1,253 @@
+{
+  "Header": {
+    "logo": "Threedly",
+    "nav": {
+      "catalog": "Catalog",
+      "categories": "Categories",
+      "designers": "Designers",
+      "pricing": "Pricing"
+    },
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System",
+      "toggle": "Toggle theme"
+    },
+    "language": {
+      "en": "English",
+      "ua": "Ukrainian",
+      "toggle": "Switch language"
+    },
+    "login": "Login",
+    "signup": "Sign up",
+    "profile": "Profile"
+  },
+
+  "Hero": {
+    "badge": "3D model platform",
+    "title": "Find and publish 3D models for visualizers and designers",
+    "type": {
+      "one": "Search by categories, styles, and formats.",
+      "two": "Portfolio, sales, and client access in one place.",
+      "three": "Showcase new models and reach your market."
+    },
+    "primaryCta": "Browse catalog",
+    "secondaryCta": "Learn more"
+  },
+
+  "Pricing": {
+    "title": "Simple, transparent pricing",
+    "subtitle": "Choose a plan that fits your workflow. No hidden fees.",
+    "includesLabel": "Includes:",
+    "billingPeriod": "/month",
+    "cta": "Get started",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "For hobbyists and getting started",
+        "price": "$0",
+        "features": {
+          "one": "5 uploads per month",
+          "two": "Access to free models",
+          "three": "Basic license",
+          "four": "Community support"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "For professionals",
+        "price": "$29",
+        "badge": "Popular",
+        "features": {
+          "one": "50 uploads per month",
+          "two": "Access to all models",
+          "three": "Commercial license",
+          "four": "Priority support",
+          "five": "Model customization"
+        }
+      },
+      "business": {
+        "name": "Business",
+        "description": "For teams and studios",
+        "price": "$99",
+        "features": {
+          "one": "Unlimited uploads",
+          "two": "Access to all models",
+          "three": "Extended commercial license",
+          "four": "Dedicated support",
+          "five": "Custom model requests",
+          "six": "Team collaboration tools"
+        }
+      }
+    },
+    "faqTitle": "Questions & Answers",
+    "faqSubtitle": "Answers to common questions about plans and billing.",
+    "faq": {
+      "one": {
+        "question": "Which plan is right for me?",
+        "answer": "Start with Free to explore the library. Upgrade to Pro for commercial use or Business for team workflows."
+      },
+      "two": {
+        "question": "What payment options do you accept?",
+        "answer": "We accept major credit cards. Annual billing and invoices are available for Business plans."
+      },
+      "three": {
+        "question": "Can I cancel or switch plans?",
+        "answer": "Yes. You can change plans at any time and the new plan will take effect on your next billing cycle."
+      },
+      "four": {
+        "question": "Do you offer refunds?",
+        "answer": "We offer a 14-day refund window for paid plans. Contact support if you need help."
+      },
+      "five": {
+        "question": "What happens if I hit usage limits?",
+        "answer": "You can upgrade instantly or wait until limits reset at the start of the next billing cycle."
+      }
+    }
+  },
+
+  "HowItWorks": {
+    "title": "How it works",
+    "subtitle": "Get started in three simple steps.",
+    "steps": {
+      "one": {
+        "tag": "Step 1",
+        "title": "Create account",
+        "description": "Sign up in seconds with your email and start exploring right away."
+      },
+      "two": {
+        "tag": "Step 2",
+        "title": "Choose your plan",
+        "description": "Start free and upgrade later when you need more downloads or publishing limits."
+      },
+      "three": {
+        "tag": "Step 3",
+        "title": "Download or publish",
+        "description": "Download models for your work or upload your own in just a few clicks."
+      }
+    }
+  },
+
+  "ForWho": {
+    "title": "Who is it for",
+    "subtitle": "Built for people who need reliable 3D assets in production workflows.",
+    "designers": {
+      "title": "Designers & Visualizers",
+      "items": {
+        "one": "Find models fast with focused search and filters.",
+        "two": "Use clean previews with practical specs.",
+        "three": "Download in common formats for real projects."
+      }
+    },
+    "creators": {
+      "title": "Creators",
+      "items": {
+        "one": "Upload new models in minutes.",
+        "two": "Manage your model pages and content.",
+        "three": "Reach your audience as the platform grows."
+      }
+    }
+  },
+
+  "FinalCta": {
+    "title": "Ready to explore?",
+    "subtitle": "Browse the catalog or create an account to get started.",
+    "primaryCta": "Browse catalog",
+    "secondaryCta": "Create account"
+  },
+
+  "Footer": {
+    "copyright": "© 2025 Threedly. All rights reserved.",
+    "terms": "Terms",
+    "privacy": "Privacy"
+  },
+
+  "Profile": {
+    "title": "Profile",
+    "description": "Your account details are shown below.",
+    "emailLabel": "Email",
+    "emptyEmail": "No email found."
+  },
+
+  "Auth": {
+    "login": {
+      "title": "Welcome back",
+      "description": "Don’t have an account?",
+      "link": "Sign up",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "showPasswordButton": "Show password",
+      "hidePasswordButton": "Hide password",
+      "errors": {
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Enter a valid email.",
+        "passwordMinLength": "Password must be at least 8 characters.",
+        "invalidCredentials": "Invalid email or password.",
+        "emailNotConfirmed": "Please confirm your email before logging in.",
+        "generic": "Unable to sign in. Please try again."
+      },
+      "submit": "Log in"
+    },
+    "signup": {
+      "title": "Create an account",
+      "description": "Already have an account?",
+      "link": "Log in",
+      "firstNameLabel": "First name",
+      "firstNamePlaceholder": "John",
+      "lastNameLabel": "Last name",
+      "lastNamePlaceholder": "Doe",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Create a password",
+      "showPasswordButton": "Show password",
+      "hidePasswordButton": "Hide password",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat your password",
+      "termsPrefix": "I agree to the",
+      "termsLink": "Terms & Conditions",
+      "errors": {
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Enter a valid email.",
+        "passwordMinLength": "Password must be at least 8 characters.",
+        "termsRequired": "You must accept the terms.",
+        "alreadyRegistered": "This email is already registered.",
+        "rateLimit": "Too many attempts. Please try again a bit later.",
+        "generic": "Unable to create account. Please try again."
+      },
+      "submit": "Create account"
+    },
+    "verifyEmail": {
+      "title": "Verify your email",
+      "description": "We sent a 8-digit code to your email.",
+      "backToSignup": "Back to sign up",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "otpLabel": "One-time code",
+      "otpHint": "Enter the 8-digit code from your email message.",
+      "submit": "Verify code",
+      "verifying": "Verifying...",
+      "resend": "Resend code",
+      "resending": "Sending...",
+      "resendCountdown": "Resend in {seconds}s",
+      "resentSuccess": "A new code has been sent to your email.",
+      "errors": {
+        "emailRequired": "Email is required.",
+        "requiredFields": "Email and code are required.",
+        "missingEmailContext": "Email context is missing. Please sign up again.",
+        "invalidCode": "The verification code is invalid.",
+        "codeExpired": "The verification code has expired.",
+        "rateLimit": "Too many attempts. Please try again a bit later.",
+        "generic": "Unable to verify code. Please try again."
+      }
+    },
+    "valueBullets": {
+      "catalog": "Instant access to catalog",
+      "formats": "Download in common formats",
+      "publish": "Upload your models",
+      "beta": "beta"
+    }
+  }
+}

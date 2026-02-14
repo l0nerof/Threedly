@@ -1,46 +1,141 @@
-import ThemeSwitcher from "@/business/components/ThemeSwitcher";
-import { createClient } from "@/business/utils/supabase/server";
-import { Button } from "@/shared/components/Button";
-import Logo from "@/shared/components/Logo";
-import Link from "next/link";
-import BurgerMenu from "./components/BurgerMenu";
-import Navigation from "./components/Navigation";
-import UserMenu from "./components/UserMenu";
+"use client";
 
-async function Header() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getUser();
-  const isLoggedIn = !error && data?.user;
+import { createClient } from "@/src/business/utils/supabase/client";
+import { Link } from "@/src/i18n/routing";
+import { User } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { navItems } from "../../constants/navItems";
+import { LanguageToggle } from "../LanguageToggle";
+import {
+  MobileNav,
+  MobileNavHeader,
+  MobileNavMenu,
+  MobileNavToggle,
+  NavBody,
+  NavItems,
+  Navbar,
+  NavbarButton,
+  NavbarLogo,
+} from "../Navbar";
+import { ThemeToggle } from "../ThemeToggle";
+
+function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const t = useTranslations("Header");
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(Boolean(session));
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Logo />
-          <Navigation />
+    <Navbar>
+      {/* Desktop Navigation */}
+      <NavBody>
+        <NavbarLogo />
+        <NavItems items={navItems} />
+
+        <div className="flex items-center gap-1">
+          {isAuthenticated === true ? (
+            <NavbarButton
+              variant="secondary"
+              as={Link}
+              href="/profile"
+              className="p-2"
+            >
+              <User className="text-foreground size-5" />
+            </NavbarButton>
+          ) : isAuthenticated === false ? (
+            <>
+              <NavbarButton variant="secondary" as={Link} href="/login">
+                {t("login")}
+              </NavbarButton>
+              <NavbarButton variant="primary" as={Link} href="/signup">
+                {t("signup")}
+              </NavbarButton>
+            </>
+          ) : null}
         </div>
-        <div className="flex items-center gap-4">
-          <div className="hidden items-center gap-2 md:flex">
-            {isLoggedIn ? (
-              <UserMenu />
-            ) : (
+      </NavBody>
+
+      {/* Mobile Navigation */}
+      <MobileNav>
+        <MobileNavHeader>
+          <NavbarLogo />
+          <MobileNavToggle
+            isOpen={isMobileMenuOpen}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          />
+        </MobileNavHeader>
+
+        <MobileNavMenu
+          isOpen={isMobileMenuOpen}
+          onClose={() => setIsMobileMenuOpen(false)}
+        >
+          {navItems.map((item, idx) => (
+            <Link
+              key={`mobile-link-${idx}`}
+              href={item.link}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-foreground relative"
+            >
+              {t(item.name)}
+            </Link>
+          ))}
+
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
+
+          <div className="flex w-full flex-col gap-2">
+            {isAuthenticated === true ? (
+              <NavbarButton
+                as={Link}
+                href="/profile"
+                onClick={() => setIsMobileMenuOpen(false)}
+                variant="primary"
+                className="w-full"
+              >
+                {t("profile")}
+              </NavbarButton>
+            ) : isAuthenticated === false ? (
               <>
-                <Button variant="outline" asChild>
-                  <Link href="/login">Увійти</Link>
-                </Button>
-                <Button asChild>
-                  <Link href="/signup">Зареєструватися</Link>
-                </Button>
+                <NavbarButton
+                  as={Link}
+                  href="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                >
+                  {t("login")}
+                </NavbarButton>
+                <NavbarButton
+                  as={Link}
+                  href="/signup"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                >
+                  {t("signup")}
+                </NavbarButton>
               </>
-            )}
+            ) : null}
           </div>
-          <div className="hidden items-center gap-2 lg:flex">
-            <ThemeSwitcher />
-          </div>
-          <BurgerMenu />
-        </div>
-      </div>
-    </header>
+        </MobileNavMenu>
+      </MobileNav>
+    </Navbar>
   );
 }
 

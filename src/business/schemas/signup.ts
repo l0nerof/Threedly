@@ -1,25 +1,9 @@
 import { z } from "zod";
 
 export const signupSchema = z.object({
-  firstName: z
-    .string()
-    .min(1, "Поле ім'я є обов'язковим")
-    .min(2, "Ім'я повинно містити щонайменше 2 символи")
-    .max(50, "Ім'я не може перевищувати 50 символів"),
-  lastName: z
-    .string()
-    .min(1, "Поле прізвище є обов'язковим")
-    .min(2, "Прізвище повинно містити щонайменше 2 символи")
-    .max(50, "Прізвище не може перевищувати 50 символів"),
-  email: z
-    .string()
-    .min(1, "Поле email є обов'язковим")
-    .email("Введіть коректну адресу електронної пошти"),
-  password: z
-    .string()
-    .min(6, "Пароль повинен містити щонайменше 6 символів")
-    .max(50, "Пароль не може перевищувати 50 символів"),
-  agreedToTerms: z.boolean().refine((val) => val === true, {
-    message: "Необхідно погодитися з умовами використання",
-  }),
+  email: z.string().min(1, "errors.emailRequired").email("errors.emailInvalid"),
+  password: z.string().min(8, "errors.passwordMinLength"),
+  terms: z
+    .boolean()
+    .refine((value) => value, { message: "errors.termsRequired" }),
 });
