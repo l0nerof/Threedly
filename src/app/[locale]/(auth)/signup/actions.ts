@@ -5,6 +5,7 @@ import { createClient } from "@/src/business/utils/supabase/server";
 import { headers } from "next/headers";
 
 type SignupActionInput = {
+  username: string;
   email: string;
   password: string;
   locale: string;
@@ -12,9 +13,16 @@ type SignupActionInput = {
 
 type ActionResult = {
   ok: boolean;
-  error?: "alreadyRegistered" | "rateLimit" | "generic";
+  error?:
+    | "alreadyRegistered"
+    | "rateLimit"
+    | "usernameTaken"
+    | "invalidUsername"
+    | "generic";
   nextPath?: string;
 };
+
+const USERNAME_REGEX = /^[a-z0-9_]{3,20}$/;
 
 const resolveOrigin = async () => {
   const requestHeaders = await headers();
@@ -32,6 +40,7 @@ const resolveOrigin = async () => {
 };
 
 export async function signupWithEmailPassword({
+  username,
   email,
   password,
   locale,
@@ -40,18 +49,36 @@ export async function signupWithEmailPassword({
     return { ok: false, error: "generic" };
   }
 
+  const normalizedUsername = username.trim().toLowerCase();
+  if (!USERNAME_REGEX.test(normalizedUsername)) {
+    return { ok: false, error: "invalidUsername" };
+  }
+
   const normalizedEmail = email.trim().toLowerCase();
   const supabase = await createClient();
   const origin = await resolveOrigin();
   const emailRedirectTo = origin
     ? `${origin}/${locale}/verify-email?email=${encodeURIComponent(normalizedEmail)}`
     : undefined;
+  const { data: usernameAvailable, error: usernameAvailabilityError } =
+    await supabase.rpc("is_username_available", { u: normalizedUsername });
+
+  if (usernameAvailabilityError) {
+    return { ok: false, error: "generic" };
+  }
+
+  if (usernameAvailable !== true) {
+    return { ok: false, error: "usernameTaken" };
+  }
 
   const { data, error } = await supabase.auth.signUp({
     email: normalizedEmail,
     password,
     options: {
       emailRedirectTo,
+      data: {
+        username: normalizedUsername,
+      },
     },
   });
 
@@ -62,6 +89,14 @@ export async function signupWithEmailPassword({
 
     if (error.message.toLowerCase().includes("rate limit")) {
       return { ok: false, error: "rateLimit" };
+    }
+
+    if (
+      error.message.toLowerCase().includes("profiles_username_key") ||
+      (error.message.toLowerCase().includes("duplicate key value") &&
+        error.message.toLowerCase().includes("username"))
+    ) {
+      return { ok: false, error: "usernameTaken" };
     }
 
     return { ok: false, error: "generic" };

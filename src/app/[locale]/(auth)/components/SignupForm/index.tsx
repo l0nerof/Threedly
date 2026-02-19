@@ -22,6 +22,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 const defaultValues: SignupFormValues = {
+  username: "",
   email: "",
   password: "",
   terms: false,
@@ -33,6 +34,9 @@ function SignupForm() {
   const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [usernameServerError, setUsernameServerError] = useState<string | null>(
+    null,
+  );
 
   const {
     register,
@@ -47,14 +51,25 @@ function SignupForm() {
 
   const onSubmit = async (values: SignupFormValues) => {
     setServerError(null);
+    setUsernameServerError(null);
+    const normalizedUsername = values.username.trim().toLowerCase();
 
     const result = await signupWithEmailPassword({
+      username: normalizedUsername,
       email: values.email,
       password: values.password,
       locale,
     });
 
     if (!result.ok) {
+      if (
+        result.error === "usernameTaken" ||
+        result.error === "invalidUsername"
+      ) {
+        setUsernameServerError(resolveServerError(result.error));
+        return;
+      }
+
       setServerError(resolveServerError(result.error));
       return;
     }
@@ -67,11 +82,18 @@ function SignupForm() {
   };
 
   const resolveServerError = (
-    code?: "alreadyRegistered" | "rateLimit" | "generic",
+    code?:
+      | "alreadyRegistered"
+      | "rateLimit"
+      | "usernameTaken"
+      | "invalidUsername"
+      | "generic",
   ) => {
     const errorMessagesByCode = {
       alreadyRegistered: t("errors.alreadyRegistered"),
       rateLimit: t("errors.rateLimit"),
+      usernameTaken: t("errors.usernameTaken"),
+      invalidUsername: t("errors.usernameInvalid"),
       generic: t("errors.generic"),
     } as const;
 
@@ -81,6 +103,10 @@ function SignupForm() {
   };
   const resolveErrorMessage = (message?: string) => {
     switch (message) {
+      case "errors.usernameRequired":
+        return t("errors.usernameRequired");
+      case "errors.usernameInvalid":
+        return t("errors.usernameInvalid");
       case "errors.emailRequired":
         return t("errors.emailRequired");
       case "errors.emailInvalid":
@@ -97,6 +123,37 @@ function SignupForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <FieldGroup>
+        <Field>
+          <FieldLabel htmlFor="username">{t("usernameLabel")}</FieldLabel>
+          <FieldContent>
+            <Input
+              id="username"
+              type="text"
+              autoComplete="username"
+              placeholder={t("usernamePlaceholder")}
+              className="bg-muted/40 border-border/60"
+              aria-invalid={!!errors.username || !!usernameServerError}
+              {...register("username")}
+            />
+            <p className="text-muted-foreground text-xs">{t("usernameHint")}</p>
+            <FieldError
+              errors={[
+                ...(errors.username
+                  ? [
+                      {
+                        ...errors.username,
+                        message: resolveErrorMessage(errors.username.message),
+                      },
+                    ]
+                  : []),
+                ...(usernameServerError
+                  ? [{ message: usernameServerError }]
+                  : []),
+              ]}
+            />
+          </FieldContent>
+        </Field>
+
         <Field>
           <FieldLabel htmlFor="email">{t("emailLabel")}</FieldLabel>
           <FieldContent>
