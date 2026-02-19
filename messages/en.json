@@ -166,7 +166,87 @@
     "title": "Profile",
     "description": "Your account details are shown below.",
     "emailLabel": "Email",
-    "emptyEmail": "No email found."
+    "emptyEmail": "No email found.",
+    "sidebar": {
+      "title": "Workspace",
+      "items": {
+        "overview": "Overview",
+        "library": "My Library",
+        "uploads": "Uploads",
+        "settings": "Settings"
+      }
+    },
+    "overview": {
+      "title": "Profile Dashboard",
+      "subtitle": "Manage your profile and content. Current account: {email}",
+      "planBadge": "Free plan",
+      "primaryCta": "Browse catalog",
+      "stats": {
+        "downloads": {
+          "label": "Downloads this month",
+          "value": "0"
+        },
+        "remaining": {
+          "label": "Remaining downloads",
+          "value": "5"
+        },
+        "uploads": {
+          "label": "Published uploads",
+          "value": "0"
+        },
+        "favorites": {
+          "label": "Favorites",
+          "value": "0"
+        }
+      },
+      "continue": {
+        "title": "Continue where you left off",
+        "description": "You have no downloaded models yet. Start from the catalog.",
+        "cta": "Browse catalog"
+      },
+      "activity": {
+        "title": "Activity",
+        "description": "Recent updates in your dashboard.",
+        "placeholder": "No activity yet."
+      }
+    },
+    "library": {
+      "title": "My Library",
+      "subtitle": "Your downloaded and saved models.",
+      "primaryCta": "Browse catalog",
+      "empty": {
+        "title": "Library is empty",
+        "description": "You have not downloaded any models yet."
+      }
+    },
+    "uploads": {
+      "title": "Uploads",
+      "subtitle": "Manage your published models.",
+      "uploadCta": "Upload model",
+      "secondaryCta": "Open settings",
+      "empty": {
+        "title": "You do not have models yet",
+        "description": "Add your first model."
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Update public profile data and manage your account.",
+      "profile": {
+        "title": "Profile",
+        "description": "MVP form prepared for future profiles table integration.",
+        "displayName": "Display name",
+        "bio": "Bio",
+        "bioPlaceholder": "Tell something short about your creator profile",
+        "email": "Email",
+        "save": "Save changes"
+      },
+      "account": {
+        "title": "Account",
+        "description": "You can end your session at any time.",
+        "signOut": "Sign out"
+      }
+    }
   },
 
   "Auth": {
@@ -249,5 +329,11 @@
       "publish": "Upload your models",
       "beta": "beta"
     }
+  },
+  "Errors": {
+    "badge": "404",
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "backHome": "Back to home"
   }
 }

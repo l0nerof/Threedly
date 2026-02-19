@@ -1,10 +1,13 @@
+"use client";
+
 import { Link } from "@/src/i18n/routing";
 import { Button } from "@/src/shared/components/Button";
 import LightRays from "@/src/shared/components/LightRays";
-import { getTranslations } from "next-intl/server";
+import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
 
-async function FinalCta() {
-  const t = await getTranslations("FinalCta");
+function FinalCta() {
+  const t = useTranslations("FinalCta");
 
   return (
     <section className="relative w-full py-20 sm:py-24">
@@ -49,7 +52,13 @@ async function FinalCta() {
       />
 
       <div className="relative z-10">
-        <div className="container flex min-h-[280px] flex-col items-center justify-center gap-8 px-6 py-14 text-center sm:min-h-[340px] sm:px-10 sm:py-18">
+        <motion.div
+          className="container flex min-h-[280px] flex-col items-center justify-center gap-8 px-6 py-14 text-center sm:min-h-[340px] sm:px-10 sm:py-18"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <div className="flex flex-col items-center gap-2">
             <h2 className="text-2xl font-semibold tracking-tight sm:text-4xl">
               {t("title")}
@@ -60,14 +69,23 @@ async function FinalCta() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <Button asChild size="lg">
+            <Button
+              asChild
+              size="lg"
+              className="transition-all duration-300 hover:scale-[1.01]"
+            >
               <Link href="/catalog">{t("primaryCta")}</Link>
             </Button>
-            <Button asChild size="lg" variant="secondary">
+            <Button
+              asChild
+              size="lg"
+              variant="secondary"
+              className="transition-all duration-300 hover:scale-[1.01]"
+            >
               <Link href="/signup">{t("secondaryCta")}</Link>
             </Button>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

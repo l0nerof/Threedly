@@ -37,10 +37,19 @@ async function Hero() {
           showCursor
         />
         <div className="flex items-center gap-2">
-          <Button asChild size="lg">
+          <Button
+            asChild
+            size="lg"
+            className="transition-all duration-300 hover:scale-[1.01]"
+          >
             <Link href="/catalog">{t("primaryCta")}</Link>
           </Button>
-          <Button asChild size="lg" variant="secondary">
+          <Button
+            asChild
+            size="lg"
+            variant="secondary"
+            className="transition-all duration-300 hover:scale-[1.01]"
+          >
             <Link href="#how-it-works">{t("secondaryCta")}</Link>
           </Button>
         </div>
