@@ -178,7 +178,6 @@
     },
     "overview": {
       "title": "Profile Dashboard",
-      "subtitle": "Manage your profile and content. Current account: {email}",
       "planBadge": "Free plan",
       "primaryCta": "Browse catalog",
       "stats": {
@@ -235,11 +234,14 @@
       "profile": {
         "title": "Profile",
         "description": "MVP form prepared for future profiles table integration.",
-        "displayName": "Display name",
+        "avatar": "Avatar",
+        "username": "Username",
         "bio": "Bio",
         "bioPlaceholder": "Tell something short about your creator profile",
         "email": "Email",
-        "save": "Save changes"
+        "save": "Save changes",
+        "saveSuccess": "Changes saved successfully.",
+        "saveError": "Failed to save changes."
       },
       "account": {
         "title": "Account",

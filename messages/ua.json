@@ -178,7 +178,6 @@
     },
     "overview": {
       "title": "Кабінет профілю",
-      "subtitle": "Поточний акаунт: {email}",
       "planBadge": "Безкоштовний план",
       "primaryCta": "До каталогу",
       "stats": {
@@ -235,11 +234,14 @@
       "profile": {
         "title": "Профіль",
         "description": "Базові дані профілю.",
-        "displayName": "Ім'я в профілі",
+        "avatar": "Аватар",
+        "username": "Username",
         "bio": "Про себе",
         "bioPlaceholder": "Коротко про себе як креатора",
         "email": "Email",
-        "save": "Зберегти зміни"
+        "save": "Зберегти зміни",
+        "saveSuccess": "Зміни успішно збережено.",
+        "saveError": "Не вдалося зберегти зміни."
       },
       "account": {
         "title": "Акаунт",

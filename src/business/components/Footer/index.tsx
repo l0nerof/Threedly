@@ -1,12 +1,10 @@
-"use client";
-
 import { Link } from "@/src/i18n/routing";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { LanguageToggle } from "../LanguageToggle";
 import { ThemeToggle } from "../ThemeToggle";
 
-function Footer() {
-  const t = useTranslations("Footer");
+async function Footer() {
+  const t = await getTranslations("Footer");
 
   return (
     <footer className="w-full border-t py-6 md:py-12">

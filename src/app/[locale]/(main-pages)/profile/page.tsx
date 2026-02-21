@@ -1,5 +1,4 @@
 import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
-import { createClient } from "@/src/business/utils/supabase/server";
 import { Link } from "@/src/i18n/routing";
 import { Badge } from "@/src/shared/components/Badge";
 import { Button } from "@/src/shared/components/Button";
@@ -27,19 +26,12 @@ export default async function ProfilePage({ params }: Props) {
   setRequestLocale(locale);
 
   const t = await getTranslations("Profile");
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
   return (
     <section className="flex flex-col gap-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-semibold">{t("overview.title")}</h1>
-          <p className="text-muted-foreground text-sm">
-            {t("overview.subtitle", { email: user?.email ?? t("emptyEmail") })}
-          </p>
           <Badge variant="outline">{t("overview.planBadge")}</Badge>
         </div>
 
