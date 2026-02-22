@@ -169,6 +169,7 @@
     "emptyEmail": "No email found.",
     "sidebar": {
       "title": "Workspace",
+      "viewPublicProfile": "View public profile",
       "items": {
         "overview": "Overview",
         "library": "My Library",
@@ -233,8 +234,14 @@
       "subtitle": "Update public profile data and manage your account.",
       "profile": {
         "title": "Profile",
-        "description": "MVP form prepared for future profiles table integration.",
+        "description": "Basic profile data.",
         "avatar": "Avatar",
+        "avatarMenuAriaLabel": "Open avatar menu",
+        "avatarMenu": {
+          "edit": "Edit",
+          "upload": "Upload photo",
+          "remove": "Remove photo"
+        },
         "username": "Username",
         "bio": "Bio",
         "bioPlaceholder": "Tell something short about your creator profile",

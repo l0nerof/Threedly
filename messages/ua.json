@@ -169,6 +169,7 @@
     "emptyEmail": "Email не знайдено.",
     "sidebar": {
       "title": "Кабінет",
+      "viewPublicProfile": "Переглянути публічний профіль",
       "items": {
         "overview": "Огляд",
         "library": "Моя бібліотека",
@@ -235,6 +236,12 @@
         "title": "Профіль",
         "description": "Базові дані профілю.",
         "avatar": "Аватар",
+        "avatarMenuAriaLabel": "Відкрити меню аватара",
+        "avatarMenu": {
+          "edit": "Змінити",
+          "upload": "Завантажити фото...",
+          "remove": "Прибрати фото"
+        },
         "username": "Username",
         "bio": "Про себе",
         "bioPlaceholder": "Коротко про себе як креатора",

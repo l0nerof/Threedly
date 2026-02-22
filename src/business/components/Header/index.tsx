@@ -1,8 +1,8 @@
 "use client";
 
+import { ProfileAvatar } from "@/src/business/components/ProfileAvatar";
 import { createClient } from "@/src/business/utils/supabase/client";
 import { Link } from "@/src/i18n/routing";
-import { User } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { navItems } from "../../constants/navItems";
@@ -23,15 +23,53 @@ import { ThemeToggle } from "../ThemeToggle";
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [avatarPath, setAvatarPath] = useState<string | null>(null);
   const t = useTranslations("Header");
 
   useEffect(() => {
     const supabase = createClient();
 
+    const loadCurrentUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        setIsAuthenticated(false);
+        setAvatarPath(null);
+        return;
+      }
+
+      setIsAuthenticated(true);
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("avatar_path")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      setAvatarPath(profile?.avatar_path ?? null);
+    };
+
+    void loadCurrentUser();
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsAuthenticated(Boolean(session));
+      if (!session) {
+        setAvatarPath(null);
+        return;
+      }
+
+      void supabase
+        .from("profiles")
+        .select("avatar_path")
+        .eq("id", session.user.id)
+        .maybeSingle()
+        .then(({ data: profile }) => {
+          setAvatarPath(profile?.avatar_path ?? null);
+        });
     });
 
     return () => {
@@ -54,7 +92,11 @@ function Header() {
               href="/profile"
               className="p-2"
             >
-              <User className="text-foreground size-5" />
+              <ProfileAvatar
+                avatarPath={avatarPath}
+                className="size-5 bg-transparent"
+                iconClassName="size-4"
+              />
             </NavbarButton>
           ) : isAuthenticated === false ? (
             <>

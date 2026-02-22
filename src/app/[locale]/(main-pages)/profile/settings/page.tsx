@@ -1,10 +1,5 @@
 import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/src/shared/components/Card";
+import { Card } from "@/src/shared/components/Card";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { updateProfileAction } from "./actions";
@@ -37,10 +32,6 @@ export default async function ProfileSettingsPage({ params }: Props) {
       </div>
 
       <Card className="gap-4 p-4">
-        <CardHeader className="p-0">
-          <CardTitle>{t("settings.profile.title")}</CardTitle>
-          <CardDescription>{t("settings.profile.description")}</CardDescription>
-        </CardHeader>
         <ProfileSettingsForm onSubmitAction={updateProfileWithLocale} />
       </Card>
     </section>
