@@ -74,9 +74,7 @@ function Header() {
         });
     });
 
-    const handleAvatarUpdated = (
-      event: Event,
-    ) => {
+    const handleAvatarUpdated = (event: Event) => {
       const customEvent = event as CustomEvent<{ avatarPath: string | null }>;
       setAvatarPath(customEvent.detail.avatarPath);
     };

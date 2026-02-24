@@ -14,6 +14,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/src/shared/components/Sidebar";
+import { Skeleton } from "@/src/shared/components/Skeleton";
 import { LogOutIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -29,6 +30,7 @@ export function ProfileSidebar() {
   const [username, setUsername] = useState("");
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
   const [email, setEmail] = useState("");
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
   useEffect(() => {
     let isCancelled = false;
@@ -40,6 +42,9 @@ export function ProfileSidebar() {
       } = await supabase.auth.getUser();
 
       if (!user || isCancelled) {
+        if (!isCancelled) {
+          setIsLoadingProfile(false);
+        }
         return;
       }
 
@@ -56,6 +61,7 @@ export function ProfileSidebar() {
       setUsername(profile?.username ?? "");
       setAvatarPath(profile?.avatar_path ?? null);
       setEmail(user.email ?? "");
+      setIsLoadingProfile(false);
     };
 
     void loadProfile();
@@ -83,22 +89,30 @@ export function ProfileSidebar() {
             <div className="flex flex-col items-center gap-2">
               <div className="flex flex-col items-center gap-3 text-center">
                 <ProfileAvatar avatarPath={avatarPath} className="size-24" />
-                <p className="text-sm font-medium">{username || email}</p>
+                {isLoadingProfile ? (
+                  <Skeleton className="h-5 w-28" />
+                ) : (
+                  <p className="text-sm font-medium">{username || email}</p>
+                )}
               </div>
-              {username && (
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className="flex items-center justify-center transition-colors duration-300"
-                    >
-                      <Link href={`/designers/${username}`}>
-                        {t("sidebar.viewPublicProfile")}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              ) }
+              {isLoadingProfile ? (
+                <Skeleton className="h-8 w-full rounded-md" />
+              ) : (
+                username && (
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        asChild
+                        className="flex items-center justify-center transition-colors duration-300"
+                      >
+                        <Link href={`/designers/${username}`}>
+                          {t("sidebar.viewPublicProfile")}
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                )
+              )}
             </div>
 
             <SidebarSeparator className="mx-0 my-2" />

@@ -18,6 +18,7 @@ import {
 } from "@/src/shared/components/DropdownMenu";
 import { Input } from "@/src/shared/components/Input";
 import { Label } from "@/src/shared/components/Label";
+import { Skeleton } from "@/src/shared/components/Skeleton";
 import { Textarea } from "@/src/shared/components/Textarea";
 import { PencilIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -268,48 +269,71 @@ function ProfileSettingsForm({
       </CardHeader>
 
       <CardContent className="flex flex-col gap-4 p-0">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="username">{t("settings.profile.username")}</Label>
-          <Input
-            id="username"
-            name="username"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-            placeholder={t("settings.profile.username")}
-          />
-        </div>
+        {isLoadingProfile ? (
+          <>
+            <div className="flex flex-col gap-2">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-24 w-full" />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Skeleton className="h-4 w-14" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="username">{t("settings.profile.username")}</Label>
+              <Input
+                id="username"
+                name="username"
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                placeholder={t("settings.profile.username")}
+              />
+            </div>
 
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="bio">{t("settings.profile.bio")}</Label>
-          <Textarea
-            id="bio"
-            name="bio"
-            rows={4}
-            value={bio}
-            onChange={(event) => setBio(event.target.value)}
-            placeholder={t("settings.profile.bioPlaceholder")}
-          />
-        </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="bio">{t("settings.profile.bio")}</Label>
+              <Textarea
+                id="bio"
+                name="bio"
+                rows={4}
+                value={bio}
+                onChange={(event) => setBio(event.target.value)}
+                placeholder={t("settings.profile.bioPlaceholder")}
+              />
+            </div>
 
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="email">{t("settings.profile.email")}</Label>
-          <Input id="email" value={email} readOnly />
-        </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="email">{t("settings.profile.email")}</Label>
+              <Input id="email" value={email} readOnly />
+            </div>
+          </>
+        )}
       </CardContent>
       <CardFooter className="p-0">
-        <Button
-          type="submit"
-          variant="outline"
-          disabled={
-            !hasChanges ||
-            isSubmitting ||
-            isLoadingProfile ||
-            isUploadingAvatar ||
-            isRemovingAvatar
-          }
-        >
-          {t("settings.profile.save")}
-        </Button>
+        {isLoadingProfile ? (
+          <Skeleton className="h-9 w-28 rounded-md" />
+        ) : (
+          <Button
+            type="submit"
+            variant="outline"
+            disabled={
+              !hasChanges ||
+              isSubmitting ||
+              isLoadingProfile ||
+              isUploadingAvatar ||
+              isRemovingAvatar
+            }
+          >
+            {t("settings.profile.save")}
+          </Button>
+        )}
       </CardFooter>
     </form>
   );

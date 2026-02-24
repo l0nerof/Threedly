@@ -1,6 +1,6 @@
 import { UserIcon } from "lucide-react";
-import { resolveAvatarPublicUrl } from "../../utils/supabase/storage";
 import { cn } from "../../../shared/utils/cn";
+import { resolveAvatarPublicUrl } from "../../utils/supabase/storage";
 
 type ProfileAvatarProps = {
   avatarPath?: string | null;
