@@ -2,7 +2,11 @@ import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
 import { Card } from "@/src/shared/components/Card";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { updateProfileAction } from "./actions";
+import {
+  removeAvatarAction,
+  updateProfileAction,
+  uploadAvatarAction,
+} from "./actions";
 import ProfileSettingsForm from "./components/ProfileSettingsForm";
 
 type Props = {
@@ -21,6 +25,8 @@ export default async function ProfileSettingsPage({ params }: Props) {
   const t = await getTranslations("Profile");
 
   const updateProfileWithLocale = updateProfileAction.bind(null, locale);
+  const uploadAvatarWithLocale = uploadAvatarAction.bind(null, locale);
+  const removeAvatarWithLocale = removeAvatarAction.bind(null, locale);
 
   return (
     <section className="flex flex-col gap-4">
@@ -32,7 +38,11 @@ export default async function ProfileSettingsPage({ params }: Props) {
       </div>
 
       <Card className="gap-4 p-4">
-        <ProfileSettingsForm onSubmitAction={updateProfileWithLocale} />
+        <ProfileSettingsForm
+          onSubmitAction={updateProfileWithLocale}
+          onUploadAvatarAction={uploadAvatarWithLocale}
+          onRemoveAvatarAction={removeAvatarWithLocale}
+        />
       </Card>
     </section>
   );

@@ -20,6 +20,8 @@ import {
 } from "../Navbar";
 import { ThemeToggle } from "../ThemeToggle";
 
+const PROFILE_AVATAR_UPDATED_EVENT = "profile-avatar-updated";
+
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -72,8 +74,20 @@ function Header() {
         });
     });
 
+    const handleAvatarUpdated = (
+      event: Event,
+    ) => {
+      const customEvent = event as CustomEvent<{ avatarPath: string | null }>;
+      setAvatarPath(customEvent.detail.avatarPath);
+    };
+    window.addEventListener(PROFILE_AVATAR_UPDATED_EVENT, handleAvatarUpdated);
+
     return () => {
       subscription.unsubscribe();
+      window.removeEventListener(
+        PROFILE_AVATAR_UPDATED_EVENT,
+        handleAvatarUpdated,
+      );
     };
   }, []);
 

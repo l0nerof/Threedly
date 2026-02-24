@@ -1,4 +1,5 @@
 import { UserIcon } from "lucide-react";
+import { resolveAvatarPublicUrl } from "../../utils/supabase/storage";
 import { cn } from "../../../shared/utils/cn";
 
 type ProfileAvatarProps = {
@@ -12,6 +13,8 @@ function ProfileAvatar({
   className,
   iconClassName,
 }: ProfileAvatarProps) {
+  const avatarPublicUrl = resolveAvatarPublicUrl(avatarPath);
+
   return (
     <div
       className={cn(
@@ -19,10 +22,10 @@ function ProfileAvatar({
         className,
       )}
     >
-      {avatarPath ? (
+      {avatarPublicUrl ? (
         <div
           className="h-full w-full bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${avatarPath})` }}
+          style={{ backgroundImage: `url(${avatarPublicUrl})` }}
         />
       ) : (
         <UserIcon className={cn("size-8", iconClassName)} />

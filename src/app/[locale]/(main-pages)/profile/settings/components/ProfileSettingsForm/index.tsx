@@ -22,15 +22,33 @@ import { Textarea } from "@/src/shared/components/Textarea";
 import { PencilIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { toast } from "sonner";
-import type { UpdateProfileActionResult } from "../../actions";
+import type {
+  AvatarActionResult,
+  UpdateProfileActionResult,
+} from "../../actions";
+
+const PROFILE_AVATAR_UPDATED_EVENT = "profile-avatar-updated";
 
 type ProfileSettingsFormProps = {
   onSubmitAction: (formData: FormData) => Promise<UpdateProfileActionResult>;
+  onUploadAvatarAction: (formData: FormData) => Promise<AvatarActionResult>;
+  onRemoveAvatarAction: () => Promise<AvatarActionResult>;
 };
 
-function ProfileSettingsForm({ onSubmitAction }: ProfileSettingsFormProps) {
+function ProfileSettingsForm({
+  onSubmitAction,
+  onUploadAvatarAction,
+  onRemoveAvatarAction,
+}: ProfileSettingsFormProps) {
   const t = useTranslations("Profile");
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -41,6 +59,8 @@ function ProfileSettingsForm({ onSubmitAction }: ProfileSettingsFormProps) {
   const [savedBio, setSavedBio] = useState("");
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [isRemovingAvatar, setIsRemovingAvatar] = useState(false);
   const avatarInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -123,6 +143,73 @@ function ProfileSettingsForm({ onSubmitAction }: ProfileSettingsFormProps) {
     }
   };
 
+  const handleAvatarUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || isUploadingAvatar || isRemovingAvatar || isLoadingProfile) {
+      event.target.value = "";
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+
+    try {
+      const formData = new FormData();
+      formData.set("avatar", file);
+      const result = await onUploadAvatarAction(formData);
+
+      if (!result.ok) {
+        toast.error(t("settings.profile.saveError"));
+        return;
+      }
+
+      const nextAvatarPath = result.avatarPath ?? null;
+      setAvatarPath(nextAvatarPath);
+      window.dispatchEvent(
+        new CustomEvent(PROFILE_AVATAR_UPDATED_EVENT, {
+          detail: { avatarPath: nextAvatarPath },
+        }),
+      );
+      toast.success(t("settings.profile.saveSuccess"));
+      router.refresh();
+    } finally {
+      setIsUploadingAvatar(false);
+      event.target.value = "";
+    }
+  };
+
+  const handleRemoveAvatar = async () => {
+    if (
+      !avatarPath ||
+      isRemovingAvatar ||
+      isUploadingAvatar ||
+      isLoadingProfile
+    ) {
+      return;
+    }
+
+    setIsRemovingAvatar(true);
+
+    try {
+      const result = await onRemoveAvatarAction();
+
+      if (!result.ok) {
+        toast.error(t("settings.profile.saveError"));
+        return;
+      }
+
+      setAvatarPath(null);
+      window.dispatchEvent(
+        new CustomEvent(PROFILE_AVATAR_UPDATED_EVENT, {
+          detail: { avatarPath: null },
+        }),
+      );
+      toast.success(t("settings.profile.saveSuccess"));
+      router.refresh();
+    } finally {
+      setIsRemovingAvatar(false);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="contents">
       <CardHeader className="flex flex-row items-center justify-between gap-4 p-0">
@@ -146,13 +233,26 @@ function ProfileSettingsForm({ onSubmitAction }: ProfileSettingsFormProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
+              disabled={
+                isUploadingAvatar || isRemovingAvatar || isLoadingProfile
+              }
               onSelect={() => {
                 avatarInputRef.current?.click();
               }}
             >
               {t("settings.profile.avatarMenu.upload")}
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={
+                !avatarPath ||
+                isUploadingAvatar ||
+                isRemovingAvatar ||
+                isLoadingProfile
+              }
+              onSelect={() => {
+                void handleRemoveAvatar();
+              }}
+            >
               {t("settings.profile.avatarMenu.remove")}
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -163,9 +263,7 @@ function ProfileSettingsForm({ onSubmitAction }: ProfileSettingsFormProps) {
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={() => {
-            // Upload and remove actions are intentionally UI-only for now.
-          }}
+          onChange={handleAvatarUpload}
         />
       </CardHeader>
 
@@ -202,7 +300,13 @@ function ProfileSettingsForm({ onSubmitAction }: ProfileSettingsFormProps) {
         <Button
           type="submit"
           variant="outline"
-          disabled={!hasChanges || isSubmitting || isLoadingProfile}
+          disabled={
+            !hasChanges ||
+            isSubmitting ||
+            isLoadingProfile ||
+            isUploadingAvatar ||
+            isRemovingAvatar
+          }
         >
           {t("settings.profile.save")}
         </Button>

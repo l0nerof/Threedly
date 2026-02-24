@@ -19,6 +19,8 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { signOutAction } from "../../settings/actions";
 
+const PROFILE_AVATAR_UPDATED_EVENT = "profile-avatar-updated";
+
 export function ProfileSidebar() {
   const t = useTranslations("Profile");
   const locale = useLocale();
@@ -58,8 +60,18 @@ export function ProfileSidebar() {
 
     void loadProfile();
 
+    const handleAvatarUpdated = (event: Event) => {
+      const customEvent = event as CustomEvent<{ avatarPath: string | null }>;
+      setAvatarPath(customEvent.detail.avatarPath);
+    };
+    window.addEventListener(PROFILE_AVATAR_UPDATED_EVENT, handleAvatarUpdated);
+
     return () => {
       isCancelled = true;
+      window.removeEventListener(
+        PROFILE_AVATAR_UPDATED_EVENT,
+        handleAvatarUpdated,
+      );
     };
   }, []);
 
