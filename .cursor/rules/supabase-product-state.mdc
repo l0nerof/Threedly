@@ -1,0 +1,15 @@
+---
+description: Supabase usage and product maturity constraints
+globs:
+  - "src/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Supabase And Product Maturity Rules
+
+- Reuse helpers from `src/business/utils/supabase` rather than creating duplicate clients.
+- Current verified usage includes auth, session refresh, username availability RPC, and avatar storage.
+- Do not hard-code a final storage architecture for large 3D model uploads unless the task explicitly requires it.
+- Billing, download quotas, and creator marketplace flows should be treated as planned work unless implemented in the current task.
+- Validate external data before treating it as trusted application state.
+- Do not invent tables, columns, RPC contracts, or RLS behavior that cannot be verified.

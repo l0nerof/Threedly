@@ -1,0 +1,30 @@
+---
+description: Core Threedly product and architecture context
+alwaysApply: true
+---
+
+# Threedly Project Context
+
+- Always answer in Ukrainian unless the task explicitly requires another language.
+- Optimize for the smallest possible diff that solves the task.
+- Before substantial changes, first give a short plan, list files to change, and surface assumptions or questions.
+- Threedly is a premium 3D model marketplace for designers, 3D visualizers, and studios.
+- The product targets Ukrainian and English-speaking users.
+- The design bar is intentionally high: avoid generic SaaS styling and preserve a polished, modern feel.
+- The current repo already contains marketing pages, pricing, auth, profile routes, theme support, and Supabase integration.
+- The full marketplace core is not finished yet. Do not assume catalog, billing, quotas, or creator uploads already exist unless you are implementing them.
+- Preserve behavior unless a task explicitly changes it.
+- Do not invent undocumented APIs, database schema, response fields, or library contracts.
+- Follow existing repository structure and conventions before introducing new patterns.
+- Never use `any`. Use `unknown` only at boundaries and narrow it safely before use.
+- Preserve semantics, accessibility, SEO, and performance for public-facing pages.
+- Keep project layering intact:
+  - `src/app` for routing, layouts, metadata, and route-level server actions
+  - `src/business` for product-aware logic and components
+  - `src/shared` for reusable primitives and generic utilities
+- Preserve locale-aware routing with `next-intl` and support for `ua` and `en`.
+- Prefer verified docs and source-of-truth tools for setup/config/API usage when available.
+
+@README.md
+@docs/project-context.md
+@docs/development-guide.md

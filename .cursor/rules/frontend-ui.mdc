@@ -1,0 +1,21 @@
+---
+description: Frontend direction for Threedly UI work
+globs:
+  - "src/**/*.tsx"
+  - "src/app/**/*.css"
+alwaysApply: false
+---
+
+# Frontend UI Rules
+
+- Favor expressive, premium UI over generic dashboard layouts.
+- Reuse the existing shared component layer and theme tokens before adding new abstractions.
+- Keep animations purposeful and not purely decorative.
+- Respect the current multilingual structure and locale-aware navigation.
+- Distinguish between implemented features and roadmap ideas in UI copy and states.
+- Do not redesign existing screens or global styles unless requested.
+- Maintain accessibility basics: semantic elements, icon button labels, keyboard support, and clear focus behavior.
+- Prefer minimal structural changes over large UI rewrites.
+- Prefer semantic markup and logical heading structure for crawlable, accessible pages.
+- Preserve or improve metadata, content clarity, and performance when touching public-facing UI.
+- Avoid heavy motion or visual effects that harm usability, reduced-motion comfort, or page performance.
