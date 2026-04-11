@@ -5,12 +5,13 @@ import { ThemeToggle } from "../ThemeToggle";
 
 async function Footer() {
   const t = await getTranslations("Footer");
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="w-full border-t py-6 md:py-12">
       <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
         <p className="text-muted-foreground text-center text-sm leading-loose md:text-left">
-          {t("copyright")}
+          {t("copyright", { year: currentYear })}
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4 md:justify-end">
           <div className="flex gap-4">

@@ -157,7 +157,7 @@
   },
 
   "Footer": {
-    "copyright": "© 2025 Threedly. All rights reserved.",
+    "copyright": "© {year} Threedly. All rights reserved.",
     "terms": "Terms",
     "privacy": "Privacy"
   },

@@ -157,7 +157,7 @@
   },
 
   "Footer": {
-    "copyright": "© 2025 Threedly. Всі права захищені.",
+    "copyright": "© {year} Threedly. Всі права захищені.",
     "terms": "Умови",
     "privacy": "Конфіденційність"
   },
