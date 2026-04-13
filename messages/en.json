@@ -25,19 +25,40 @@
 
   "Hero": {
     "badge": "3D model platform",
-    "title": "Find and publish 3D models for visualizers and designers",
+    "eyebrow": "For designers, visualizers, and studios",
+    "titleStart": "Find and save",
+    "titleAccent": "3D models",
+    "titleEnd": "for interior scenes",
+    "description": "Threedly is a bilingual platform where it feels easier to browse models, work with your profile, and build your own library.",
     "type": {
-      "one": "Search by categories, styles, and formats.",
-      "two": "Portfolio, sales, and client access in one place.",
-      "three": "Showcase new models and reach your market."
+      "one": "Cleaner previews and clearer structure.",
+      "two": "Profile, library, and pricing inside one product.",
+      "three": "A more premium feel for the archviz audience."
     },
     "primaryCta": "Browse catalog",
-    "secondaryCta": "Learn more"
+    "secondaryCta": "How it works"
   },
 
   "Pricing": {
-    "title": "Simple, transparent pricing",
-    "subtitle": "Choose a plan that fits your workflow. No hidden fees.",
+    "eyebrow": "Pricing",
+    "titleStart": "Choose the",
+    "titleAccent": "working pace",
+    "titleEnd": "that fits you best",
+    "subtitle": "From first access to the library to steady studio-level work, Threedly plans are structured to grow with your workflow.",
+    "highlights": {
+      "one": {
+        "label": "To start",
+        "value": "Free lets you explore the catalog, personal library, and the base workflow of the platform."
+      },
+      "two": {
+        "label": "To work",
+        "value": "Pro is built for regular downloads, commercial use, and a more active day-to-day workflow."
+      },
+      "three": {
+        "label": "For studios",
+        "value": "Business fits teams that need stable access, broader usage rights, and a more predictable workflow."
+      }
+    },
     "includesLabel": "Includes:",
     "billingPeriod": "/month",
     "cta": "Get started",
@@ -46,6 +67,7 @@
         "name": "Free",
         "description": "For hobbyists and getting started",
         "price": "$0",
+        "summary": "Try the platform, save selections, and understand how Threedly fits into your process.",
         "features": {
           "one": "5 uploads per month",
           "two": "Access to free models",
@@ -58,6 +80,7 @@
         "description": "For professionals",
         "price": "$29",
         "badge": "Popular",
+        "summary": "The strongest option for designers and visualizers who work with models regularly in commercial projects.",
         "features": {
           "one": "50 uploads per month",
           "two": "Access to all models",
@@ -70,6 +93,7 @@
         "name": "Business",
         "description": "For teams and studios",
         "price": "$99",
+        "summary": "For studios that need scale, broader usage rights, and a more stable team workflow.",
         "features": {
           "one": "Unlimited uploads",
           "two": "Access to all models",
@@ -80,8 +104,10 @@
         }
       }
     },
+    "faqEyebrow": "Common questions",
     "faqTitle": "Questions & Answers",
-    "faqSubtitle": "Answers to common questions about plans and billing.",
+    "faqSubtitle": "Short answers about plans, billing, and how the pricing structure works in a real workflow.",
+    "faqNote": "If your studio or team needs a different setup, pricing can evolve alongside the product.",
     "faq": {
       "one": {
         "question": "Which plan is right for me?",
@@ -107,53 +133,93 @@
   },
 
   "HowItWorks": {
-    "title": "How it works",
-    "subtitle": "Get started in three simple steps.",
+    "eyebrow": "A simple start",
+    "title": "From sign-up to your first library workflow",
+    "subtitle": "Three clear steps to enter the product, choose the right setup, and move into the model workflow.",
     "steps": {
       "one": {
         "tag": "Step 1",
         "title": "Create account",
-        "description": "Sign up in seconds with your email and start exploring right away."
+        "description": "Sign up with email and move straight into a bilingual interface with access to the core product areas.",
+        "caption": "Your account is the entry point to the catalog, personal library, profile, and the next stages of the platform."
       },
       "two": {
         "tag": "Step 2",
         "title": "Choose your plan",
-        "description": "Start free and upgrade later when you need more downloads or publishing limits."
+        "description": "Start with Free or pick the level that matches your download pace and the needs of your team.",
+        "caption": "Your plan sets the way you work with the platform: for exploration, regular production, or studio use."
       },
       "three": {
         "tag": "Step 3",
         "title": "Download or publish",
-        "description": "Download models for your work or upload your own in just a few clicks."
+        "description": "Move into the catalog, collect references in your personal library, and grow your profile on the platform.",
+        "caption": "Threedly brings model discovery, account workflow, and the foundation for creator scenarios into one environment."
       }
     }
   },
 
   "ForWho": {
-    "title": "Who is it for",
-    "subtitle": "Built for people who need reliable 3D assets in production workflows.",
+    "eyebrow": "Who it is for",
+    "title": "Two different ways of working with 3D models",
+    "subtitle": "Threedly should work equally well for people sourcing models fast and for people who want a stronger presentation for their own work.",
+    "pointLabel": "Point {number}",
     "designers": {
+      "label": "Scenario 01",
       "title": "Designers & Visualizers",
+      "headline": "Faster model selection for working scenes",
+      "description": "For people building interior scenes on deadlines and wanting to spend less time searching for the right asset.",
+      "meta": {
+        "one": {
+          "label": "Focus",
+          "value": "Find the right model for a specific space faster"
+        },
+        "two": {
+          "label": "Important",
+          "value": "Easy previewing, clear formats, and a direct path into the library"
+        }
+      },
+      "note": "Threedly should help narrow the search, surface the right model, and make it easy to return to it later in your library.",
       "items": {
-        "one": "Find models fast with focused search and filters.",
-        "two": "Use clean previews with practical specs.",
-        "three": "Download in common formats for real projects."
+        "one": "Narrow the search through categories, curated groupings, and a more readable page structure.",
+        "two": "Judge models through previews, basic specifications, and cleaner content presentation.",
+        "three": "Save selected items to the library so they are easier to revisit across new projects."
       }
     },
     "creators": {
+      "label": "Scenario 02",
       "title": "Creators",
+      "headline": "A stronger presentation for work and profile",
+      "description": "For people who want not only to upload models, but to build a more professional presence around their work.",
+      "meta": {
+        "one": {
+          "label": "Focus",
+          "value": "Present models, profile, and portfolio inside one environment"
+        },
+        "two": {
+          "label": "Important",
+          "value": "Content trust, polished presentation, and a foundation for future growth"
+        }
+      },
+      "note": "The platform should strengthen how the work is perceived: from the first impression to the profile where models and author details come together.",
       "items": {
-        "one": "Upload new models in minutes.",
-        "two": "Manage your model pages and content.",
-        "three": "Reach your audience as the platform grows."
+        "one": "Show models in an environment where attention stays on the work instead of on random interface noise.",
+        "two": "Bring profile, models, and essential author details together in one professional space.",
+        "three": "Grow with creator scenarios that support presentation quality and trust around the content."
       }
     }
   },
 
   "FinalCta": {
-    "title": "Ready to explore?",
-    "subtitle": "Browse the catalog or create an account to get started.",
+    "eyebrow": "Start with the foundation",
+    "title": "Try Threedly now",
+    "subtitle": "Browse the catalog or create an account and start working with the library inside a more composed, premium interface.",
     "primaryCta": "Browse catalog",
-    "secondaryCta": "Create account"
+    "secondaryCta": "Create account",
+    "notes": {
+      "one": "The catalog helps move faster from search to a model selection for a specific project.",
+      "two": "Profile and library keep chosen models and the personal workspace together in one place.",
+      "three": "Free, Pro, and Max create the foundation for different working rhythms, from first use to studio workflows."
+    }
   },
 
   "Footer": {
@@ -259,6 +325,25 @@
   },
 
   "Auth": {
+    "visual": {
+      "eyebrow": "Threedly account",
+      "title": "Step into a space where catalog, library, and profile work together",
+      "description": "Sign in to save models, return to your library, and manage your profile inside one workspace.",
+      "cards": {
+        "one": {
+          "label": "Catalog",
+          "value": "Fast access to models and curated selections from the first session."
+        },
+        "two": {
+          "label": "Library",
+          "value": "Saved selections and chosen models in one personal space."
+        },
+        "three": {
+          "label": "Profile",
+          "value": "The foundation for account settings, presence, and future creator workflows."
+        }
+      }
+    },
     "login": {
       "title": "Welcome back",
       "description": "Don’t have an account?",

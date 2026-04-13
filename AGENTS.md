@@ -58,6 +58,10 @@ The audience is visually demanding. Avoid generic SaaS-looking output.
 - Prefer `zod` and existing schema/form patterns for validation.
 - Never use `any`. `unknown` is allowed only at external boundaries and must be narrowed before use.
 - Reuse existing Supabase helpers in `src/business/utils/supabase`.
+- Prefer ready-made, maintained building blocks over ad hoc implementations when they fit the need.
+- For UI primitives and common interaction patterns, prefer existing `shadcn/ui` components first.
+- If a suitable `shadcn` component is missing but clearly fits the task, add/install it instead of writing a custom replacement from scratch.
+- Only build custom UI behavior when existing `shadcn`, shared, or business-layer components cannot reasonably support the requirement.
 - Do not invent storage or billing architecture as if it already exists unless the task is explicitly to design or implement it.
 - Distinguish clearly between implemented behavior and roadmap assumptions.
 
@@ -65,6 +69,11 @@ The audience is visually demanding. Avoid generic SaaS-looking output.
 
 - Do not create new architectural layers or folders unless there is a clear need.
 - Keep components focused and extract subcomponents/hooks only when it meaningfully reduces complexity.
+- Do not keep reusable arrays, step definitions, tab configs, display maps, or similar view configuration inline in large component files without a good reason.
+- Move reusable constants, configs, and structured UI data into appropriate files under existing `constants`, `types`, or nearby extracted modules when that improves reuse, readability, or maintainability.
+- If logic, data shape, or presentation structure is likely to be reused across routes or components, extract it instead of duplicating or embedding it deeply in one file.
+- Prefer standard Tailwind scale values and existing utilities before using arbitrary values like `[]`.
+- Use arbitrary values only when the design clearly requires a non-standard value and the existing Tailwind scale or tokens do not cover the need well.
 - Do not redesign existing UI or change global styles unless requested.
 - Maintain baseline accessibility: semantic markup, labels for icon-only controls, keyboard support, and visible focus behavior.
 - Prefer semantic HTML that supports both accessibility and SEO.

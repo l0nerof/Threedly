@@ -1,126 +1,199 @@
 "use client";
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/src/shared/components/Card";
+  AUTO_PLAY_DELAY,
+  howItWorksSteps,
+} from "@/src/business/constants/howItWorks";
 import { cn } from "@/src/shared/utils/cn";
-import { CreditCard, Download, UserPlus } from "lucide-react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
-import { StepKey } from "../../types/howItWorksSteps";
+import { useEffect, useState } from "react";
 
 function HowItWorks() {
   const t = useTranslations("HowItWorks");
   const [activeStep, setActiveStep] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const activeConfig = howItWorksSteps[activeStep];
+  const ActiveIcon = activeConfig.icon;
 
-  const steps = useMemo(
-    () => [
-      {
-        key: "one" as StepKey,
-        icon: UserPlus,
-      },
-      {
-        key: "two" as StepKey,
-        icon: CreditCard,
-      },
-      {
-        key: "three" as StepKey,
-        icon: Download,
-      },
-    ],
-    [],
-  );
+  useEffect(() => {
+    if (isPaused) {
+      return undefined;
+    }
+
+    const interval = window.setInterval(() => {
+      setActiveStep((current) => (current + 1) % howItWorksSteps.length);
+    }, AUTO_PLAY_DELAY);
+
+    return () => window.clearInterval(interval);
+  }, [isPaused]);
 
   return (
-    <motion.section
+    <section
       id="how-it-works"
       aria-labelledby="how-it-works-title"
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.45, ease: "easeOut" }}
-      className="container flex scroll-mt-24 flex-col items-center gap-10 py-20 sm:scroll-mt-28 sm:py-24"
+      className="relative overflow-hidden py-22 sm:py-28"
     >
-      <div className="flex flex-col items-center gap-3">
-        <h2
-          id="how-it-works-title"
-          className="text-2xl font-semibold tracking-tight sm:text-3xl"
-        >
-          {t("title")}
-        </h2>
-        <p className="text-muted-foreground max-w-2xl text-sm sm:text-base">
-          {t("subtitle")}
-        </p>
-      </div>
-
-      <div className="relative w-full">
-        <div className="bg-border absolute top-0 bottom-0 left-4 hidden w-px sm:block" />
+      <div className="container grid gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-14">
         <motion.div
-          aria-hidden
-          className="from-primary/80 via-primary to-primary/30 absolute top-0 left-4 hidden w-px origin-top bg-linear-to-b shadow-[0_0_24px_hsl(var(--primary)/0.4)] sm:block"
-          animate={{
-            height: `${((activeStep + 1) / steps.length) * 100}%`,
-          }}
-          transition={{ type: "spring", stiffness: 200, damping: 28 }}
-        />
+          className="flex flex-col gap-6 lg:sticky lg:top-28 lg:self-start"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+        >
+          <div className="space-y-4">
+            <span className="text-primary text-xs font-medium tracking-[0.2em] uppercase">
+              {t("eyebrow")}
+            </span>
+            <h2
+              id="how-it-works-title"
+              className="max-w-lg text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl"
+            >
+              {t("title")}
+            </h2>
+            <p className="text-muted-foreground max-w-xl text-base leading-7 sm:text-lg">
+              {t("subtitle")}
+            </p>
+          </div>
 
-        <ol className="flex w-full flex-col gap-6 sm:gap-8">
-          {steps.map((step, index) => {
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeConfig.key}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -14 }}
+              transition={{ duration: 0.28, ease: "easeOut" }}
+              className="border-border/60 bg-card/65 relative overflow-hidden rounded-4xl border p-6 backdrop-blur-sm sm:p-7"
+            >
+              <div
+                aria-hidden
+                className="absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_left,hsl(var(--primary)/0.22),transparent_62%)]"
+              />
+              <div className="relative z-10 flex flex-col gap-6">
+                <div className="flex items-start justify-between gap-4">
+                  <span className="text-muted-foreground text-xs font-medium tracking-[0.18em] uppercase">
+                    {t(`steps.${activeConfig.key}.tag`)}
+                  </span>
+                  <div className="bg-primary/10 text-primary border-primary/15 flex size-11 items-center justify-center rounded-2xl border">
+                    <ActiveIcon className="size-5" aria-hidden />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <h3 className="text-2xl leading-tight font-semibold text-balance sm:text-3xl">
+                    {t(`steps.${activeConfig.key}.title`)}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-7 sm:text-base">
+                    {t(`steps.${activeConfig.key}.description`)}
+                  </p>
+                </div>
+
+                <div className="border-border/50 bg-background/72 rounded-3xl border p-4">
+                  <p className="text-foreground/82 text-sm leading-7 sm:text-base">
+                    {t(`steps.${activeConfig.key}.caption`)}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
+
+        <ol
+          className="grid gap-4"
+          onMouseLeave={() => setIsPaused(false)}
+          onBlur={() => setIsPaused(false)}
+        >
+          {howItWorksSteps.map((step, index) => {
             const Icon = step.icon;
-            const isActive = index <= activeStep;
+            const isActive = index === activeStep;
 
             return (
               <motion.li
                 key={step.key}
-                className="relative pl-0 sm:pl-14"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.45 }}
-                transition={{ duration: 0.35, delay: index * 0.08 }}
-                onViewportEnter={() => setActiveStep(index)}
+                viewport={{ once: true, amount: 0.35 }}
+                transition={{ duration: 0.4, delay: index * 0.07 }}
               >
-                <div
+                <button
+                  type="button"
+                  onClick={() => setActiveStep(index)}
+                  onMouseEnter={() => {
+                    setActiveStep(index);
+                    setIsPaused(true);
+                  }}
+                  onFocus={() => {
+                    setActiveStep(index);
+                    setIsPaused(true);
+                  }}
                   className={cn(
-                    "bg-background text-muted-foreground ring-border absolute top-8 -left-0.5 hidden h-9 w-9 items-center justify-center rounded-full ring-2 transition-colors sm:flex",
+                    "border-border/60 bg-card/45 relative flex w-full items-start gap-4 overflow-hidden rounded-[1.8rem] border p-5 text-left transition-all duration-300 sm:gap-5 sm:p-6",
                     isActive &&
-                      "text-primary ring-primary/60 shadow-[0_0_16px_hsl(var(--primary)/0.35)]",
+                      "border-primary/35 bg-primary/6 shadow-[0_24px_70px_hsl(var(--primary)/0.12)]",
                   )}
+                  aria-pressed={isActive}
                 >
-                  <Icon className="size-5" aria-hidden />
-                </div>
+                  <div
+                    aria-hidden
+                    className={cn(
+                      "absolute inset-x-0 top-0 h-px bg-transparent transition-colors duration-300",
+                      isActive && "bg-primary/50",
+                    )}
+                  />
 
-                <Card
-                  className={cn(
-                    "border-border/80 flex flex-col gap-4 p-6 transition-all duration-300",
-                    isActive && "border-primary/40 shadow-md",
-                  )}
-                >
-                  <CardHeader className="flex flex-col gap-2 p-0">
-                    <span className="text-muted-foreground text-xs">
-                      {t(`steps.${step.key}.tag`)}
-                    </span>
-                    <CardTitle className="mt-1 text-lg sm:text-xl">
-                      {t(`steps.${step.key}.title`)}
-                    </CardTitle>
-                  </CardHeader>
+                  <span className="text-muted-foreground/80 min-w-12 text-3xl leading-none font-semibold tracking-tight sm:min-w-16 sm:text-5xl">
+                    0{index + 1}
+                  </span>
 
-                  <CardContent className="p-0">
-                    <CardDescription className="text-sm sm:text-base">
+                  <div className="flex flex-1 flex-col gap-3">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="space-y-1">
+                        <span className="text-primary text-xs font-medium tracking-[0.16em] uppercase">
+                          {t(`steps.${step.key}.tag`)}
+                        </span>
+                        <h3 className="text-lg leading-tight font-semibold sm:text-2xl">
+                          {t(`steps.${step.key}.title`)}
+                        </h3>
+                      </div>
+
+                      <div
+                        className={cn(
+                          "bg-background text-muted-foreground border-border/60 flex size-11 shrink-0 items-center justify-center rounded-2xl border transition-colors",
+                          isActive &&
+                            "bg-primary/10 text-primary border-primary/20",
+                        )}
+                      >
+                        <Icon className="size-5" aria-hidden />
+                      </div>
+                    </div>
+
+                    <p className="text-muted-foreground max-w-2xl text-sm leading-7 sm:text-base">
                       {t(`steps.${step.key}.description`)}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
+                    </p>
+
+                    <div className="bg-border/60 mt-2 h-1.5 w-full overflow-hidden rounded-full">
+                      {isActive ? (
+                        <motion.div
+                          key={step.key}
+                          className="bg-primary h-full rounded-full"
+                          initial={{ width: "0%" }}
+                          animate={{ width: "100%" }}
+                          transition={{
+                            duration: isPaused ? 0.25 : AUTO_PLAY_DELAY / 1000,
+                            ease: "linear",
+                          }}
+                        />
+                      ) : null}
+                    </div>
+                  </div>
+                </button>
               </motion.li>
             );
           })}
         </ol>
       </div>
-    </motion.section>
+    </section>
   );
 }
 

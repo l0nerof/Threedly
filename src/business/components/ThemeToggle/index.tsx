@@ -11,19 +11,32 @@ import { Theme } from "@/src/shared/types/theme";
 import { Laptop, Moon, Sun } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
+import { useSyncExternalStore } from "react";
 import { themeOptions } from "../../constants/themeOptions";
+
+const emptySubscribe = () => () => {};
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme();
   const t = useTranslations("Header");
 
+  const currentTheme = useSyncExternalStore(
+    emptySubscribe,
+    () => theme ?? Theme.SYSTEM,
+    () => Theme.SYSTEM,
+  );
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon" className="relative">
-          {theme === Theme.LIGHT && <Sun className="text-foreground size-5" />}
-          {theme === Theme.DARK && <Moon className="text-foreground size-5" />}
-          {theme === Theme.SYSTEM && (
+          {currentTheme === Theme.LIGHT && (
+            <Sun className="text-foreground size-5" />
+          )}
+          {currentTheme === Theme.DARK && (
+            <Moon className="text-foreground size-5" />
+          )}
+          {currentTheme === Theme.SYSTEM && (
             <Laptop className="text-foreground size-5" />
           )}
 
