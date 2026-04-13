@@ -16,7 +16,7 @@ function FinalCta() {
         <LightRays
           className="z-0 opacity-35 dark:hidden"
           raysOrigin="top-center"
-          raysColor="#28160a"
+          raysColor="#000000"
           raysSpeed={1.2}
           lightSpread={1.12}
           rayLength={2.1}
