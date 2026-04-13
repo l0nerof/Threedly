@@ -23,7 +23,7 @@ export const pricingPlanMeta: Record<
 > = {
   free: {
     icon: Sparkles,
-    buttonVariant: "secondary",
+    buttonVariant: "outline",
     cardClassName:
       "bg-card/70 border-border/60 shadow-[0_18px_50px_hsl(var(--foreground)/0.06)]",
     iconWrapClassName: "bg-background text-foreground border-border/60",
