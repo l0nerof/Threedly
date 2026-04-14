@@ -75,6 +75,7 @@
           "four": "Community support"
         }
       },
+
       "pro": {
         "name": "Pro",
         "description": "For professionals",
@@ -89,6 +90,7 @@
           "five": "Model customization"
         }
       },
+
       "business": {
         "name": "Business",
         "description": "For teams and studios",
@@ -113,18 +115,22 @@
         "question": "Which plan is right for me?",
         "answer": "Start with Free to explore the library. Upgrade to Pro for commercial use or Business for team workflows."
       },
+
       "two": {
         "question": "What payment options do you accept?",
         "answer": "We accept major credit cards. Annual billing and invoices are available for Business plans."
       },
+
       "three": {
         "question": "Can I cancel or switch plans?",
         "answer": "Yes. You can change plans at any time and the new plan will take effect on your next billing cycle."
       },
+
       "four": {
         "question": "Do you offer refunds?",
         "answer": "We offer a 14-day refund window for paid plans. Contact support if you need help."
       },
+
       "five": {
         "question": "What happens if I hit usage limits?",
         "answer": "You can upgrade instantly or wait until limits reset at the start of the next billing cycle."
@@ -143,12 +149,14 @@
         "description": "Sign up with email and move straight into a bilingual interface with access to the core product areas.",
         "caption": "Your account is the entry point to the catalog, personal library, profile, and the next stages of the platform."
       },
+
       "two": {
         "tag": "Step 2",
         "title": "Choose your plan",
         "description": "Start with Free or pick the level that matches your download pace and the needs of your team.",
         "caption": "Your plan sets the way you work with the platform: for exploration, regular production, or studio use."
       },
+
       "three": {
         "tag": "Step 3",
         "title": "Download or publish",
@@ -185,6 +193,7 @@
         "three": "Save selected items to the library so they are easier to revisit across new projects."
       }
     },
+
     "creators": {
       "label": "Scenario 02",
       "title": "Creators",
@@ -243,6 +252,7 @@
         "settings": "Settings"
       }
     },
+
     "overview": {
       "title": "Profile Dashboard",
       "planBadge": "Free plan",
@@ -252,30 +262,36 @@
           "label": "Downloads this month",
           "value": "0"
         },
+
         "remaining": {
           "label": "Remaining downloads",
           "value": "5"
         },
+
         "uploads": {
           "label": "Published uploads",
           "value": "0"
         },
+
         "favorites": {
           "label": "Favorites",
           "value": "0"
         }
       },
+
       "continue": {
         "title": "Continue where you left off",
         "description": "You have no downloaded models yet. Start from the catalog.",
         "cta": "Browse catalog"
       },
+
       "activity": {
         "title": "Activity",
         "description": "Recent updates in your dashboard.",
         "placeholder": "No activity yet."
       }
     },
+
     "library": {
       "title": "My Library",
       "subtitle": "Your downloaded and saved models.",
@@ -285,6 +301,7 @@
         "description": "You have not downloaded any models yet."
       }
     },
+
     "uploads": {
       "title": "Uploads",
       "subtitle": "Manage your published models.",
@@ -295,6 +312,7 @@
         "description": "Add your first model."
       }
     },
+
     "settings": {
       "title": "Settings",
       "subtitle": "Update public profile data and manage your account.",
@@ -316,6 +334,7 @@
         "saveSuccess": "Changes saved successfully.",
         "saveError": "Failed to save changes."
       },
+
       "account": {
         "title": "Account",
         "description": "You can end your session at any time.",
@@ -348,6 +367,8 @@
       "title": "Welcome back",
       "description": "Don’t have an account?",
       "link": "Sign up",
+      "forgotPassword": "Forgot password?",
+      "passwordResetSuccessMessage": "Password updated. Sign in using your new password.",
       "emailLabel": "Email address",
       "emailPlaceholder": "you@example.com",
       "passwordLabel": "Password",
@@ -364,6 +385,49 @@
       },
       "submit": "Log in"
     },
+
+    "forgotPassword": {
+      "title": "Reset your password",
+      "description": "Enter your email to receive a password reset link.",
+      "backToLogin": "Back to login",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "submit": "Send reset email",
+      "submitting": "Sending...",
+      "success": "If an account exists for this email address, the password reset link has been sent.",
+      "errors": {
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Enter a valid email.",
+        "rateLimit": "Too many attempts. Please try again a bit later.",
+        "generic": "Unable to send the password reset email. Please try again."
+      }
+    },
+
+    "resetPassword": {
+      "title": "Set a new password",
+      "description": "Choose a new password after opening the email link.",
+      "backToLogin": "Back to login",
+      "requestNewLink": "Request a new link",
+      "checking": "Checking your recovery link...",
+      "passwordLabel": "New password",
+      "passwordPlaceholder": "Enter a new password",
+      "confirmPasswordLabel": "Confirm new password",
+      "confirmPasswordPlaceholder": "Repeat the new password",
+      "showPasswordButton": "Show password",
+      "hidePasswordButton": "Hide password",
+      "submit": "Save new password",
+      "submitting": "Saving...",
+      "success": "Your password has been updated. You can now sign in with the new password.",
+      "errors": {
+        "passwordMinLength": "Password must be at least 8 characters.",
+        "confirmPasswordRequired": "Please confirm your password.",
+        "passwordMismatch": "Passwords do not match.",
+        "samePassword": "The new password must be different from the current one.",
+        "invalidRecoveryState": "The recovery link is invalid or has expired.",
+        "generic": "Unable to update the password. Please try again."
+      }
+    },
+
     "signup": {
       "title": "Create an account",
       "description": "Already have an account?",
@@ -399,6 +463,7 @@
       },
       "submit": "Create account"
     },
+
     "verifyEmail": {
       "title": "Verify your email",
       "description": "We sent a 8-digit code to your email.",
@@ -423,6 +488,7 @@
         "generic": "Unable to verify code. Please try again."
       }
     },
+
     "valueBullets": {
       "catalog": "Instant access to catalog",
       "formats": "Download in common formats",
@@ -430,6 +496,7 @@
       "beta": "beta"
     }
   },
+
   "Errors": {
     "badge": "404",
     "title": "Page not found",
