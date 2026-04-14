@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
+      HUSKY: 0
       NEXT_TELEMETRY_DISABLED: 1
     steps:
       - name: Checkout repository
