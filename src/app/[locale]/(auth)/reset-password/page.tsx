@@ -1,16 +1,15 @@
 import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
 import { Link } from "@/src/i18n/routing";
-import { Download, Search, Upload } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import AuthCard from "../components/AuthCard";
-import SignupForm from "../components/SignupForm";
+import ResetPasswordForm from "../components/ResetPasswordForm";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
-export default async function SignupPage({ params }: Props) {
+export default async function ResetPasswordPage({ params }: Props) {
   const { locale } = await params;
 
   if (!isLocaleCode(locale)) {
@@ -19,8 +18,7 @@ export default async function SignupPage({ params }: Props) {
 
   setRequestLocale(locale);
 
-  const t = await getTranslations("Auth.signup");
-  const valueBulletsT = await getTranslations("Auth.valueBullets");
+  const t = await getTranslations("Auth.resetPassword");
 
   return (
     <AuthCard
@@ -32,22 +30,12 @@ export default async function SignupPage({ params }: Props) {
             href="/login"
             className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors duration-300"
           >
-            {t("link")}
+            {t("backToLogin")}
           </Link>
         </>
       }
-      valueBullets={[
-        { icon: Search, label: valueBulletsT("catalog") },
-        { icon: Download, label: valueBulletsT("formats") },
-        {
-          icon: Upload,
-          label: valueBulletsT("publish"),
-          isBeta: true,
-          betaLabel: valueBulletsT("beta"),
-        },
-      ]}
     >
-      <SignupForm />
+      <ResetPasswordForm />
     </AuthCard>
   );
 }

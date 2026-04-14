@@ -8,10 +8,12 @@ import LoginForm from "../components/LoginForm";
 
 type Props = {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ reset?: string }>;
 };
 
-export default async function LoginPage({ params }: Props) {
+export default async function LoginPage({ params, searchParams }: Props) {
   const { locale } = await params;
+  const { reset } = await searchParams;
 
   if (!isLocaleCode(locale)) {
     notFound();
@@ -30,7 +32,7 @@ export default async function LoginPage({ params }: Props) {
           {t("description")}{" "}
           <Link
             href="/signup"
-            className="text-primary underline underline-offset-4"
+            className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors duration-300"
           >
             {t("link")}
           </Link>
@@ -47,7 +49,11 @@ export default async function LoginPage({ params }: Props) {
         },
       ]}
     >
-      <LoginForm />
+      <LoginForm
+        successMessage={
+          reset === "success" ? t("passwordResetSuccessMessage") : undefined
+        }
+      />
     </AuthCard>
   );
 }

@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { resendEmailOtp, verifyEmailOtp } from "../../verify-email/actions";
 
 const RESEND_COOLDOWN_SECONDS = 60;
-const OTP_LENGTH = 8;
+const OTP_LENGTH = 6;
 
 type VerifyEmailFormProps = {
   initialEmail: string;
@@ -180,8 +180,6 @@ function VerifyEmailForm({ initialEmail }: VerifyEmailFormProps) {
                 <InputOTPSlot index={3} className="h-11 w-full flex-1" />
                 <InputOTPSlot index={4} className="h-11 w-full flex-1" />
                 <InputOTPSlot index={5} className="h-11 w-full flex-1" />
-                <InputOTPSlot index={6} className="h-11 w-full flex-1" />
-                <InputOTPSlot index={7} className="h-11 w-full flex-1" />
               </InputOTPGroup>
             </InputOTP>
             <p className="text-muted-foreground text-xs">{t("otpHint")}</p>

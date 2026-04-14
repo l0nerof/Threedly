@@ -30,7 +30,7 @@ export default async function VerifyEmailPage({ params, searchParams }: Props) {
           {t("description")}{" "}
           <Link
             href="/signup"
-            className="text-primary underline underline-offset-4"
+            className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors duration-300"
           >
             {t("backToSignup")}
           </Link>

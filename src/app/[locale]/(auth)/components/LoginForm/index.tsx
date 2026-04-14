@@ -3,6 +3,7 @@
 import { loginWithEmailPassword } from "@/src/app/[locale]/(auth)/login/actions";
 import { loginSchema } from "@/src/business/schemas/login";
 import type { LoginFormValues } from "@/src/business/types/login";
+import { Link } from "@/src/i18n/routing";
 import { Button } from "@/src/shared/components/Button";
 import {
   Field,
@@ -24,7 +25,11 @@ const defaultValues: LoginFormValues = {
   password: "",
 };
 
-function LoginForm() {
+type LoginFormProps = {
+  successMessage?: string;
+};
+
+function LoginForm({ successMessage }: LoginFormProps) {
   const t = useTranslations("Auth.login");
   const locale = useLocale();
   const router = useRouter();
@@ -158,7 +163,18 @@ function LoginForm() {
           </FieldContent>
         </Field>
       </FieldGroup>
+      {successMessage ? (
+        <p className="text-sm text-green-600 dark:text-green-500">
+          {successMessage}
+        </p>
+      ) : null}
       <FieldError errors={serverError ? [{ message: serverError }] : []} />
+      <Link
+        href="/forgot-password"
+        className="text-primary hover:text-primary/80 text-sm underline underline-offset-4 transition-colors duration-300"
+      >
+        {t("forgotPassword")}
+      </Link>
       <Button type="submit" className="w-full" disabled={isSubmitting}>
         {t("submit")}
       </Button>
