@@ -80,10 +80,22 @@ npm install
 npm run dev
 ```
 
+By default, `npm run dev` starts the local Supabase stack and runs the frontend against the local database.
+
+To run the frontend against the real Supabase project instead, keep your real project credentials in `.env.local` and use:
+
+```bash
+npm run dev:remote
+```
+
 Useful scripts:
 
 ```bash
 npm run dev
+npm run dev:remote
+npm run db:start
+npm run db:reset
+npm run db:seed
 npm run build
 npm run start
 npm run lint
@@ -94,6 +106,23 @@ npm run format
 ## Environment Variables
 
 Copy `.env.example` to `.env.local` and fill in the required values for your environment.
+
+Keep the real Supabase project credentials in `.env.local`.
+
+When you run `npm run dev`, the local wrapper injects local Supabase credentials into the current `next dev` process without rewriting `.env.local`. When you need the real project, use `npm run dev:remote`.
+
+Local helper files created during development:
+
+- `.env.demo-user.local` stores the seeded demo user credentials for the local database
+- `.env.local` should remain your remote/default Supabase configuration
+
+There is no need to keep `.env.remote.local` or `.env.supabase.local` anymore. The local workflow now injects local credentials only into the current dev process.
+
+Local Supabase URLs:
+
+- Studio: `http://127.0.0.1:54323`
+- API: `http://127.0.0.1:54321`
+- Postgres: `postgresql://postgres:postgres@127.0.0.1:54322/postgres`
 
 Environment values are used by the browser, server, and session proxy helpers in `src/business/utils/supabase/*`.
 

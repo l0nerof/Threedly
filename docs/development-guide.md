@@ -19,6 +19,10 @@
 ```bash
 npm install
 npm run dev
+npm run dev:remote
+npm run db:start
+npm run db:reset
+npm run db:seed
 npm run build
 npm run lint
 npm run typecheck
@@ -33,6 +37,22 @@ Expected public environment variables:
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 ```
+
+Recommended workflow:
+
+- keep the real Supabase project credentials in `.env.local`
+- use `npm run dev` for local frontend + local Supabase
+- use `npm run dev:remote` when you want the frontend to talk to the real Supabase project
+- use `npm run db:start`, `npm run db:reset`, and `npm run db:seed` only for the local Supabase stack
+
+How local mode works:
+
+- `npm run dev` starts local Supabase if needed
+- the wrapper injects the local URL and publishable key directly into the `next dev` process
+- `.env.local` is not rewritten during local startup
+- Supabase Studio is available at `http://127.0.0.1:54323`
+- local demo user credentials are written to `.env.demo-user.local`
+- `.env.remote.local` and `.env.supabase.local` are no longer part of the workflow
 
 These values are used by:
 
