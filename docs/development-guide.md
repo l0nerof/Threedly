@@ -195,12 +195,18 @@ When implementing testable features, prefer designs that make side effects injec
 - Playwright config lives in `playwright.config.ts`.
 - E2E tests live in `e2e/` with a `fixtures -> pages -> tests` structure.
 - Coverage and known gaps are tracked in `e2e/README.md`.
-- The default web server command is `node ./scripts/local-supabase.mjs dev --remote`.
+- The default local web server command is `node ./scripts/local-supabase.mjs dev --remote`.
+- In CI, Playwright switches to `node ./scripts/local-supabase.mjs dev` so e2e can run against local Supabase without remote secrets.
 - The browser context is pinned to `uk-UA` to keep locale-based flows deterministic.
 - This keeps smoke tests focused on app behavior without requiring local Supabase containers.
 - If a compatible app server is already running on `http://localhost:3000`, Playwright reuses it automatically.
 - Browser binaries can be installed with `npm run e2e:install`.
 - The initial smoke spec covers the default locale redirect and the home-to-pricing navigation path.
+
+### CI Workflows
+
+- `.github/workflows/quality.yml` runs lint, typecheck, and format checks.
+- `.github/workflows/test.yml` runs unit and e2e tests in separate jobs.
 
 ### Vitest Setup
 

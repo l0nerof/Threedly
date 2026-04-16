@@ -2,6 +2,11 @@ import { defineConfig, devices } from "@playwright/test";
 
 const port = Number(process.env.PORT ?? 3000);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${port}`;
+const webServerCommand =
+  process.env.PLAYWRIGHT_WEB_SERVER_COMMAND ??
+  (process.env.CI
+    ? "node ./scripts/local-supabase.mjs dev"
+    : "node ./scripts/local-supabase.mjs dev --remote");
 
 export default defineConfig({
   testDir: "./e2e/tests",
@@ -25,10 +30,10 @@ export default defineConfig({
     viewport: { width: 1440, height: 960 },
   },
   webServer: {
-    command: "node ./scripts/local-supabase.mjs dev --remote",
+    command: webServerCommand,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: process.env.CI ? 240_000 : 120_000,
   },
   projects: [
     {

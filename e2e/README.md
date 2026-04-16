@@ -11,6 +11,7 @@ This file documents the Playwright coverage in this repository and should stay i
 - Keep valid remote Supabase credentials in `.env.local` for the built-in web server mode.
 - The browser context is pinned to `uk-UA`, so locale-sensitive smoke tests are expected to resolve `/` to `/ua`.
 - If the app is already running on `http://localhost:3000`, Playwright reuses the existing server automatically.
+- In CI, Playwright switches to `node ./scripts/local-supabase.mjs dev` so e2e can run without remote Supabase secrets.
 
 ## Smoke (`smoke.spec.ts`)
 
