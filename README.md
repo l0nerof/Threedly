@@ -98,10 +98,59 @@ npm run db:reset
 npm run db:seed
 npm run build
 npm run start
+npm run e2e:install
+npm run e2e
+npm run e2e:headed
+npm run e2e:ui
+npm run test:unit
+npm run test:unit:watch
 npm run lint
 npm run typecheck
 npm run format
 ```
+
+## Unit Testing
+
+The repository now includes a `Vitest` setup for unit tests under `unit/`.
+
+Quick start:
+
+```bash
+npm run test:unit
+```
+
+Notes:
+
+- The setup follows the current Next.js `Vitest` guidance with `@vitejs/plugin-react` and `jsdom`.
+- Path aliases are resolved through Vite's native `tsconfig` paths support.
+- Unit tests live under `unit/` and follow a `fixtures -> mocks -> tests` structure similar to the e2e setup.
+- The first unit smoke covers the `useIsMobile` hook and verifies desktop/mobile behavior through a reusable `matchMedia` mock.
+- Async server components are still better covered with e2e tests.
+- Coverage tracking and known gaps live in `unit/README.md` and should be kept in sync with the actual specs.
+
+More details live in [unit/README.md](unit/README.md).
+
+## End-To-End Testing
+
+The repository now includes a Playwright setup for e2e coverage under `e2e/`.
+
+Quick start:
+
+```bash
+npm run e2e:install
+npm run e2e
+```
+
+Notes:
+
+- Playwright is configured to start the app in remote Supabase mode through `node ./scripts/local-supabase.mjs dev --remote`.
+- Keep valid remote Supabase credentials in `.env.local` for the built-in web server flow.
+- Playwright runs with `uk-UA` locale so locale-aware smoke tests stay deterministic.
+- If you already have the app running on `http://localhost:3000`, Playwright will reuse the existing server automatically.
+- The first smoke test covers the default locale redirect and navigation from the home page to pricing.
+- Coverage tracking and known gaps live in `e2e/README.md` and should be kept in sync with the actual specs.
+
+More details live in [e2e/README.md](e2e/README.md).
 
 ## Environment Variables
 
@@ -132,6 +181,8 @@ More context lives here:
 
 - [Project Context](docs/project-context.md)
 - [Development Guide](docs/development-guide.md)
+- [Unit Testing Guide](unit/README.md)
+- [E2E Testing Guide](e2e/README.md)
 - [Agent Rules](AGENTS.md)
 
 ## Implementation Notes

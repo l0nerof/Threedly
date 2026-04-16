@@ -5,6 +5,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   /* config options here */
+  allowedDevOrigins: ["127.0.0.1"],
   experimental: {
     serverActions: {
       bodySizeLimit: "5mb",
