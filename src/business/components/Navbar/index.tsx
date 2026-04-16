@@ -2,7 +2,7 @@
 
 import { Link } from "@/src/i18n/routing";
 import { cn } from "@/src/shared/utils/cn";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import {
   AnimatePresence,
   motion,
@@ -24,11 +24,17 @@ type NavBodyProps = {
   visible?: boolean;
 };
 
+type NavDropdownChild = {
+  label: string;
+  href: string;
+};
+
+export type NavItemConfig =
+  | { name: string; link: string; dropdown?: never }
+  | { name: string; link?: never; dropdown: NavDropdownChild[] };
+
 type NavItemsProps = {
-  items: {
-    name: string;
-    link: string;
-  }[];
+  items: NavItemConfig[];
   className?: string;
   onItemClick?: () => void;
 };
@@ -117,39 +123,113 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
 
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<number | null>(null);
   const t = useTranslations("Header");
+  const navRef = useRef<HTMLDivElement>(null);
 
   return (
     <motion.div
+      ref={navRef}
       onMouseLeave={() => setHovered(null)}
       className={cn(
         "text-muted-foreground hover:text-foreground absolute inset-0 hidden flex-1 flex-row items-center justify-center gap-2 text-sm font-medium transition duration-200 lg:flex",
         className,
       )}
     >
-      {items.map((item, idx) => (
-        <Link
-          onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
-          className="text-foreground relative px-4 py-2"
-          key={`link-${idx}`}
-          href={item.link}
-        >
-          <AnimatePresence>
-            {hovered === idx && (
-              <motion.div
-                layoutId="hovered"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="bg-muted absolute inset-0 h-full w-full rounded-full"
-              />
-            )}
-          </AnimatePresence>
-          <span className="relative z-20">{t(item.name)}</span>
-        </Link>
-      ))}
+      {items.map((item, idx) => {
+        if (item.dropdown) {
+          const isOpen = openDropdown === idx;
+          return (
+            <div
+              key={`link-${idx}`}
+              className="relative"
+              onMouseEnter={() => {
+                setHovered(idx);
+                setOpenDropdown(idx);
+              }}
+              onMouseLeave={() => {
+                setHovered(null);
+                setOpenDropdown(null);
+              }}
+            >
+              <button
+                type="button"
+                className="text-foreground relative flex cursor-default items-center gap-1 px-4 py-2"
+              >
+                <AnimatePresence>
+                  {hovered === idx && (
+                    <motion.div
+                      layoutId="hovered"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="bg-muted absolute inset-0 h-full w-full rounded-full"
+                    />
+                  )}
+                </AnimatePresence>
+                <span className="relative z-20">{t(item.name)}</span>
+                <ChevronDown
+                  className={cn(
+                    "relative z-20 size-4 transition-transform duration-200",
+                    isOpen && "rotate-180",
+                  )}
+                />
+              </button>
+
+              <AnimatePresence>
+                {isOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.18 }}
+                    className="bg-background border-border absolute top-full left-1/2 z-[70] mt-2 min-w-44 -translate-x-1/2 rounded-xl border p-1.5 shadow-lg"
+                  >
+                    {item.dropdown.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        onClick={() => {
+                          setOpenDropdown(null);
+                          onItemClick?.();
+                        }}
+                        className="text-foreground hover:bg-muted block rounded-lg px-3 py-2 text-sm transition-colors"
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        }
+
+        return (
+          <Link
+            onMouseEnter={() => setHovered(idx)}
+            onClick={onItemClick}
+            className="text-foreground relative px-4 py-2"
+            key={`link-${idx}`}
+            href={item.link}
+          >
+            <AnimatePresence>
+              {hovered === idx && (
+                <motion.div
+                  layoutId="hovered"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-muted absolute inset-0 h-full w-full rounded-full"
+                />
+              )}
+            </AnimatePresence>
+            <span className="relative z-20">{t(item.name)}</span>
+          </Link>
+        );
+      })}
     </motion.div>
   );
 };

@@ -1,5 +1,5 @@
 import Footer from "@/src/business/components/Footer";
-import Header from "@/src/business/components/Header";
+import Header from "@/src/business/components/HeaderWrapper";
 import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
