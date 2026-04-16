@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   quality:
-    name: Lint, Typecheck And Format
+    name: Lint, Typecheck, Format And Unit Tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -45,3 +45,6 @@ jobs:
 
       - name: Check formatting
         run: npm run format:check
+
+      - name: Run unit tests
+        run: npm run test:unit

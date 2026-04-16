@@ -205,8 +205,8 @@ When implementing testable features, prefer designs that make side effects injec
 
 ### CI Workflows
 
-- `.github/workflows/quality.yml` runs lint, typecheck, and format checks.
-- `.github/workflows/test.yml` runs unit and e2e tests in separate jobs.
+- `.github/workflows/quality.yml` runs lint, typecheck, format checks, and unit tests.
+- `.github/workflows/test.yml` runs e2e tests separately.
 
 ### Vitest Setup
 
