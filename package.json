@@ -10,6 +10,10 @@
     "db:seed": "node ./scripts/local-supabase.mjs seed",
     "build": "next build",
     "start": "next start",
+    "e2e": "playwright test",
+    "e2e:headed": "playwright test --headed",
+    "e2e:ui": "playwright test --ui",
+    "e2e:install": "playwright install chromium",
     "format": "prettier --write --ignore-unknown .",
     "format:check": "prettier --check --ignore-unknown .",
     "lint": "eslint",
@@ -48,6 +52,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/node": "^20",

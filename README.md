@@ -98,10 +98,35 @@ npm run db:reset
 npm run db:seed
 npm run build
 npm run start
+npm run e2e:install
+npm run e2e
+npm run e2e:headed
+npm run e2e:ui
 npm run lint
 npm run typecheck
 npm run format
 ```
+
+## End-To-End Testing
+
+The repository now includes a Playwright setup for e2e coverage under `e2e/`.
+
+Quick start:
+
+```bash
+npm run e2e:install
+npm run e2e
+```
+
+Notes:
+
+- Playwright is configured to start the app in remote Supabase mode through `node ./scripts/local-supabase.mjs dev --remote`.
+- Keep valid remote Supabase credentials in `.env.local` for the built-in web server flow.
+- Playwright runs with `uk-UA` locale so locale-aware smoke tests stay deterministic.
+- If you already have the app running on `http://localhost:3000`, Playwright will reuse the existing server automatically.
+- The first smoke test covers the default locale redirect and navigation from the home page to pricing.
+
+More details live in [e2e/README.md](e2e/README.md).
 
 ## Environment Variables
 
@@ -132,6 +157,7 @@ More context lives here:
 
 - [Project Context](docs/project-context.md)
 - [Development Guide](docs/development-guide.md)
+- [E2E Testing Guide](e2e/README.md)
 - [Agent Rules](AGENTS.md)
 
 ## Implementation Notes
