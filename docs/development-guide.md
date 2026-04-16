@@ -24,8 +24,13 @@ npm run db:start
 npm run db:reset
 npm run db:seed
 npm run build
+npm run start
 npm run e2e:install
 npm run e2e
+npm run e2e:headed
+npm run e2e:ui
+npm run test:unit
+npm run test:unit:watch
 npm run lint
 npm run typecheck
 npm run format
@@ -173,10 +178,7 @@ Planned later:
 Current testing setup:
 
 - `Playwright` for end-to-end tests
-
-Planned next step:
-
-- `Vitest` + `React Testing Library` for unit and component/integration tests
+- `Vitest` + `React Testing Library` for unit tests
 
 Testing principles:
 
@@ -192,12 +194,25 @@ When implementing testable features, prefer designs that make side effects injec
 
 - Playwright config lives in `playwright.config.ts`.
 - E2E tests live in `e2e/` with a `fixtures -> pages -> tests` structure.
+- Coverage and known gaps are tracked in `e2e/README.md`.
 - The default web server command is `node ./scripts/local-supabase.mjs dev --remote`.
 - The browser context is pinned to `uk-UA` to keep locale-based flows deterministic.
 - This keeps smoke tests focused on app behavior without requiring local Supabase containers.
 - If a compatible app server is already running on `http://localhost:3000`, Playwright reuses it automatically.
 - Browser binaries can be installed with `npm run e2e:install`.
 - The initial smoke spec covers the default locale redirect and the home-to-pricing navigation path.
+
+### Vitest Setup
+
+- Vitest config lives in `vitest.config.mts`.
+- Unit tests live in `unit/` with a `fixtures -> mocks -> tests` structure.
+- Coverage and known gaps are tracked in `unit/README.md`.
+- The setup follows the current Next.js guide with `@vitejs/plugin-react` and `jsdom`.
+- Path aliases are resolved through Vite's native `tsconfig` paths support.
+- Shared cleanup is configured in `vitest.setup.ts`.
+- The initial unit smoke spec covers `src/shared/hooks/use-mobile.ts`.
+- Prefer unit coverage for hooks, utils, and synchronous client components.
+- Async server components should continue to be validated primarily through e2e tests.
 
 ## Verification Expectations
 
@@ -212,6 +227,7 @@ When the relevant test setup exists, also run the affected suites, for example:
 
 ```bash
 npm run e2e
+npm run test:unit
 ```
 
 ## SEO And Accessibility

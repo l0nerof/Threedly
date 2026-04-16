@@ -93,7 +93,7 @@ The audience is visually demanding. Avoid generic SaaS-looking output.
 ## Testing Expectations
 
 - Preferred stack for this project:
-  - `Jest` + `React Testing Library` for unit/integration tests
+  - `Vitest` + `React Testing Library` for unit/integration tests
   - `Playwright` for end-to-end tests
 - Test behavior from the user perspective, not implementation details.
 - Minimum expectation for new behavior:
@@ -101,7 +101,9 @@ The audience is visually demanding. Avoid generic SaaS-looking output.
   - 1-2 meaningful edge cases
   - at least one failure state when relevant
 - Keep tests deterministic:
-  - no real network
+  - no real network in unit tests
+  - prefer mocked, stubbed, or otherwise controlled boundaries for unit/integration coverage
+  - for e2e, use the documented project workflow and keep assertions resilient to environment-specific timing
   - control time/randomness
   - avoid flaky waits
 
@@ -119,8 +121,8 @@ The audience is visually demanding. Avoid generic SaaS-looking output.
 - Before finishing meaningful code changes, aim to run:
   - `npm run typecheck`
   - `npm run lint`
-  - relevant unit tests
-  - relevant e2e tests when applicable
+  - `npm run test:unit` for relevant unit coverage
+  - `npm run e2e` for relevant end-to-end coverage when applicable
 - If checks cannot be run, state that clearly and list the exact commands.
 
 ## Docs
@@ -130,3 +132,5 @@ For more context, read:
 - `README.md`
 - `docs/project-context.md`
 - `docs/development-guide.md`
+- `unit/README.md`
+- `e2e/README.md`
