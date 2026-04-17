@@ -1,8 +1,8 @@
 "use client";
 
-import { CategoriesDropdown } from "@/src/business/components/CategoriesDropdown";
 import { NavItemConfig } from "@/src/business/types/navItemsConfig";
 import { Link } from "@/src/i18n/routing";
+import { NavDropdown } from "@/src/shared/components/NavDropdown";
 import { cn } from "@/src/shared/utils/cn";
 import { Menu, X } from "lucide-react";
 import {
@@ -131,9 +131,10 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       {items.map((item, idx) => {
         if (item.dropdown) {
           return (
-            <CategoriesDropdown
+            <NavDropdown
               key={`link-${idx}`}
-              item={item}
+              label={t(item.name)}
+              items={item.dropdown}
               idx={idx}
               hovered={hovered}
               setHovered={setHovered}
