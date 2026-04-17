@@ -1,5 +1,5 @@
 import { createClient } from "@/src/business/utils/supabase/server";
-import HeaderClient, { Category } from "../Header";
+import Header from "../Header";
 
 async function HeaderWrapper() {
   const supabase = await createClient();
@@ -8,9 +8,7 @@ async function HeaderWrapper() {
     .from("categories")
     .select("slug, name_ua, name_en");
 
-  const categories: Category[] = data ?? [];
-
-  return <HeaderClient categories={categories} />;
+  return <Header categories={data ?? []} />;
 }
 
 export default HeaderWrapper;

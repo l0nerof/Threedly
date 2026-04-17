@@ -3,11 +3,17 @@
 import { ProfileAvatar } from "@/src/business/components/ProfileAvatar";
 import { createClient } from "@/src/business/utils/supabase/client";
 import { Link } from "@/src/i18n/routing";
-import { ChevronDown } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/src/shared/components/Accordion";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { navItems } from "../../constants/navItems";
+import { Category } from "../../types/category";
+import { NavItemConfig } from "../../types/navItemsConfig";
 import { LanguageToggle } from "../LanguageToggle";
 import {
   MobileNav,
@@ -15,19 +21,12 @@ import {
   MobileNavMenu,
   MobileNavToggle,
   NavBody,
-  NavItemConfig,
   NavItems,
   Navbar,
   NavbarButton,
   NavbarLogo,
 } from "../Navbar";
 import { ThemeToggle } from "../ThemeToggle";
-
-export type Category = {
-  slug: string;
-  name_ua: string;
-  name_en: string;
-};
 
 type HeaderProps = {
   categories: Category[];
@@ -37,7 +36,6 @@ const PROFILE_AVATAR_UPDATED_EVENT = "profile-avatar-updated";
 
 function Header({ categories }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
   const t = useTranslations("Header");
@@ -168,46 +166,34 @@ function Header({ categories }: HeaderProps) {
           {navItemsWithCategories.map((item, idx) => {
             if (item.dropdown) {
               return (
-                <div key={`mobile-link-${idx}`} className="w-full">
-                  <button
-                    type="button"
-                    onClick={() => setIsMobileCategoriesOpen((prev) => !prev)}
-                    className="text-foreground flex items-center gap-1 py-1 text-sm font-medium"
-                  >
-                    {t(item.name)}
-                    <ChevronDown
-                      className={`size-4 transition-transform duration-200 ${isMobileCategoriesOpen ? "rotate-180" : ""}`}
-                    />
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {isMobileCategoriesOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="flex flex-col gap-2 pt-2 pb-1 pl-3">
-                          {item.dropdown.map((child) => (
+                <Accordion
+                  key={`mobile-link-${idx}`}
+                  type="single"
+                  collapsible
+                  className="w-full"
+                >
+                  <AccordionItem value="categories" className="border-b-0">
+                    <AccordionTrigger className="text-foreground py-1 text-sm font-medium hover:no-underline">
+                      {t(item.name)}
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex flex-col gap-2 pb-1 pl-3">
+                        {item.dropdown.map(
+                          (child: { label: string; href: string }) => (
                             <Link
                               key={child.href}
                               href={child.href}
-                              onClick={() => {
-                                setIsMobileMenuOpen(false);
-                                setIsMobileCategoriesOpen(false);
-                              }}
+                              onClick={() => setIsMobileMenuOpen(false)}
                               className="text-muted-foreground text-sm"
                             >
                               {child.label}
                             </Link>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                          ),
+                        )}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               );
             }
             return (
