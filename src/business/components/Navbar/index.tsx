@@ -1,5 +1,7 @@
 "use client";
 
+import { NavDropdown } from "@/src/business/components/NavDropdown";
+import { NavItemConfig } from "@/src/business/types/navItemsConfig";
 import { Link } from "@/src/i18n/routing";
 import { cn } from "@/src/shared/utils/cn";
 import { Menu, X } from "lucide-react";
@@ -25,10 +27,7 @@ type NavBodyProps = {
 };
 
 type NavItemsProps = {
-  items: {
-    name: string;
-    link: string;
-  }[];
+  items: NavItemConfig[];
   className?: string;
   onItemClick?: () => void;
 };
@@ -118,38 +117,56 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
   const t = useTranslations("Header");
+  const navRef = useRef<HTMLDivElement>(null);
 
   return (
     <motion.div
+      ref={navRef}
       onMouseLeave={() => setHovered(null)}
       className={cn(
         "text-muted-foreground hover:text-foreground absolute inset-0 hidden flex-1 flex-row items-center justify-center gap-2 text-sm font-medium transition duration-200 lg:flex",
         className,
       )}
     >
-      {items.map((item, idx) => (
-        <Link
-          onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
-          className="text-foreground relative px-4 py-2"
-          key={`link-${idx}`}
-          href={item.link}
-        >
-          <AnimatePresence>
-            {hovered === idx && (
-              <motion.div
-                layoutId="hovered"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="bg-muted absolute inset-0 h-full w-full rounded-full"
-              />
-            )}
-          </AnimatePresence>
-          <span className="relative z-20">{t(item.name)}</span>
-        </Link>
-      ))}
+      {items.map((item, idx) => {
+        if (item.dropdown) {
+          return (
+            <NavDropdown
+              key={`link-${idx}`}
+              label={t(item.name)}
+              items={item.dropdown}
+              idx={idx}
+              hovered={hovered}
+              setHovered={setHovered}
+              onItemClick={onItemClick}
+            />
+          );
+        }
+
+        return (
+          <Link
+            onMouseEnter={() => setHovered(idx)}
+            onClick={onItemClick}
+            className="text-foreground relative px-4 py-2"
+            key={`link-${idx}`}
+            href={item.link}
+          >
+            <AnimatePresence>
+              {hovered === idx && (
+                <motion.div
+                  layoutId="hovered"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-muted absolute inset-0 h-full w-full rounded-full"
+                />
+              )}
+            </AnimatePresence>
+            <span className="relative z-20">{t(item.name)}</span>
+          </Link>
+        );
+      })}
     </motion.div>
   );
 };

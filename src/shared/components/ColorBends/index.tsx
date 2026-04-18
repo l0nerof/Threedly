@@ -176,11 +176,16 @@ export default function ColorBends({
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: false,
-      powerPreference: "high-performance",
-      alpha: true,
-    });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: false,
+        powerPreference: "high-performance",
+        alpha: true,
+      });
+    } catch {
+      return;
+    }
     rendererRef.current = renderer;
     (
       renderer as unknown as { outputColorSpace: typeof THREE.SRGBColorSpace }
