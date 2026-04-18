@@ -18,6 +18,7 @@ import {
 } from "@/src/shared/components/DropdownMenu";
 import { Input } from "@/src/shared/components/Input";
 import { Label } from "@/src/shared/components/Label";
+import { Separator } from "@/src/shared/components/Separator";
 import { Skeleton } from "@/src/shared/components/Skeleton";
 import { Textarea } from "@/src/shared/components/Textarea";
 import { PencilIcon } from "lucide-react";
@@ -213,10 +214,12 @@ function ProfileSettingsForm({
 
   return (
     <form onSubmit={handleSubmit} className="contents">
-      <CardHeader className="flex flex-row items-center justify-between gap-4 p-0">
+      <CardHeader className="flex flex-col gap-4 p-0 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-2">
           <CardTitle>{t("settings.profile.title")}</CardTitle>
-          <CardDescription>{t("settings.profile.description")}</CardDescription>
+          <CardDescription className="leading-6">
+            {t("settings.profile.description")}
+          </CardDescription>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -225,7 +228,7 @@ function ProfileSettingsForm({
               className="group relative cursor-pointer rounded-full"
               aria-label={t("settings.profile.avatarMenuAriaLabel")}
             >
-              <ProfileAvatar avatarPath={avatarPath} />
+              <ProfileAvatar avatarPath={avatarPath} className="size-20" />
               <span className="absolute inset-0 rounded-full bg-black/45 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100" />
               <span className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
                 <PencilIcon className="size-4 text-white" />
@@ -268,18 +271,20 @@ function ProfileSettingsForm({
         />
       </CardHeader>
 
+      <Separator />
+
       <CardContent className="flex flex-col gap-4 p-0">
         {isLoadingProfile ? (
           <>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               <Skeleton className="h-4 w-20" />
               <Skeleton className="h-10 w-full" />
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-24 w-full" />
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               <Skeleton className="h-4 w-14" />
               <Skeleton className="h-10 w-full" />
             </div>
@@ -316,13 +321,16 @@ function ProfileSettingsForm({
           </>
         )}
       </CardContent>
-      <CardFooter className="p-0">
+
+      <Separator />
+
+      <CardFooter className="justify-end p-0">
         {isLoadingProfile ? (
           <Skeleton className="h-9 w-28 rounded-md" />
         ) : (
           <Button
             type="submit"
-            variant="outline"
+            className="w-full sm:w-auto"
             disabled={
               !hasChanges ||
               isSubmitting ||

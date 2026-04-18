@@ -20,10 +20,12 @@ export default async function ProfileLayout({ children, params }: Props) {
   setRequestLocale(locale);
 
   return (
-    <section className="container w-full pt-28 pb-8">
+    <section className="container w-full pt-28 pb-10">
       <SidebarProvider className="flex min-h-[calc(100svh-14rem)] flex-col items-center gap-6 md:flex-row md:items-start">
         <ProfileSidebar />
-        <SidebarInset className="bg-transparent">{children}</SidebarInset>
+        <SidebarInset className="min-w-0 bg-transparent">
+          {children}
+        </SidebarInset>
       </SidebarProvider>
     </section>
   );

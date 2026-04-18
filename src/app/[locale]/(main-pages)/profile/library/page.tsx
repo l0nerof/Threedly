@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/src/shared/components/Card";
+import { Separator } from "@/src/shared/components/Separator";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -27,16 +28,21 @@ export default async function ProfileLibraryPage({ params }: Props) {
   const t = await getTranslations("Profile");
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-semibold">{t("library.title")}</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">
+          {t("library.title")}
+        </h1>
         <p className="text-muted-foreground text-sm">{t("library.subtitle")}</p>
       </div>
+      <Separator />
 
-      <Card className="p-4">
+      <Card className="border-border/60 gap-4 rounded-2xl p-6 shadow-none">
         <CardHeader className="p-0">
           <CardTitle>{t("library.empty.title")}</CardTitle>
-          <CardDescription>{t("library.empty.description")}</CardDescription>
+          <CardDescription className="leading-6">
+            {t("library.empty.description")}
+          </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <Button asChild>

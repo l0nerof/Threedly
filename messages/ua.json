@@ -466,12 +466,12 @@
 
     "verifyEmail": {
       "title": "Підтвердіть email",
-      "description": "Ми надіслали 8-значний код на вашу пошту.",
+      "description": "Ми надіслали 6-значний код на вашу пошту.",
       "backToSignup": "Повернутися до реєстрації",
       "emailLabel": "Email адреса",
       "emailPlaceholder": "you@example.com",
       "otpLabel": "Одноразовий код",
-      "otpHint": "Введіть 8-значний код з листа.",
+      "otpHint": "Введіть 6-значний код з листа.",
       "submit": "Підтвердити код",
       "verifying": "Перевіряємо...",
       "resend": "Надіслати код ще раз",
