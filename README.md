@@ -80,7 +80,7 @@ npm install
 npm run dev
 ```
 
-By default, `npm run dev` starts the local Supabase stack and runs the frontend against the local database.
+By default, `npm run dev` starts the local Supabase stack, ensures the local demo user exists, and runs the frontend against the local database.
 
 To run the frontend against the real Supabase project instead, keep your real project credentials in `.env.local` and use:
 
@@ -162,7 +162,7 @@ When you run `npm run dev`, the local wrapper injects local Supabase credentials
 
 Local helper files created during development:
 
-- `.env.demo-user.local` stores the seeded demo user credentials for the local database
+- `.env.demo-user.local` stores the local demo user credentials used by the wrapper and local database
 - `.env.local` should remain your remote/default Supabase configuration
 
 There is no need to keep `.env.remote.local` or `.env.supabase.local` anymore. The local workflow now injects local credentials only into the current dev process.

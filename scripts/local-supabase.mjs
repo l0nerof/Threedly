@@ -179,6 +179,10 @@ async function ensureSupabaseStarted() {
   return status;
 }
 
+async function ensureLocalDemoUser(status) {
+  await runPostSeed(status);
+}
+
 async function runPostSeed(status) {
   await runCommand(process.execPath, [postSeedScriptPath], {
     env: {
@@ -239,7 +243,8 @@ async function main() {
 
   switch (command) {
     case "start": {
-      await ensureSupabaseStarted();
+      const status = await ensureSupabaseStarted();
+      await ensureLocalDemoUser(status);
       return;
     }
     case "reset": {
@@ -265,6 +270,7 @@ async function main() {
       }
 
       const status = await ensureSupabaseStarted();
+      await ensureLocalDemoUser(status);
       await runNextDev({
         useLocalSupabase: true,
         status,

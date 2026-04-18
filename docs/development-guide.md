@@ -54,11 +54,11 @@ Recommended workflow:
 
 How local mode works:
 
-- `npm run dev` starts local Supabase if needed
+- `npm run dev` starts local Supabase if needed and ensures the local demo user exists
 - the wrapper injects the local URL and publishable key directly into the `next dev` process
 - `.env.local` is not rewritten during local startup
 - Supabase Studio is available at `http://127.0.0.1:54323`
-- local demo user credentials are written to `.env.demo-user.local`
+- local demo user credentials are written to `.env.demo-user.local` and kept in sync with the local auth seed
 - `.env.remote.local` and `.env.supabase.local` are no longer part of the workflow
 
 These values are used by:
