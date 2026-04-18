@@ -4,6 +4,7 @@ import { ProfileAvatar } from "@/src/business/components/ProfileAvatar";
 import { sidebarItems } from "@/src/business/constants/sidebarItems";
 import { createClient } from "@/src/business/utils/supabase/client";
 import { Link, usePathname } from "@/src/i18n/routing";
+import { Button } from "@/src/shared/components/Button";
 import {
   Sidebar,
   SidebarContent,
@@ -82,42 +83,50 @@ export function ProfileSidebar() {
   }, []);
 
   return (
-    <Sidebar collapsible="none" className="rounded-xl border">
+    <Sidebar
+      collapsible="none"
+      className="border-border/60 bg-card/70 rounded-3xl border shadow-sm md:sticky md:top-28"
+    >
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarGroup className="p-4">
           <SidebarGroupContent>
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-3">
               <div className="flex flex-col items-center gap-3 text-center">
-                <ProfileAvatar avatarPath={avatarPath} className="size-24" />
+                <ProfileAvatar avatarPath={avatarPath} className="size-20" />
                 {isLoadingProfile ? (
-                  <Skeleton className="h-5 w-28" />
+                  <div className="flex flex-col items-center gap-2">
+                    <Skeleton className="h-5 w-28" />
+                    <Skeleton className="h-4 w-36" />
+                  </div>
                 ) : (
-                  <p className="text-sm font-medium">{username || email}</p>
+                  <div className="flex flex-col items-center gap-1">
+                    <p className="text-sm font-medium">{username || email}</p>
+                    <p className="text-muted-foreground max-w-52 truncate text-xs">
+                      {email || t("emptyEmail")}
+                    </p>
+                  </div>
                 )}
               </div>
               {isLoadingProfile ? (
-                <Skeleton className="h-8 w-full rounded-md" />
+                <Skeleton className="h-9 w-full rounded-xl" />
               ) : (
                 username && (
-                  <SidebarMenu>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        asChild
-                        className="flex items-center justify-center transition-colors duration-300"
-                      >
-                        <Link href={`/designers/${username}`}>
-                          {t("sidebar.viewPublicProfile")}
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </SidebarMenu>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="h-auto w-full rounded-xl px-4 py-2 text-center whitespace-normal"
+                  >
+                    <Link href={`/designers/${username}`}>
+                      {t("sidebar.viewPublicProfile")}
+                    </Link>
+                  </Button>
                 )
               )}
             </div>
 
-            <SidebarSeparator className="mx-0 my-2" />
+            <SidebarSeparator className="mx-0 my-3" />
 
-            <SidebarMenu>
+            <SidebarMenu className="gap-1.5">
               {sidebarItems.map((item) => {
                 const isActive =
                   pathname === item.href ||
@@ -128,8 +137,9 @@ export function ProfileSidebar() {
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton
                       asChild
+                      size="lg"
                       isActive={isActive}
-                      className="transition-colors duration-300"
+                      className="rounded-xl transition-colors duration-300"
                     >
                       <Link href={item.href}>
                         <item.icon className="size-5" />
@@ -142,14 +152,15 @@ export function ProfileSidebar() {
               })}
             </SidebarMenu>
 
-            <SidebarSeparator className="mx-0 my-2" />
+            <SidebarSeparator className="mx-0 my-3" />
 
             <form action={signOutWithLocale}>
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     type="submit"
-                    className="text-destructive hover:text-destructive/80 cursor-pointer transition-colors duration-300"
+                    size="lg"
+                    className="text-destructive hover:text-destructive/80 cursor-pointer rounded-xl transition-colors duration-300"
                   >
                     <LogOutIcon className="size-5" />
 

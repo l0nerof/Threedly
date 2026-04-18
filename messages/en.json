@@ -466,12 +466,12 @@
 
     "verifyEmail": {
       "title": "Verify your email",
-      "description": "We sent a 8-digit code to your email.",
+      "description": "We sent a 6-digit code to your email.",
       "backToSignup": "Back to sign up",
       "emailLabel": "Email address",
       "emailPlaceholder": "you@example.com",
       "otpLabel": "One-time code",
-      "otpHint": "Enter the 8-digit code from your email message.",
+      "otpHint": "Enter the 6-digit code from your email message.",
       "submit": "Verify code",
       "verifying": "Verifying...",
       "resend": "Resend code",
