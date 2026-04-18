@@ -177,7 +177,7 @@ function Header({ categories }: HeaderProps) {
                       {t(item.name)}
                     </AccordionTrigger>
                     <AccordionContent className="pb-0">
-                      <div className="flex flex-col gap-2 pb-1 pl-3">
+                      <div className="flex flex-col gap-2 pl-3">
                         {item.dropdown.map(
                           (child: { label: string; href: string }) => (
                             <Link

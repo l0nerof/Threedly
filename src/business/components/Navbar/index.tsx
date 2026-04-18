@@ -1,8 +1,8 @@
 "use client";
 
+import { NavDropdown } from "@/src/business/components/NavDropdown";
 import { NavItemConfig } from "@/src/business/types/navItemsConfig";
 import { Link } from "@/src/i18n/routing";
-import { NavDropdown } from "@/src/shared/components/NavDropdown";
 import { cn } from "@/src/shared/utils/cn";
 import { Menu, X } from "lucide-react";
 import {
