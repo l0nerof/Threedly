@@ -109,6 +109,12 @@ npm run typecheck
 npm run format
 ```
 
+Local database workflow:
+
+- `npm run db:start` starts the local Supabase stack and syncs the local demo user.
+- `npm run db:reset` resets the local database state, reapplies migrations and seeds, then exits.
+- `npm run db:seed` reapplies seed data to an already running local Supabase stack and does not start Docker containers for you.
+
 ## Unit Testing
 
 The repository now includes a `Vitest` setup for unit tests under `unit/`.
