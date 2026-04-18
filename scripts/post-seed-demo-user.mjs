@@ -34,7 +34,7 @@ async function loadSupabaseEnv() {
   }
 
   throw new Error(
-    "Local Supabase credentials are missing. Run the script through `npm run db:reset` or `npm run db:seed`.",
+    "Local Supabase credentials are missing. Run the script through `npm run db:start`, `npm run db:reset`, or `npm run db:seed`.",
   );
 }
 

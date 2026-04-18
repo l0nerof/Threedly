@@ -34,6 +34,12 @@ const seedFiles = [
   path.join(repoRoot, "supabase", "seeds", "03_model_files.sql"),
 ];
 
+function hasLocalSupabaseStatus(status) {
+  return Boolean(
+    status?.apiUrl && status.publishableKey && status.serviceRoleKey,
+  );
+}
+
 function runCommand(command, args, options = {}) {
   const { capture = false, env = process.env } = options;
 
@@ -163,20 +169,36 @@ function printRemoteAccessSummary() {
 async function ensureSupabaseStarted() {
   let status = await getSupabaseStatus();
 
-  if (!status) {
+  if (!hasLocalSupabaseStatus(status)) {
     await runCommand(supabaseBin, ["start", "--yes"]);
     status = await getSupabaseStatus();
   }
 
-  if (!status?.apiUrl || !status.publishableKey || !status.serviceRoleKey) {
+  if (!hasLocalSupabaseStatus(status)) {
     throw new Error(
       "Supabase started, but local credentials were not available from `supabase status`.",
     );
   }
 
   await writeLocalSupportFiles();
-  printLocalAccessSummary(status);
   return status;
+}
+
+async function requireRunningSupabase(commandName) {
+  const status = await getSupabaseStatus();
+
+  if (!hasLocalSupabaseStatus(status)) {
+    throw new Error(
+      `Local Supabase is not running. Start it with \`npm run db:start\` before running \`npm run ${commandName}\`.`,
+    );
+  }
+
+  await writeLocalSupportFiles();
+  return status;
+}
+
+async function ensureLocalDemoUser(status) {
+  await runPostSeed(status);
 }
 
 async function runPostSeed(status) {
@@ -239,17 +261,19 @@ async function main() {
 
   switch (command) {
     case "start": {
-      await ensureSupabaseStarted();
+      const status = await ensureSupabaseStarted();
+      await ensureLocalDemoUser(status);
+      printLocalAccessSummary(status);
       return;
     }
     case "reset": {
-      const status = await ensureSupabaseStarted();
       await runCommand(supabaseBin, ["db", "reset", "--local", "--yes"]);
+      const status = await requireRunningSupabase("db:reset");
       await runPostSeed(status);
       return;
     }
     case "seed": {
-      const status = await ensureSupabaseStarted();
+      const status = await requireRunningSupabase("db:seed");
       await runSqlSeedFiles();
       await runPostSeed(status);
       return;
@@ -265,6 +289,8 @@ async function main() {
       }
 
       const status = await ensureSupabaseStarted();
+      await ensureLocalDemoUser(status);
+      printLocalAccessSummary(status);
       await runNextDev({
         useLocalSupabase: true,
         status,

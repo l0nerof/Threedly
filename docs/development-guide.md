@@ -51,15 +51,23 @@ Recommended workflow:
 - use `npm run dev` for local frontend + local Supabase
 - use `npm run dev:remote` when you want the frontend to talk to the real Supabase project
 - use `npm run db:start`, `npm run db:reset`, and `npm run db:seed` only for the local Supabase stack
+- use `npm run db:start` to boot local Supabase containers before `npm run db:seed`
 
 How local mode works:
 
-- `npm run dev` starts local Supabase if needed
+- `npm run dev` starts local Supabase if needed and ensures the local demo user exists
 - the wrapper injects the local URL and publishable key directly into the `next dev` process
 - `.env.local` is not rewritten during local startup
 - Supabase Studio is available at `http://127.0.0.1:54323`
-- local demo user credentials are written to `.env.demo-user.local`
+- local demo user credentials are written to `.env.demo-user.local` and kept in sync with the local auth seed
 - `.env.remote.local` and `.env.supabase.local` are no longer part of the workflow
+
+Local DB command behavior:
+
+- `npm run db:start` starts the local Supabase stack and syncs the demo auth user
+- `npm run db:reset` resets local database state, reapplies migrations and SQL seeds, then runs the demo-user post-seed
+- `npm run db:seed` reapplies SQL seeds and demo-user post-seed against an already running local stack
+- `npm run db:seed` should fail fast if local Supabase is not running instead of starting Docker automatically
 
 These values are used by:
 
