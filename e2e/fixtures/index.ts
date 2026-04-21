@@ -1,6 +1,6 @@
 import { test as base } from "@playwright/test";
-import { CatalogPage } from "../pages/catalog.page";
 import { ForgotPasswordPage, LoginPage, SignupPage } from "../pages/auth.page";
+import { CatalogPage } from "../pages/catalog.page";
 import { DesignerProfilePage, DesignersPage } from "../pages/designers.page";
 import { HomePage } from "../pages/home.page";
 import { EnHomePage, EnLoginPage, EnPricingPage } from "../pages/locale.page";
