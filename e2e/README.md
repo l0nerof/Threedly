@@ -12,6 +12,9 @@ This file documents the Playwright coverage in this repository and should stay i
 - The browser context is pinned to `uk-UA`, so locale-sensitive smoke tests are expected to resolve `/` to `/ua`.
 - If the app is already running on `http://localhost:3000`, Playwright reuses the existing server automatically.
 - In CI, Playwright switches to `node ./scripts/local-supabase.mjs dev` so e2e can run without remote Supabase secrets.
+- `global-setup.ts` logs in with the demo user once and stores the session in `e2e/.auth/demo-user.json`.
+  - Demo credentials are read from `THREEDLY_DEMO_USER_EMAIL` / `THREEDLY_DEMO_USER_PASSWORD` env vars (defaults: `demo@threedly.local` / `ThreedlyDemo123!`).
+  - `e2e/.auth/` is gitignored.
 
 ## Smoke (`smoke.spec.ts`)
 
@@ -21,29 +24,107 @@ This file documents the Playwright coverage in this repository and should stay i
 - [x] Navigating from home reaches `/ua/pricing`
 - [x] The pricing page renders its primary heading
 - [x] The pricing page renders the three plan cards
+- [x] The pricing page renders the FAQ section heading
+
+## Auth (`auth.spec.ts`)
+
+### Login
+
+- [x] Form renders with all fields and links
+- [x] Validation errors shown on empty submit
+- [x] Error shown for invalid email format
+- [x] Server error shown for wrong credentials
+- [x] Password visibility toggle works
+- [x] Navigates to signup via link
+- [x] Navigates to forgot-password via link
+
+### Signup
+
+- [x] Form renders with all fields
+- [x] Validation errors shown on empty submit
+- [x] Error shown for invalid username format
+- [x] Error shown for invalid email format
+- [x] Navigates to login via link
+
+### Forgot Password
+
+- [x] Form renders
+- [x] Error shown on empty submit
+- [x] Error shown for invalid email format
+- [x] Success message shown for valid email
+- [x] Navigates back to login via link
+
+## Designers (`designers.spec.ts`)
+
+- [x] Designers list page renders heading
+- [x] Designers list page URL is correct
+- [x] Designer profile page opens by username
+- [x] Unknown username renders 404
+
+## Profile (`profile.spec.ts`)
+
+### Unauthenticated
+
+- [x] `/ua/profile` redirects to login
+- [x] `/ua/profile/settings` redirects to login
+
+### Authenticated (demo user session)
+
+- [x] Overview page renders heading and plan badge
+- [x] Overview page shows all stat cards
+- [x] Settings page renders heading
+- [x] Library page renders heading and empty state
+- [x] Uploads page renders heading and empty state
+- [x] Sidebar navigation: overview → settings
+- [x] Sidebar navigation: overview → library
+- [x] Sidebar navigation: overview → uploads
+- [x] Sidebar shows sign-out button
+- [x] Sign out redirects to home
+
+## Not Found (`not-found.spec.ts`)
+
+- [x] Unknown UA route renders 404 page
+- [x] Deeply nested unknown route renders 404 page
+- [x] Home link is visible and has a valid href
+
+## Locale (`locale.spec.ts`)
+
+- [x] `/en` renders home page in English
+- [x] `/en/pricing` renders pricing page in English with 3 plan cards
+- [x] `/en/login` renders login form in English
 
 ## Known Gaps
 
-- [ ] No English-locale smoke coverage yet
-- [ ] No direct route coverage yet for `catalog`, `designers`, or auth pages
-- [ ] No profile-area e2e coverage yet
-- [ ] No not-found / error-state coverage yet
-- [ ] No accessibility coverage yet
+- [ ] No catalog e2e coverage (out of scope)
+- [ ] No reset-password flow coverage (requires real email link)
+- [ ] No verify-email flow coverage (requires real OTP)
+- [ ] No avatar upload coverage in profile settings
+- [ ] No profile settings save flow coverage
 
 ## Pages And POMs
 
-| Page / Area  | Route           | POM           | Spec            | Status            |
-| ------------ | --------------- | ------------- | --------------- | ----------------- |
-| Home         | `/`, `/ua`      | `HomePage`    | `smoke.spec.ts` | `[x] Covered`     |
-| Pricing      | `/ua/pricing`   | `PricingPage` | `smoke.spec.ts` | `[x] Covered`     |
-| Catalog      | `/ua/catalog`   | -             | -               | `[ ] Not covered` |
-| Designers    | `/ua/designers` | -             | -               | `[ ] Not covered` |
-| Login        | `/ua/login`     | -             | -               | `[ ] Not covered` |
-| Signup       | `/ua/signup`    | -             | -               | `[ ] Not covered` |
-| Profile area | `/ua/profile/*` | -             | -               | `[ ] Not covered` |
+| Page / Area      | Route                  | POM                   | Spec                | Status        |
+| ---------------- | ---------------------- | --------------------- | ------------------- | ------------- |
+| Home             | `/`, `/ua`             | `HomePage`            | `smoke.spec.ts`     | `[x] Covered` |
+| Pricing          | `/ua/pricing`          | `PricingPage`         | `smoke.spec.ts`     | `[x] Covered` |
+| Login            | `/ua/login`            | `LoginPage`           | `auth.spec.ts`      | `[x] Covered` |
+| Signup           | `/ua/signup`           | `SignupPage`          | `auth.spec.ts`      | `[x] Covered` |
+| Forgot Password  | `/ua/forgot-password`  | `ForgotPasswordPage`  | `auth.spec.ts`      | `[x] Covered` |
+| Designers List   | `/ua/designers`        | `DesignersPage`       | `designers.spec.ts` | `[x] Covered` |
+| Designer Profile | `/ua/designers/:user`  | `DesignerProfilePage` | `designers.spec.ts` | `[x] Covered` |
+| Profile Overview | `/ua/profile`          | `ProfileOverviewPage` | `profile.spec.ts`   | `[x] Covered` |
+| Profile Settings | `/ua/profile/settings` | `ProfileSettingsPage` | `profile.spec.ts`   | `[x] Covered` |
+| Profile Library  | `/ua/profile/library`  | `ProfileLibraryPage`  | `profile.spec.ts`   | `[x] Covered` |
+| Profile Uploads  | `/ua/profile/uploads`  | `ProfileUploadsPage`  | `profile.spec.ts`   | `[x] Covered` |
+| Not Found        | `/ua/*`                | `NotFoundPage`        | `not-found.spec.ts` | `[x] Covered` |
+| EN Home          | `/en`                  | `EnHomePage`          | `locale.spec.ts`    | `[x] Covered` |
+| EN Pricing       | `/en/pricing`          | `EnPricingPage`       | `locale.spec.ts`    | `[x] Covered` |
+| EN Login         | `/en/login`            | `EnLoginPage`         | `locale.spec.ts`    | `[x] Covered` |
+| Catalog          | `/ua/catalog`          | -                     | -                   | `[ ] Skipped` |
 
 ## Authoring Notes
 
 - Prefer user-facing assertions such as `role`, visible text, URL transitions, and visible item counts.
 - Add new page objects under `e2e/pages` when a flow grows beyond a single spec.
+- Profile tests that require auth must use `test.use({ storageState: STORAGE_STATE_PATH })`.
 - Keep this file updated whenever a new spec is added, removed, or broadened.
