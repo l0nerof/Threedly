@@ -159,7 +159,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-muted absolute inset-0 h-full w-full rounded-full"
+                  className="bg-surface-muted ring-border/70 dark:bg-surface-elevated dark:ring-primary/35 absolute inset-0 h-full w-full rounded-full ring-1"
                 />
               )}
             </AnimatePresence>

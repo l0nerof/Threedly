@@ -180,7 +180,7 @@ function Header() {
                   className="w-full"
                 >
                   <AccordionItem value="categories" className="border-b-0">
-                    <AccordionTrigger className="text-foreground py-1 text-sm font-medium hover:no-underline">
+                    <AccordionTrigger className="text-foreground py-1 text-base font-normal hover:no-underline">
                       {t(item.name)}
                     </AccordionTrigger>
                     <AccordionContent className="pb-0">
