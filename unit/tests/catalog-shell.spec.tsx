@@ -1,4 +1,5 @@
 import CatalogShell from "@/src/app/[locale]/(main-pages)/catalog/components/CatalogShell";
+import { NextIntlClientProvider } from "next-intl";
 import {
   describe,
   expect,
@@ -9,42 +10,84 @@ import {
   within,
 } from "../fixtures";
 
-const content = {
-  badge: "Catalog",
-  title: "Find 3D models faster",
-  subtitle: "Use search and filters together.",
-  searchLabel: "Search catalog",
-  searchPlaceholder: "Search by model or material",
-  mobileFiltersButton: "Filters",
-  sortLabel: "Sort",
-  resetFilters: "Reset",
-  activeFiltersLabel: "Active filters",
-  noActiveFilters: "No active filters yet",
-  removeFilter: "Remove filter",
-  filtersPanel: {
-    title: "Filters",
-    description: "Refine the catalog for your workflow.",
-  },
-  filters: {
-    category: {
-      title: "Category",
-      description: "You can select more than one category.",
-      empty: "Category data is not available yet",
+const messages = {
+  Catalog: {
+    title: "Find 3D models faster",
+    searchLabel: "Search catalog",
+    searchPlaceholder: "Search by model or material",
+    mobileFiltersButton: "Filters",
+    sortLabel: "Sort",
+    resetFilters: "Reset",
+    activeFiltersLabel: "Active filters",
+    noActiveFilters: "No active filters yet",
+    removeFilter: "Remove filter",
+    filtersPanel: {
+      title: "Filters",
+      description: "Refine the catalog for your workflow.",
     },
-    plan: {
-      title: "Plan",
-      description: "Filter by access tier.",
+    filters: {
+      category: {
+        title: "Category",
+        description: "You can select more than one category.",
+        empty: "Category data is not available yet",
+      },
+      plan: {
+        title: "Plan",
+        description: "Filter by access tier.",
+        options: {
+          free: {
+            label: "Free",
+            description: "Entry",
+          },
+          pro: {
+            label: "Pro",
+            description: "Professional",
+          },
+          max: {
+            label: "Max",
+            description: "Highest tier",
+          },
+        },
+      },
+      format: {
+        title: "Format",
+        description: "Filter by file format.",
+        options: {
+          glb: {
+            label: "GLB",
+            description: "Preview friendly",
+          },
+          fbx: {
+            label: "FBX",
+            description: "Exchange format",
+          },
+          max: {
+            label: "MAX",
+            description: "3ds Max",
+          },
+        },
+      },
     },
-    format: {
-      title: "Format",
-      description: "Filter by file format.",
+    sortOptions: {
+      curated: {
+        label: "Curated first",
+        description: "Premium discovery order",
+      },
+      fresh: {
+        label: "Newest arrivals",
+        description: "Latest additions first",
+      },
+      downloads: {
+        label: "Most downloaded",
+        description: "Demand-led order",
+      },
     },
-  },
-  resultsArea: {
-    ariaLabel: "Catalog results area",
-    title: "Model cards",
-    description: "Real models arrive next.",
-    paginationLabel: "Pagination",
+    resultsArea: {
+      ariaLabel: "Catalog results area",
+      title: "Model cards",
+      description: "Real models arrive next.",
+      paginationLabel: "Pagination",
+    },
   },
 };
 
@@ -53,46 +96,14 @@ const categories = [
   { value: "lighting", label: "Lighting" },
 ];
 
-const planOptions = [
-  { value: "free", label: "Free", description: "Entry" },
-  { value: "pro", label: "Pro", description: "Professional" },
-  { value: "max", label: "Max", description: "Highest tier" },
-] as const;
-
-const formatOptions = [
-  { value: "glb", label: "GLB", description: "Preview friendly" },
-  { value: "fbx", label: "FBX", description: "Exchange format" },
-  { value: "max", label: "MAX", description: "3ds Max" },
-] as const;
-
-const sortOptions = [
-  {
-    value: "curated",
-    label: "Curated first",
-    description: "Premium discovery order",
-  },
-  {
-    value: "fresh",
-    label: "Newest arrivals",
-    description: "Latest additions first",
-  },
-  {
-    value: "downloads",
-    label: "Most downloaded",
-    description: "Demand-led order",
-  },
-] as const;
-
 function renderCatalogShell(initialCategories: string[] = []) {
   return render(
-    <CatalogShell
-      categories={categories}
-      planOptions={[...planOptions]}
-      formatOptions={[...formatOptions]}
-      sortOptions={[...sortOptions]}
-      initialCategories={initialCategories}
-      content={content}
-    />,
+    <NextIntlClientProvider locale="en" messages={messages}>
+      <CatalogShell
+        categories={categories}
+        initialCategories={initialCategories}
+      />
+    </NextIntlClientProvider>,
   );
 }
 

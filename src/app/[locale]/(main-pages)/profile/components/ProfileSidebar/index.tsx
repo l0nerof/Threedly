@@ -85,7 +85,7 @@ export function ProfileSidebar() {
   return (
     <Sidebar
       collapsible="none"
-      className="border-border/60 bg-card/70 rounded-3xl border shadow-sm md:sticky md:top-28"
+      className="border-border/60 bg-surface/95 rounded-3xl border shadow-sm md:sticky md:top-28"
     >
       <SidebarContent>
         <SidebarGroup className="p-4">

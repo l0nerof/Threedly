@@ -25,8 +25,8 @@ export const pricingPlanMeta: Record<
     icon: Sparkles,
     buttonVariant: "outline",
     cardClassName:
-      "bg-card/70 border-border/60 shadow-[0_18px_50px_hsl(var(--foreground)/0.06)]",
-    iconWrapClassName: "bg-background text-foreground border-border/60",
+      "bg-surface/95 border-border/60 shadow-[0_18px_50px_hsl(var(--foreground)/0.06)]",
+    iconWrapClassName: "bg-surface-elevated text-foreground border-border/60",
   },
   pro: {
     icon: Zap,
@@ -39,7 +39,7 @@ export const pricingPlanMeta: Record<
     icon: BriefcaseBusiness,
     buttonVariant: "outline",
     cardClassName:
-      "bg-card/78 border-border/60 shadow-[0_18px_50px_hsl(var(--foreground)/0.06)]",
-    iconWrapClassName: "bg-background text-foreground border-border/60",
+      "bg-surface/95 border-border/60 shadow-[0_18px_50px_hsl(var(--foreground)/0.06)]",
+    iconWrapClassName: "bg-surface-elevated text-foreground border-border/60",
   },
 };

@@ -32,7 +32,7 @@ async function Hero() {
       />
 
       <div className="relative z-10 container flex min-h-[80vh] flex-col items-center justify-center py-16 text-center sm:py-20">
-        <div className="border-border/50 bg-background/22 flex w-full max-w-4xl flex-col items-center gap-6 rounded-4xl border px-6 py-10 backdrop-blur-md sm:px-10 sm:py-12">
+        <div className="border-border/50 bg-surface/38 flex w-full max-w-4xl flex-col items-center gap-6 rounded-4xl border px-6 py-10 backdrop-blur-md sm:px-10 sm:py-12">
           <span className="bg-foreground/10 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium">
             {t("badge")}
           </span>

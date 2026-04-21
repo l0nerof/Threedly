@@ -30,7 +30,7 @@ export class CatalogPage extends BasePage {
 
   async expectLoaded() {
     await this.expectPathname("/ua/catalog");
-    await expect(this.heading).toBeVisible();
+    await expect(this.heading).toHaveCount(1);
     await expect(this.searchInput).toBeVisible();
   }
 

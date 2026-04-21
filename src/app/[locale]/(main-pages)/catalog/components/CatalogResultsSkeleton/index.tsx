@@ -1,31 +1,29 @@
 import { Separator } from "@/src/shared/components/Separator";
 import { Skeleton } from "@/src/shared/components/Skeleton";
-import { type CatalogShellContent } from "../../types/catalog";
-
-type CatalogResultsCanvasProps = {
-  content: CatalogShellContent["resultsArea"];
-};
+import { useTranslations } from "next-intl";
 
 const cardHeights = ["h-64", "h-56", "h-60", "h-52", "h-64", "h-56"] as const;
 
-function CatalogResultsCanvas({ content }: CatalogResultsCanvasProps) {
+function CatalogResultsSkeleton() {
+  const t = useTranslations("Catalog");
+
   return (
     <section
-      aria-label={content.ariaLabel}
-      className="border-border/60 bg-background/74 flex flex-col gap-6 rounded-[2rem] border p-5 shadow-[0_28px_100px_hsl(var(--foreground)/0.08)] backdrop-blur-xl sm:p-6"
+      aria-label={t("resultsArea.ariaLabel")}
+      className="border-border/60 bg-surface/95 flex flex-col gap-6 rounded-4xl border p-5 shadow-[0_28px_100px_hsl(var(--foreground)/0.08)] backdrop-blur-xl sm:p-6"
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex max-w-2xl flex-col gap-2">
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            {content.title}
+            {t("resultsArea.title")}
           </h2>
           <p className="text-muted-foreground text-sm leading-6 sm:text-base">
-            {content.description}
+            {t("resultsArea.description")}
           </p>
         </div>
 
         <div className="border-border/60 text-muted-foreground inline-flex items-center rounded-full border px-3 py-1.5 text-xs tracking-[0.12em] uppercase">
-          {content.paginationLabel}
+          {t("resultsArea.paginationLabel")}
         </div>
       </div>
 
@@ -33,7 +31,7 @@ function CatalogResultsCanvas({ content }: CatalogResultsCanvasProps) {
         {cardHeights.map((cardHeight, index) => (
           <article
             key={`${cardHeight}-${index}`}
-            className="border-border/60 bg-card/72 flex flex-col gap-4 rounded-[1.65rem] border p-4 sm:p-5"
+            className="border-border/60 bg-surface-elevated/95 flex flex-col gap-4 rounded-[1.65rem] border p-4 sm:p-5"
           >
             <Skeleton className={`${cardHeight} rounded-[1.25rem]`} />
 
@@ -71,4 +69,4 @@ function CatalogResultsCanvas({ content }: CatalogResultsCanvasProps) {
   );
 }
 
-export default CatalogResultsCanvas;
+export default CatalogResultsSkeleton;

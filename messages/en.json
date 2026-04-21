@@ -143,9 +143,7 @@
       "title": "Threedly Catalog - 3D models for designers",
       "description": "Browse 3D models in the Threedly catalog by category, file format, and access level."
     },
-    "badge": "Catalog",
     "title": "Find 3D models faster for working scenes",
-    "subtitle": "The catalog brings search, categories, file format, and access level into one working interface.",
     "searchLabel": "Search catalog",
     "searchPlaceholder": "Search by model, object, material, or use case",
     "mobileFiltersButton": "Filters",

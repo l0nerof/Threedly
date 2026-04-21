@@ -54,7 +54,7 @@ function ForWho() {
           onValueChange={(value) => setActiveTab(value as AudienceId)}
           className="w-full items-center gap-6"
         >
-          <TabsList className="border-border/60 bg-card/45 h-auto! w-full max-w-xl rounded-full border p-1.5 shadow-[0_12px_44px_hsl(var(--foreground)/0.08)] backdrop-blur-sm">
+          <TabsList className="border-border/60 bg-surface/90 h-auto! w-full max-w-xl rounded-full border p-1.5 shadow-[0_12px_44px_hsl(var(--foreground)/0.08)] backdrop-blur-sm">
             {audiences.map((audience) => {
               const AudienceIcon = audience.icon;
 
@@ -85,7 +85,7 @@ function ForWho() {
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.32, ease: "easeOut" }}
-                  className="border-border/60 bg-card/55 relative w-full overflow-hidden rounded-[2rem] border p-6 backdrop-blur-sm sm:p-8"
+                  className="border-border/60 bg-surface/90 relative w-full overflow-hidden rounded-[2rem] border p-6 backdrop-blur-sm sm:p-8"
                 >
                   <div
                     aria-hidden
@@ -120,7 +120,7 @@ function ForWho() {
                         {forWhoMetaKeys.map((itemKey) => (
                           <div
                             key={itemKey}
-                            className="border-border/60 bg-background/78 rounded-[1.5rem] border p-4 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)]"
+                            className="border-border/60 bg-surface-elevated/86 rounded-[1.5rem] border p-4 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)]"
                           >
                             <p className="text-muted-foreground text-[0.72rem] font-medium tracking-[0.14em] uppercase">
                               {t(`${audience.id}.meta.${itemKey}.label`)}
@@ -132,7 +132,7 @@ function ForWho() {
                         ))}
                       </div>
 
-                      <div className="border-border/60 bg-background/68 rounded-[1.6rem] border p-5">
+                      <div className="border-border/60 bg-surface/90 rounded-[1.6rem] border p-5">
                         <p className="text-foreground/84 text-sm leading-7 sm:text-base">
                           {t(`${audience.id}.note`)}
                         </p>
@@ -146,7 +146,7 @@ function ForWho() {
                         return (
                           <div
                             key={pointKey}
-                            className="border-border/60 bg-background/72 flex items-start gap-4 rounded-[1.55rem] border px-4 py-4 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] sm:px-5"
+                            className="border-border/60 bg-surface-elevated/84 flex items-start gap-4 rounded-[1.55rem] border px-4 py-4 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] sm:px-5"
                           >
                             <div className="bg-primary/10 text-primary mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-xl">
                               <PointIcon className="size-4" aria-hidden />
