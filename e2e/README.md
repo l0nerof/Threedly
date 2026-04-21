@@ -22,25 +22,32 @@ This file documents the Playwright coverage in this repository and should stay i
 - [x] The pricing page renders its primary heading
 - [x] The pricing page renders the three plan cards
 
+## Catalog (`catalog.spec.ts`)
+
+- [x] `/ua/catalog` renders the catalog heading and search input
+- [x] Desktop viewport shows the filter sidebar shell
+- [x] Mobile viewport opens the filter sheet from the toolbar
+- [x] `/ua/catalog?category=chairs` preselects the matching category chip
+
 ## Known Gaps
 
 - [ ] No English-locale smoke coverage yet
-- [ ] No direct route coverage yet for `catalog`, `designers`, or auth pages
+- [ ] No direct route coverage yet for `designers` or auth pages
 - [ ] No profile-area e2e coverage yet
 - [ ] No not-found / error-state coverage yet
 - [ ] No accessibility coverage yet
 
 ## Pages And POMs
 
-| Page / Area  | Route           | POM           | Spec            | Status            |
-| ------------ | --------------- | ------------- | --------------- | ----------------- |
-| Home         | `/`, `/ua`      | `HomePage`    | `smoke.spec.ts` | `[x] Covered`     |
-| Pricing      | `/ua/pricing`   | `PricingPage` | `smoke.spec.ts` | `[x] Covered`     |
-| Catalog      | `/ua/catalog`   | -             | -               | `[ ] Not covered` |
-| Designers    | `/ua/designers` | -             | -               | `[ ] Not covered` |
-| Login        | `/ua/login`     | -             | -               | `[ ] Not covered` |
-| Signup       | `/ua/signup`    | -             | -               | `[ ] Not covered` |
-| Profile area | `/ua/profile/*` | -             | -               | `[ ] Not covered` |
+| Page / Area  | Route           | POM           | Spec              | Status            |
+| ------------ | --------------- | ------------- | ----------------- | ----------------- |
+| Home         | `/`, `/ua`      | `HomePage`    | `smoke.spec.ts`   | `[x] Covered`     |
+| Pricing      | `/ua/pricing`   | `PricingPage` | `smoke.spec.ts`   | `[x] Covered`     |
+| Catalog      | `/ua/catalog`   | `CatalogPage` | `catalog.spec.ts` | `[x] Covered`     |
+| Designers    | `/ua/designers` | -             | -                 | `[ ] Not covered` |
+| Login        | `/ua/login`     | -             | -                 | `[ ] Not covered` |
+| Signup       | `/ua/signup`    | -             | -                 | `[ ] Not covered` |
+| Profile area | `/ua/profile/*` | -             | -                 | `[ ] Not covered` |
 
 ## Authoring Notes
 

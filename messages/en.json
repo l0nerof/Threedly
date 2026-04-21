@@ -138,6 +138,91 @@
     }
   },
 
+  "Catalog": {
+    "metadata": {
+      "title": "Threedly Catalog - 3D models for designers",
+      "description": "Browse 3D models in the Threedly catalog by category, file format, and access level."
+    },
+    "badge": "Catalog",
+    "title": "Find 3D models faster for working scenes",
+    "subtitle": "The catalog brings search, categories, file format, and access level into one working interface.",
+    "searchLabel": "Search catalog",
+    "searchPlaceholder": "Search by model, object, material, or use case",
+    "mobileFiltersButton": "Filters",
+    "sortLabel": "Sort",
+    "resetFilters": "Reset",
+    "activeFiltersLabel": "Active filters",
+    "noActiveFilters": "Choose categories, plan, or format to narrow the results.",
+    "removeFilter": "Remove filter",
+    "filtersPanel": {
+      "title": "Filters",
+      "description": "Refine the catalog for your workflow."
+    },
+    "filters": {
+      "category": {
+        "title": "Category",
+        "description": "You can select more than one category.",
+        "empty": "Categories are not available right now."
+      },
+      "plan": {
+        "title": "Minimum plan",
+        "description": "Filter models by access tier.",
+        "options": {
+          "free": {
+            "label": "Free",
+            "description": "For getting started and testing."
+          },
+          "pro": {
+            "label": "Pro",
+            "description": "For regular professional work."
+          },
+          "max": {
+            "label": "Max",
+            "description": "For heavier studio workflows."
+          }
+        }
+      },
+      "format": {
+        "title": "File format",
+        "description": "Quickly narrow the catalog by required format.",
+        "options": {
+          "glb": {
+            "label": "GLB",
+            "description": "Useful for quick previews."
+          },
+          "fbx": {
+            "label": "FBX",
+            "description": "Common format for cross-tool exchange."
+          },
+          "max": {
+            "label": "MAX",
+            "description": "Directly usable in 3ds Max."
+          }
+        }
+      }
+    },
+    "sortOptions": {
+      "curated": {
+        "label": "Recommended",
+        "description": "Default order for exploring the catalog."
+      },
+      "fresh": {
+        "label": "Newest arrivals",
+        "description": "Show the latest additions first."
+      },
+      "downloads": {
+        "label": "Popular",
+        "description": "Show the most in-demand models first."
+      }
+    },
+    "resultsArea": {
+      "ariaLabel": "Catalog results area",
+      "title": "Model cards",
+      "description": "Real models and pagination will be connected here in the next step.",
+      "paginationLabel": "Pagination"
+    }
+  },
+
   "HowItWorks": {
     "eyebrow": "A simple start",
     "title": "From sign-up to your first library workflow",
