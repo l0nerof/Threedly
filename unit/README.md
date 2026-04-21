@@ -17,15 +17,22 @@ This file documents the Vitest coverage in this repository and should stay in sy
 - [x] `useIsMobile` returns to `false` when the viewport goes back to desktop width
 - [x] The behavior is exercised through a reusable `matchMedia` mock rather than per-test inline stubs
 
+## Catalog UI Shell (`catalog-shell.spec.tsx`)
+
+- [x] Mobile filter sheet opens from the catalog toolbar
+- [x] Local filter state updates without any real data filtering
+- [x] Reset returns the shell to its default local state
+- [x] Initial category from route state appears in the active filter UI
+
 ## Coverage Map
 
-| Area        | Source                           | Spec                 | Status        |
-| ----------- | -------------------------------- | -------------------- | ------------- |
-| Shared hook | `src/shared/hooks/use-mobile.ts` | `use-mobile.spec.ts` | `[x] Covered` |
+| Area             | Source                                                          | Spec                     | Status        |
+| ---------------- | --------------------------------------------------------------- | ------------------------ | ------------- |
+| Shared hook      | `src/shared/hooks/use-mobile.ts`                                | `use-mobile.spec.ts`     | `[x] Covered` |
+| Catalog UI shell | `src/app/[locale]/(main-pages)/catalog/components/CatalogShell` | `catalog-shell.spec.tsx` | `[x] Covered` |
 
 ## Known Gaps
 
-- [ ] No component-level unit coverage yet
 - [ ] No shared utility coverage yet
 - [ ] No business-layer helper coverage yet
 - [ ] No schema validation coverage yet

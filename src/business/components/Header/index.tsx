@@ -28,21 +28,27 @@ import {
 } from "../Navbar";
 import { ThemeToggle } from "../ThemeToggle";
 
-type HeaderProps = {
-  categories: Category[];
-};
-
 const PROFILE_AVATAR_UPDATED_EVENT = "profile-avatar-updated";
 
-function Header({ categories }: HeaderProps) {
+function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   const t = useTranslations("Header");
   const locale = useLocale();
 
   useEffect(() => {
     const supabase = createClient();
+
+    const loadCategories = async () => {
+      const { data } = await supabase
+        .from("categories")
+        .select("slug, name_ua, name_en")
+        .order("created_at");
+
+      setCategories(data ?? []);
+    };
 
     const loadCurrentUser = async () => {
       const {
@@ -66,6 +72,7 @@ function Header({ categories }: HeaderProps) {
       setAvatarPath(profile?.avatar_path ?? null);
     };
 
+    void loadCategories();
     void loadCurrentUser();
 
     const {
@@ -173,7 +180,7 @@ function Header({ categories }: HeaderProps) {
                   className="w-full"
                 >
                   <AccordionItem value="categories" className="border-b-0">
-                    <AccordionTrigger className="text-foreground py-1 text-sm font-medium hover:no-underline">
+                    <AccordionTrigger className="text-foreground py-1 text-base font-normal hover:no-underline">
                       {t(item.name)}
                     </AccordionTrigger>
                     <AccordionContent className="pb-0">

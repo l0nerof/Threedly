@@ -105,7 +105,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
       }}
       className={cn(
         "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-2 lg:flex dark:bg-transparent",
-        visible && "bg-background/80",
+        visible && "bg-surface/90",
         className,
       )}
     >
@@ -159,7 +159,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-muted absolute inset-0 h-full w-full rounded-full"
+                  className="bg-surface-muted ring-border/70 dark:bg-surface-elevated dark:ring-primary/35 absolute inset-0 h-full w-full rounded-full ring-1"
                 />
               )}
             </AnimatePresence>
@@ -192,7 +192,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
       }}
       className={cn(
         "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between bg-transparent px-0 py-2 lg:hidden",
-        visible && "bg-background/80",
+        visible && "bg-surface/90",
         className,
       )}
     >
@@ -230,7 +230,7 @@ export const MobileNavMenu = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className={cn(
-            "bg-background absolute inset-x-0 top-20 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg px-4 py-8 shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
+            "bg-surface absolute inset-x-0 top-20 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg px-4 py-8 shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
             className,
           )}
         >
@@ -321,7 +321,8 @@ export const NavbarButton = ({
   const variantStyles = {
     primary:
       "bg-primary text-primary-foreground shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
-    secondary: "bg-secondary text-secondary-foreground shadow-none",
+    secondary:
+      "border border-border/80 bg-surface-elevated text-foreground shadow-xs hover:border-primary/35 hover:bg-surface-muted",
     dark: "bg-foreground text-background shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
     gradient:
       "bg-primary text-primary-foreground shadow-[0px_2px_0px_0px_rgba(255,255,255,0.3)_inset]",

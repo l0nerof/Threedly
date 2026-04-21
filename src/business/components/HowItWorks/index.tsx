@@ -64,7 +64,7 @@ function HowItWorks() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -14 }}
               transition={{ duration: 0.28, ease: "easeOut" }}
-              className="border-border/60 bg-card/65 relative overflow-hidden rounded-4xl border p-6 backdrop-blur-sm sm:p-7"
+              className="border-border/60 bg-surface/92 relative overflow-hidden rounded-4xl border p-6 backdrop-blur-sm sm:p-7"
             >
               <div
                 aria-hidden
@@ -89,7 +89,7 @@ function HowItWorks() {
                   </p>
                 </div>
 
-                <div className="border-border/50 bg-background/72 rounded-3xl border p-4">
+                <div className="border-border/50 bg-surface-elevated/85 rounded-3xl border p-4">
                   <p className="text-foreground/82 text-sm leading-7 sm:text-base">
                     {t(`steps.${activeConfig.key}.caption`)}
                   </p>
@@ -128,7 +128,7 @@ function HowItWorks() {
                     setIsPaused(true);
                   }}
                   className={cn(
-                    "border-border/60 bg-card/45 relative flex w-full items-start gap-4 overflow-hidden rounded-[1.8rem] border p-5 text-left transition-all duration-300 sm:gap-5 sm:p-6",
+                    "border-border/60 bg-surface/86 relative flex w-full items-start gap-4 overflow-hidden rounded-[1.8rem] border p-5 text-left transition-all duration-300 sm:gap-5 sm:p-6",
                     isActive &&
                       "border-primary/35 bg-primary/6 shadow-[0_24px_70px_hsl(var(--primary)/0.12)]",
                   )}
@@ -159,7 +159,7 @@ function HowItWorks() {
 
                       <div
                         className={cn(
-                          "bg-background text-muted-foreground border-border/60 flex size-11 shrink-0 items-center justify-center rounded-2xl border transition-colors",
+                          "bg-surface text-muted-foreground border-border/60 flex size-11 shrink-0 items-center justify-center rounded-2xl border transition-colors",
                           isActive &&
                             "bg-primary/10 text-primary border-primary/20",
                         )}

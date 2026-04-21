@@ -49,7 +49,7 @@ function FinalCta() {
       {/* container */}
       <div className="relative z-10 container">
         <motion.div
-          className="border-border/60 bg-background/62 relative grid grid-cols-1 gap-8 overflow-hidden rounded-4xl border px-6 py-8 shadow-[0_28px_120px_hsl(var(--foreground)/0.12)] backdrop-blur-xl sm:px-8 sm:py-10 lg:grid-cols-2 lg:items-center lg:gap-10"
+          className="border-border/60 bg-surface/86 relative grid grid-cols-1 gap-8 overflow-hidden rounded-4xl border px-6 py-8 shadow-[0_28px_120px_hsl(var(--foreground)/0.12)] backdrop-blur-xl sm:px-8 sm:py-10 lg:grid-cols-2 lg:items-center lg:gap-10"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -99,7 +99,7 @@ function FinalCta() {
             {["one", "two", "three"].map((itemKey, index) => (
               <div
                 key={itemKey}
-                className="border-border/60 bg-card/68 flex items-start gap-4 rounded-2xl border p-4"
+                className="border-border/60 bg-surface-elevated/85 flex items-start gap-4 rounded-2xl border p-4"
               >
                 <span className="text-primary min-w-8 text-sm font-semibold tracking-[0.14em] uppercase">
                   0{index + 1}

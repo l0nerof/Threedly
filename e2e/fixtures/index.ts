@@ -1,5 +1,6 @@
 import { test as base } from "@playwright/test";
 import { ForgotPasswordPage, LoginPage, SignupPage } from "../pages/auth.page";
+import { CatalogPage } from "../pages/catalog.page";
 import { DesignerProfilePage, DesignersPage } from "../pages/designers.page";
 import { HomePage } from "../pages/home.page";
 import { EnHomePage, EnLoginPage, EnPricingPage } from "../pages/locale.page";
@@ -14,6 +15,7 @@ import {
 } from "../pages/profile.page";
 
 type AppFixtures = {
+  catalogPage: CatalogPage;
   homePage: HomePage;
   pricingPage: PricingPage;
   loginPage: LoginPage;
@@ -33,8 +35,11 @@ type AppFixtures = {
 };
 
 export const test = base.extend<AppFixtures>({
-  homePage: async ({ page }, use) => {
-    await use(new HomePage(page));
+  catalogPage: async ({ page }, runFixture) => {
+    await runFixture(new CatalogPage(page));
+  },
+  homePage: async ({ page }, runFixture) => {
+    await runFixture(new HomePage(page));
   },
   pricingPage: async ({ page }, use) => {
     await use(new PricingPage(page));

@@ -51,7 +51,7 @@ export default async function PricingPage({ params }: Props) {
             {["one", "two", "three"].map((itemKey) => (
               <div
                 key={itemKey}
-                className="border-border/60 bg-card/60 rounded-[1.4rem] border px-4 py-4 text-left shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] backdrop-blur-sm"
+                className="border-border/60 bg-surface/90 rounded-[1.4rem] border px-4 py-4 text-left shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] backdrop-blur-sm"
               >
                 <p className="text-muted-foreground text-[0.72rem] font-medium tracking-[0.14em] uppercase">
                   {t(`highlights.${itemKey}.label`)}

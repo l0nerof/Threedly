@@ -93,6 +93,13 @@ This file documents the Playwright coverage in this repository and should stay i
 - [x] `/en/pricing` renders pricing page in English with 3 plan cards
 - [x] `/en/login` renders login form in English
 
+## Catalog (`catalog.spec.ts`)
+
+- [x] `/ua/catalog` renders the catalog heading and search input
+- [x] Desktop viewport shows the filter sidebar shell
+- [x] Mobile viewport opens the filter sheet from the toolbar
+- [x] `/ua/catalog?category=chairs` preselects the matching category chip
+
 ## Known Gaps
 
 - [ ] No catalog e2e coverage (out of scope)
@@ -120,7 +127,7 @@ This file documents the Playwright coverage in this repository and should stay i
 | EN Home          | `/en`                  | `EnHomePage`          | `locale.spec.ts`    | `[x] Covered` |
 | EN Pricing       | `/en/pricing`          | `EnPricingPage`       | `locale.spec.ts`    | `[x] Covered` |
 | EN Login         | `/en/login`            | `EnLoginPage`         | `locale.spec.ts`    | `[x] Covered` |
-| Catalog          | `/ua/catalog`          | -                     | -                   | `[ ] Skipped` |
+| Catalog          | `/ua/catalog`          | `CatalogPage`         | `catalog.spec.ts`   | `[x] Covered` |
 
 ## Authoring Notes
 
