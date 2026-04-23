@@ -18,13 +18,14 @@ import {
 } from "@/src/shared/components/Sheet";
 import { Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import {
   haveSameValues,
   resolveOptionLabel,
 } from "../../../../../../business/utils/catalogFilters";
 import CatalogFilters from "../CatalogFilters";
-import CatalogResultsSkeleton from "../CatalogResultsSkeleton";
+import CatalogResults from "../CatalogResults";
 import CatalogSortDropdown from "../CatalogSortDropdown";
 
 type CatalogShellProps = {
@@ -46,6 +47,20 @@ function CatalogShell({ categories, initialCategories }: CatalogShellProps) {
   );
   const [selectedSort, setSelectedSort] =
     useState<CatalogSortValue>(defaultSort);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = Math.max(1, Number(searchParams.get("page") ?? 1));
+
+  const setPage = (nextPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (nextPage === 1) {
+      params.delete("page");
+    } else {
+      params.set("page", String(nextPage));
+    }
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
 
   const hasActiveFilters =
     searchValue.trim().length > 0 ||
@@ -144,7 +159,10 @@ function CatalogShell({ categories, initialCategories }: CatalogShellProps) {
 
               <CatalogSortDropdown
                 selectedSort={selectedSort}
-                onSortChange={setSelectedSort}
+                onSortChange={(sort) => {
+                  setSelectedSort(sort);
+                  setPage(1);
+                }}
                 onMobileFiltersOpen={() => setIsMobileFiltersOpen(true)}
               />
             </div>
@@ -193,7 +211,11 @@ function CatalogShell({ categories, initialCategories }: CatalogShellProps) {
             />
           </aside>
 
-          <CatalogResultsSkeleton />
+          <CatalogResults
+            page={page}
+            sort={selectedSort}
+            onPageChange={setPage}
+          />
         </div>
       </div>
 

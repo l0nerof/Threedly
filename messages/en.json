@@ -215,9 +215,24 @@
     },
     "resultsArea": {
       "ariaLabel": "Catalog results area",
-      "title": "Model cards",
-      "description": "Real models and pagination will be connected here in the next step.",
-      "paginationLabel": "Pagination"
+      "title": "Model catalog",
+      "description": "Browse available 3D models and download what you need for your projects.",
+      "count": "{count, plural, one {# model} other {# models}}",
+      "pageOf": "Page {page} of {total}",
+      "empty": "No models found for your query.",
+      "error": "Failed to load models. Please try again.",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "modelCard": {
+        "downloads": "{count} downloads",
+        "planBadge": {
+          "free": "Free",
+          "pro": "Pro",
+          "max": "Max"
+        },
+        "previewButton": "Preview",
+        "downloadButton": "Download"
+      }
     }
   },
 

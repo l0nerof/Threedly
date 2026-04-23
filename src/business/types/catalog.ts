@@ -15,3 +15,21 @@ export type CatalogFilterOption<TValue extends string = string> = {
   label: string;
   description?: string;
 };
+
+export type CatalogModel = {
+  id: string;
+  slug: string;
+  title_ua: string;
+  title_en: string;
+  cover_image_path: string;
+  minimum_plan: CatalogPlanKey;
+  file_format: string | null;
+  download_count: number;
+  is_featured: boolean;
+  published_at: string | null;
+};
+
+export type CatalogModelsResult = {
+  models: CatalogModel[];
+  totalCount: number;
+};
