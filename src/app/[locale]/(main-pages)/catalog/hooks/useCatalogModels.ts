@@ -1,7 +1,4 @@
-import {
-  CATALOG_PAGE_SIZE,
-  catalogSortValues,
-} from "@/src/business/constants/catalogConfig";
+import { catalogSortValues } from "@/src/business/constants/catalogConfig";
 import type { CatalogSortValue } from "@/src/business/types/catalog";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCatalogModels } from "../actions";
