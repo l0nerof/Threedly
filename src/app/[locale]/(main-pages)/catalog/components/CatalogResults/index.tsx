@@ -3,6 +3,7 @@
 import { CATALOG_PAGE_SIZE } from "@/src/business/constants/catalogConfig";
 import type { CatalogSortValue } from "@/src/business/types/catalog";
 import { Separator } from "@/src/shared/components/Separator";
+import { cn } from "@/src/shared/utils/cn";
 import { useLocale, useTranslations } from "next-intl";
 import { useCatalogModels } from "../../hooks/useCatalogModels";
 import CatalogModelCard from "../CatalogModelCard";
@@ -66,11 +67,10 @@ function CatalogResults({ page, sort, onPageChange }: CatalogResultsProps) {
       </div>
 
       <div
-        className={
-          isFetching
-            ? "grid gap-4 opacity-60 transition-opacity duration-200 md:grid-cols-2 2xl:grid-cols-3"
-            : "grid gap-4 md:grid-cols-2 2xl:grid-cols-3"
-        }
+        className={cn(
+          "grid gap-4 md:grid-cols-2 2xl:grid-cols-3",
+          isFetching && "opacity-60 transition-opacity duration-200",
+        )}
       >
         {models.map((model) => (
           <CatalogModelCard key={model.id} model={model} locale={locale} />
