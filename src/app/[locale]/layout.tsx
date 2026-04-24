@@ -1,4 +1,5 @@
 import { LocaleCode } from "@/src/business/constants/localization";
+import { QueryProvider } from "@/src/business/providers/QueryProvider";
 import { ThemeProvider } from "@/src/business/providers/ThemeProvider";
 import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
 import { routing } from "@/src/i18n/routing";
@@ -78,10 +79,12 @@ export default async function RootLayout({ children, params }: Props) {
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider messages={messages}>
-            {children}
-            <Toaster />
-          </NextIntlClientProvider>
+          <QueryProvider>
+            <NextIntlClientProvider messages={messages}>
+              {children}
+              <Toaster />
+            </NextIntlClientProvider>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

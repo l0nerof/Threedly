@@ -1,5 +1,6 @@
 import CatalogShell from "@/src/app/[locale]/(main-pages)/catalog/components/CatalogShell";
 import { NextIntlClientProvider } from "next-intl";
+import { vi } from "vitest";
 import {
   describe,
   expect,
@@ -9,6 +10,20 @@ import {
   screen,
   within,
 } from "../fixtures";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+vi.mock("@tanstack/react-query", () => ({
+  useQuery: () => ({
+    data: undefined,
+    isLoading: true,
+    isError: false,
+    isFetching: false,
+  }),
+}));
 
 const messages = {
   Catalog: {
@@ -84,9 +99,20 @@ const messages = {
     },
     resultsArea: {
       ariaLabel: "Catalog results area",
-      title: "Model cards",
-      description: "Real models arrive next.",
-      paginationLabel: "Pagination",
+      title: "Model catalog",
+      description: "Browse available 3D models.",
+      count: "{count} models",
+      pageOf: "Page {page} of {total}",
+      empty: "No models found.",
+      error: "Failed to load models.",
+      previousPage: "Previous page",
+      nextPage: "Next page",
+      modelCard: {
+        downloads: "{count} downloads",
+        planBadge: { free: "Free", pro: "Pro", max: "Max" },
+        previewButton: "Preview",
+        downloadButton: "Download",
+      },
     },
   },
 };
