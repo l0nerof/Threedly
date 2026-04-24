@@ -15,8 +15,8 @@ function CatalogModelCard({ model, locale }: CatalogModelCardProps) {
   const title = locale === "ua" ? model.title_ua : model.title_en;
 
   return (
-    <article className="border-border/60 bg-surface-elevated/95 flex flex-col gap-4 rounded-[1.65rem] border p-4 sm:p-5">
-      <div className="bg-muted relative h-60 overflow-hidden rounded-[1.25rem]">
+    <article className="border-border/60 bg-surface-elevated/80 flex flex-col gap-4 rounded-[1.65rem] border p-4 sm:p-5">
+      <div className="bg-muted/100 relative h-60 overflow-hidden rounded-[1.25rem]">
         <Image
           src={model.cover_image_path}
           alt={title}
@@ -47,7 +47,7 @@ function CatalogModelCard({ model, locale }: CatalogModelCardProps) {
         </p>
       </div>
 
-      <div className="mt-auto grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         <Button variant="outline" size="sm" className="rounded-xl" disabled>
           <ScanEye className="size-4" aria-hidden />
           {t("modelCard.previewButton")}

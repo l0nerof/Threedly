@@ -211,11 +211,13 @@ function CatalogShell({ categories, initialCategories }: CatalogShellProps) {
             />
           </aside>
 
-          <CatalogResults
-            page={page}
-            sort={selectedSort}
-            onPageChange={setPage}
-          />
+          <div className="self-start">
+            <CatalogResults
+              page={page}
+              sort={selectedSort}
+              onPageChange={setPage}
+            />
+          </div>
         </div>
       </div>
 

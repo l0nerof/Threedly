@@ -218,7 +218,7 @@
       "title": "Model catalog",
       "description": "Browse available 3D models and download what you need for your projects.",
       "count": "{count, plural, one {# model} other {# models}}",
-      "pageOf": "Page {page} of {total}",
+      "pageOf": "Showing {from}–{to} of {total} models",
       "empty": "No models found for your query.",
       "error": "Failed to load models. Please try again.",
       "previousPage": "Previous page",

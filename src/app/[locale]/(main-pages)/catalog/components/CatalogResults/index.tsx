@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useCatalogModels } from "../../hooks/useCatalogModels";
 import CatalogModelCard from "../CatalogModelCard";
 import CatalogPagination from "../CatalogPagination";
+import CatalogResultsMessage from "../CatalogResultsMessage";
 import CatalogResultsSkeleton from "../CatalogResultsSkeleton";
 
 type CatalogResultsProps = {
@@ -30,12 +31,7 @@ function CatalogResults({ page, sort, onPageChange }: CatalogResultsProps) {
 
   if (isError) {
     return (
-      <section
-        aria-label={t("ariaLabel")}
-        className="border-border/60 bg-surface/95 flex flex-col items-center justify-center gap-4 rounded-4xl border p-12 text-center shadow-[0_28px_100px_hsl(var(--foreground)/0.08)] backdrop-blur-xl"
-      >
-        <p className="text-muted-foreground text-sm">{t("error")}</p>
-      </section>
+      <CatalogResultsMessage ariaLabel={t("ariaLabel")} message={t("error")} />
     );
   }
 
@@ -45,12 +41,7 @@ function CatalogResults({ page, sort, onPageChange }: CatalogResultsProps) {
 
   if (models.length === 0) {
     return (
-      <section
-        aria-label={t("ariaLabel")}
-        className="border-border/60 bg-surface/95 flex flex-col items-center justify-center gap-4 rounded-4xl border p-12 text-center shadow-[0_28px_100px_hsl(var(--foreground)/0.08)] backdrop-blur-xl"
-      >
-        <p className="text-muted-foreground text-sm">{t("empty")}</p>
-      </section>
+      <CatalogResultsMessage ariaLabel={t("ariaLabel")} message={t("empty")} />
     );
   }
 
@@ -90,7 +81,11 @@ function CatalogResults({ page, sort, onPageChange }: CatalogResultsProps) {
 
       <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
         <p className="text-muted-foreground shrink-0 text-sm">
-          {t("pageOf", { page, total: totalPages })}
+          {t("pageOf", {
+            from: (page - 1) * CATALOG_PAGE_SIZE + 1,
+            to: Math.min(page * CATALOG_PAGE_SIZE, totalCount),
+            total: totalCount,
+          })}
         </p>
 
         <CatalogPagination
