@@ -14,6 +14,8 @@ test.describe("profile — unauthenticated", () => {
 });
 
 test.describe("profile — authenticated", () => {
+  test.describe.configure({ mode: "serial" });
+
   test.use({ storageState: STORAGE_STATE_PATH });
 
   test("overview page renders heading and plan badge", async ({
