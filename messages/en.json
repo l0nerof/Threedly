@@ -402,12 +402,54 @@
 
     "uploads": {
       "title": "Uploads",
-      "subtitle": "Manage your published models.",
+      "subtitle": "Upload draft models into private Supabase storage.",
+      "loadError": "Could not load the model upload page data.",
       "uploadCta": "Upload model",
       "secondaryCta": "Open settings",
       "empty": {
         "title": "You do not have models yet",
-        "description": "Add your first model."
+        "description": "Add your first model and it will appear here as a draft."
+      },
+      "form": {
+        "title": "New 3D model",
+        "description": "The MVP stores the file and base metadata as a draft. Publishing to the catalog is a separate step.",
+        "titleUa": "Ukrainian title",
+        "titleEn": "English title",
+        "descriptionUa": "Ukrainian description",
+        "descriptionEn": "English description",
+        "category": "Category",
+        "categoryPlaceholder": "Choose a category",
+        "minimumPlan": "Minimum plan",
+        "plans": {
+          "free": "Free",
+          "pro": "Pro",
+          "max": "Max"
+        },
+        "file": "Model file",
+        "fileHint": "Supports GLB, GLTF, FBX, OBJ, MAX, BLEND, and ZIP up to 50 MB.",
+        "submit": "Upload model",
+        "submitting": "Uploading...",
+        "success": "Model uploaded as a draft.",
+        "errors": {
+          "invalidMetadata": "Check the titles, category, and access level.",
+          "invalidFile": "Add a model file.",
+          "fileTooLarge": "The file must be no larger than 50 MB.",
+          "unsupportedFileType": "This file format is not supported yet.",
+          "unauthorized": "Sign in to upload a model.",
+          "uploadFailed": "Could not upload the file to storage.",
+          "metadataSaveFailed": "The file uploaded, but the model metadata was not saved. Try again.",
+          "generic": "Could not upload the model. Try again."
+        }
+      },
+      "list": {
+        "title": "Uploaded drafts",
+        "description": "These models are already linked to your profile.",
+        "unknownFormat": "Unknown format"
+      },
+      "status": {
+        "draft": "Draft",
+        "published": "Published",
+        "archived": "Archived"
       }
     },
 
