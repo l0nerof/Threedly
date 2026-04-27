@@ -74,7 +74,8 @@ This file documents the Playwright coverage in this repository and should stay i
 - [x] Overview page shows all stat cards
 - [x] Settings page renders heading
 - [x] Library page renders heading and empty state
-- [x] Uploads page renders heading and empty state
+- [x] Uploads page renders the model upload form
+- [x] Uploads page renders the uploaded drafts panel
 - [x] Sidebar navigation: overview → settings
 - [x] Sidebar navigation: overview → library
 - [x] Sidebar navigation: overview → uploads
