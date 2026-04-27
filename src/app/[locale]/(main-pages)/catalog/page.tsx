@@ -7,7 +7,6 @@ import CatalogShell from "./components/CatalogShell";
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ category?: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -25,11 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function CatalogPage({ params, searchParams }: Props) {
-  const [{ locale }, resolvedSearchParams] = await Promise.all([
-    params,
-    searchParams,
-  ]);
+export default async function CatalogPage({ params }: Props) {
+  const { locale } = await params;
 
   if (!isLocaleCode(locale)) {
     notFound();
@@ -50,18 +46,5 @@ export default async function CatalogPage({ params, searchParams }: Props) {
       label: locale === "ua" ? category.name_ua : category.name_en,
     })) ?? [];
 
-  const requestedCategory = resolvedSearchParams.category;
-  const initialCategories =
-    requestedCategory &&
-    (categories.length === 0 ||
-      categories.some((category) => category.value === requestedCategory))
-      ? [requestedCategory]
-      : [];
-
-  return (
-    <CatalogShell
-      categories={categories}
-      initialCategories={initialCategories}
-    />
-  );
+  return <CatalogShell categories={categories} />;
 }

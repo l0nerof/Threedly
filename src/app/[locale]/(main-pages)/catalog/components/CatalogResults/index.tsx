@@ -1,7 +1,11 @@
 "use client";
 
 import { CATALOG_PAGE_SIZE } from "@/src/business/constants/catalogConfig";
-import type { CatalogSortValue } from "@/src/business/types/catalog";
+import type {
+  CatalogFormatValue,
+  CatalogPlanKey,
+  CatalogSortValue,
+} from "@/src/business/types/catalog";
 import { Separator } from "@/src/shared/components/Separator";
 import { cn } from "@/src/shared/utils/cn";
 import { useLocale, useTranslations } from "next-intl";
@@ -14,16 +18,32 @@ import CatalogResultsSkeleton from "../CatalogResultsSkeleton";
 type CatalogResultsProps = {
   page: number;
   sort: CatalogSortValue;
+  search?: string;
+  categories?: string[];
+  plans?: CatalogPlanKey[];
+  formats?: CatalogFormatValue[];
   onPageChange: (page: number) => void;
 };
 
-function CatalogResults({ page, sort, onPageChange }: CatalogResultsProps) {
+function CatalogResults({
+  page,
+  sort,
+  search,
+  categories,
+  plans,
+  formats,
+  onPageChange,
+}: CatalogResultsProps) {
   const t = useTranslations("Catalog.resultsArea");
   const locale = useLocale();
 
   const { data, isLoading, isError, isFetching } = useCatalogModels({
     page,
     sort,
+    search,
+    categories,
+    plans,
+    formats,
   });
 
   if (isLoading) {
