@@ -30,7 +30,7 @@ test.describe("catalog", () => {
   }) => {
     await page.setViewportSize({ width: 1440, height: 1200 });
 
-    await catalogPage.open("/ua/catalog?category=chairs");
+    await catalogPage.open("/ua/catalog?categories=chairs");
     await catalogPage.expectLoaded();
     await catalogPage.expectActiveCategoryChip(/Стільці|Chairs/i);
   });
