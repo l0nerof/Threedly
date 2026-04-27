@@ -69,10 +69,24 @@ export class ProfileLibraryPage extends BasePage {
 
 export class ProfileUploadsPage extends BasePage {
   readonly heading: Locator;
+  readonly uploadTitleUaInput: Locator;
+  readonly uploadTitleEnInput: Locator;
+  readonly uploadModelFileInput: Locator;
+  readonly uploadSubmitButton: Locator;
+  readonly uploadedDraftsHeading: Locator;
 
   constructor(page: Page) {
     super(page);
     this.heading = page.getByRole("heading", { level: 1, name: /мої моделі/i });
+    this.uploadTitleUaInput = page.getByLabel("Назва українською");
+    this.uploadTitleEnInput = page.getByLabel("Назва англійською");
+    this.uploadModelFileInput = page.getByLabel("Файл моделі");
+    this.uploadSubmitButton = page.getByRole("button", {
+      name: "Завантажити модель",
+    });
+    this.uploadedDraftsHeading = page.getByRole("heading", {
+      name: "Завантажені чернетки",
+    });
   }
 
   async open() {

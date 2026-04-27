@@ -119,7 +119,9 @@ export default async function ProfileUploadsPage({ params }: Props) {
 
       <Card className="border-border/60 gap-4 rounded-2xl p-6 shadow-none">
         <CardHeader className="p-0">
-          <CardTitle>{t("uploads.list.title")}</CardTitle>
+          <CardTitle>
+            <h2>{t("uploads.list.title")}</h2>
+          </CardTitle>
           <CardDescription>{t("uploads.list.description")}</CardDescription>
         </CardHeader>
         <CardContent className="p-0">

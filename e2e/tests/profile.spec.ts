@@ -53,14 +53,16 @@ test.describe("profile — authenticated", () => {
     ).toBeVisible();
   });
 
-  test("uploads page renders heading and empty state", async ({
+  test("uploads page renders the model upload form", async ({
     profileUploadsPage,
   }) => {
     await profileUploadsPage.open();
     await profileUploadsPage.expectLoaded();
-    await expect(
-      profileUploadsPage.page.getByText(/у вас поки немає моделей/i),
-    ).toBeVisible();
+    await expect(profileUploadsPage.uploadTitleUaInput).toBeVisible();
+    await expect(profileUploadsPage.uploadTitleEnInput).toBeVisible();
+    await expect(profileUploadsPage.uploadModelFileInput).toBeVisible();
+    await expect(profileUploadsPage.uploadSubmitButton).toBeVisible();
+    await expect(profileUploadsPage.uploadedDraftsHeading).toBeVisible();
   });
 
   test("sidebar navigation: overview → settings", async ({

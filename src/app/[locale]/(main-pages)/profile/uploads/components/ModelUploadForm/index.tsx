@@ -98,7 +98,9 @@ function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="contents">
       <CardHeader className="p-0">
-        <CardTitle>{t("title")}</CardTitle>
+        <CardTitle>
+          <h2>{t("title")}</h2>
+        </CardTitle>
         <CardDescription className="leading-6">
           {t("description")}
         </CardDescription>
