@@ -154,7 +154,7 @@ describe("CatalogShell", () => {
       within(desktopFilters).getByRole("button", { name: "Show 42 models" }),
     );
     expect(mockPushFn).toHaveBeenCalledWith(
-      expect.stringContaining("categories=lighting"),
+      expect.stringContaining("category=lighting"),
       expect.anything(),
     );
   });
@@ -181,14 +181,14 @@ describe("CatalogShell", () => {
   it("navigates to clean pathname when Reset is clicked", () => {
     mockPushFn = vi.fn();
     // Pre-set URL params so hasActiveFilters = true and Reset button is visible
-    renderCatalogShell("categories=chairs");
+    renderCatalogShell("category=chairs");
 
     fireEvent.click(screen.getAllByRole("button", { name: "Reset" })[0]);
     expect(mockPushFn).toHaveBeenCalledWith("/en/catalog", expect.anything());
   });
 
   it("pre-selects categories from URL search params", () => {
-    renderCatalogShell("categories=chairs");
+    renderCatalogShell("category=chairs");
 
     const activeFilters = screen.getByLabelText("Active filters");
     const desktopFilters = screen.getAllByLabelText("Filters")[0];
