@@ -155,8 +155,8 @@
     "filtersPanel": {
       "title": "Фільтри",
       "description": "Уточніть видачу під свій сценарій.",
-      "showCount": "{count, plural, one {Показати # модель} few {Показати # моделі} many {Показати # моделей} other {Показати # моделей}}",
-      "countLoading": "Шукаємо..."
+      "showCount": "Показати ({count})",
+      "countLoading": "..."
     },
     "filters": {
       "category": {

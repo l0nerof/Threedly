@@ -115,7 +115,7 @@ function Header() {
         name: item.name,
         dropdown: categories.map((cat) => ({
           label: locale === "ua" ? cat.name_ua : cat.name_en,
-          href: `/catalog?categories=${cat.slug}`,
+          href: `/catalog?category=${cat.slug}`,
         })),
       };
     }

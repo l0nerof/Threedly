@@ -63,7 +63,7 @@ function CatalogShell({ categories }: CatalogShellProps) {
     parseListParam(searchParams.get("sort"), catalogSortValues)[0] ??
     catalogSortValues[0];
 
-  const categoriesParam = searchParams.get("categories") ?? "";
+  const categoriesParam = searchParams.get("category") ?? "";
   const plansParam = searchParams.get("plans") ?? "";
   const formatsParam = searchParams.get("formats") ?? "";
 
@@ -170,9 +170,9 @@ function CatalogShell({ categories }: CatalogShellProps) {
     params.delete("page");
 
     if (draftCategories.length > 0) {
-      params.set("categories", draftCategories.join(","));
+      params.set("category", draftCategories.join(","));
     } else {
-      params.delete("categories");
+      params.delete("category");
     }
     if (draftPlans.length > 0) {
       params.set("plans", draftPlans.join(","));
@@ -235,7 +235,7 @@ function CatalogShell({ categories }: CatalogShellProps) {
       onRemove: () => {
         const next = selectedCategories.filter((c) => c !== category);
         setDraftCategories(next);
-        applyFilter({ categories: next.join(",") || null });
+        applyFilter({ category: next.join(",") || null });
       },
     })),
     ...selectedPlans.map((plan) => ({
@@ -264,12 +264,11 @@ function CatalogShell({ categories }: CatalogShellProps) {
       ? urlSearch.trim()
       : undefined;
 
-  // ── Draft diff — true when draft differs from committed URL state ──────────
+  // ── Draft diff — true when any draft differs from committed URL state ────────
   const sortedJoin = (arr: string[]) => [...arr].sort().join(",");
-  const hasCategoryDraft =
-    sortedJoin(draftCategories) !== sortedJoin(selectedCategories);
-  const hasPlanDraft = sortedJoin(draftPlans) !== sortedJoin(selectedPlans);
-  const hasFormatDraft =
+  const hasDraft =
+    sortedJoin(draftCategories) !== sortedJoin(selectedCategories) ||
+    sortedJoin(draftPlans) !== sortedJoin(selectedPlans) ||
     sortedJoin(draftFormats) !== sortedJoin(selectedFormats);
 
   // ── Filtered models count (runs on draft state for live feedback) ──────────
@@ -370,9 +369,7 @@ function CatalogShell({ categories }: CatalogShellProps) {
               idPrefix="catalog-sidebar"
               filteredCount={hasDraftFilters ? filteredCount : undefined}
               isCountFetching={hasDraftFilters ? isCountFetching : undefined}
-              hasCategoryDraft={hasCategoryDraft}
-              hasPlanDraft={hasPlanDraft}
-              hasFormatDraft={hasFormatDraft}
+              hasDraft={hasDraft}
             />
           </aside>
 
@@ -416,9 +413,6 @@ function CatalogShell({ categories }: CatalogShellProps) {
               onFormatToggle={handleFormatToggle}
               onReset={handleReset}
               idPrefix="catalog-mobile-sheet"
-              hasCategoryDraft={hasCategoryDraft}
-              hasPlanDraft={hasPlanDraft}
-              hasFormatDraft={hasFormatDraft}
             />
           </div>
 

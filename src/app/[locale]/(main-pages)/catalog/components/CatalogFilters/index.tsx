@@ -16,13 +16,11 @@ import {
 import { Badge } from "@/src/shared/components/Badge";
 import { Button } from "@/src/shared/components/Button";
 import { Checkbox } from "@/src/shared/components/Checkbox";
+import { Label } from "@/src/shared/components/Label";
 import { Separator } from "@/src/shared/components/Separator";
 import { cn } from "@/src/shared/utils/cn";
 import { RefreshCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-
-type FilterSection = "category" | "plan" | "format";
 
 type CatalogFiltersProps = {
   categories: CatalogFilterOption[];
@@ -38,9 +36,7 @@ type CatalogFiltersProps = {
   idPrefix?: string;
   filteredCount?: number;
   isCountFetching?: boolean;
-  hasCategoryDraft?: boolean;
-  hasPlanDraft?: boolean;
-  hasFormatDraft?: boolean;
+  hasDraft?: boolean;
 };
 
 function CatalogFilters({
@@ -57,46 +53,9 @@ function CatalogFilters({
   idPrefix = "catalog-filters",
   filteredCount,
   isCountFetching,
-  hasCategoryDraft = false,
-  hasPlanDraft = false,
-  hasFormatDraft = false,
+  hasDraft = false,
 }: CatalogFiltersProps) {
   const t = useTranslations("Catalog");
-
-  const [sectionOrder, setSectionOrder] = useState<FilterSection[]>([]);
-
-  const touchSection = (section: FilterSection) => {
-    setSectionOrder((prev) => [...prev.filter((s) => s !== section), section]);
-  };
-
-  const handleCategoryToggle = (value: string) => {
-    touchSection("category");
-    onCategoryToggle(value);
-  };
-
-  const handlePlanToggle = (value: CatalogPlanKey) => {
-    touchSection("plan");
-    onPlanToggle(value);
-  };
-
-  const handleFormatToggle = (value: CatalogFormatValue) => {
-    touchSection("format");
-    onFormatToggle(value);
-  };
-
-  // Button shows only where there are uncommitted changes (draft ≠ URL)
-  const sectionHasDraft: Record<FilterSection, boolean> = {
-    category: hasCategoryDraft,
-    plan: hasPlanDraft,
-    format: hasFormatDraft,
-  };
-
-  // Most recently interacted section that still has uncommitted changes
-  const activeSection =
-    [...sectionOrder].reverse().find((s) => sectionHasDraft[s]) ?? null;
-
-  const showButtonIn = (section: FilterSection) =>
-    onApply !== undefined && activeSection === section;
 
   const countLabel = isCountFetching
     ? t("filtersPanel.countLoading")
@@ -108,7 +67,7 @@ function CatalogFilters({
       className="border-border/60 bg-surface/95 flex flex-col gap-6 rounded-4xl border p-5 shadow-[0_26px_90px_hsl(var(--foreground)/0.07)] backdrop-blur-xl sm:p-6"
     >
       <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
           <h2 className="text-lg font-semibold tracking-tight">
             {t("filtersPanel.title")}
           </h2>
@@ -117,17 +76,33 @@ function CatalogFilters({
           </p>
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={onReset}
-          disabled={!showReset}
-          className="h-8 rounded-full px-3 text-xs"
-        >
-          <RefreshCcw className="size-3.5" aria-hidden />
-          {t("resetFilters")}
-        </Button>
+        <div className="flex min-w-[7rem] shrink-0 flex-col items-stretch gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onReset}
+            disabled={!showReset}
+            className="h-8 rounded-full px-3 text-xs"
+          >
+            <RefreshCcw className="size-3.5" aria-hidden />
+            {t("resetFilters")}
+          </Button>
+
+          {onApply !== undefined && hasDraft && (
+            <Button
+              type="button"
+              size="sm"
+              onClick={onApply}
+              disabled={isCountFetching}
+              className="h-8 rounded-full px-3 text-xs"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {countLabel}
+            </Button>
+          )}
+        </div>
       </div>
 
       <Separator />
@@ -161,50 +136,32 @@ function CatalogFilters({
           </AccordionTrigger>
           <AccordionContent>
             {categories.length > 0 ? (
-              <div className="flex flex-col gap-2">
-                <div className="flex max-h-80 flex-col gap-2 overflow-y-auto pr-1">
-                  {categories.map((category) => {
-                    const inputId = `${idPrefix}-category-${category.value}`;
-                    const isChecked = selectedCategories.includes(
-                      category.value,
-                    );
+              <div className="flex max-h-80 flex-col gap-2 overflow-y-auto pr-1">
+                {categories.map((category) => {
+                  const inputId = `${idPrefix}-category-${category.value}`;
+                  const isChecked = selectedCategories.includes(category.value);
 
-                    return (
-                      <label
-                        key={category.value}
-                        htmlFor={inputId}
-                        className={cn(
-                          "border-border/70 bg-surface-elevated/55 hover:border-primary/35 hover:bg-primary/8 flex cursor-pointer items-start gap-3 rounded-2xl border px-3 py-3 transition-colors",
-                          isChecked && "border-primary/45 bg-primary/10",
-                        )}
-                      >
-                        <Checkbox
-                          id={inputId}
-                          checked={isChecked}
-                          onCheckedChange={() =>
-                            handleCategoryToggle(category.value)
-                          }
-                          className="mt-0.5"
-                        />
-                        <span className="text-sm font-medium">
-                          {category.label}
-                        </span>
-                      </label>
-                    );
-                  })}
-                </div>
-                {showButtonIn("category") && (
-                  <Button
-                    type="button"
-                    className="h-10 w-full"
-                    onClick={onApply}
-                    disabled={isCountFetching}
-                    aria-live="polite"
-                    aria-atomic="true"
-                  >
-                    {countLabel}
-                  </Button>
-                )}
+                  return (
+                    <Label
+                      key={category.value}
+                      htmlFor={inputId}
+                      className={cn(
+                        "border-border/70 bg-surface-elevated/55 hover:border-primary/35 hover:bg-primary/8 flex cursor-pointer items-start gap-3 rounded-2xl border px-3 py-3 transition-colors",
+                        isChecked && "border-primary/45 bg-primary/10",
+                      )}
+                    >
+                      <Checkbox
+                        id={inputId}
+                        checked={isChecked}
+                        onCheckedChange={() => onCategoryToggle(category.value)}
+                        className="mt-0.5"
+                      />
+                      <span className="text-sm font-medium">
+                        {category.label}
+                      </span>
+                    </Label>
+                  );
+                })}
               </div>
             ) : (
               <p className="text-muted-foreground bg-muted/55 rounded-2xl px-4 py-3 text-sm leading-6">
@@ -237,51 +194,37 @@ function CatalogFilters({
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-col gap-2.5">
-                {catalogPlanKeys.map((planKey) => {
-                  const inputId = `${idPrefix}-plan-${planKey}`;
-                  const isChecked = selectedPlans.includes(planKey);
+            <div className="flex flex-col gap-2.5">
+              {catalogPlanKeys.map((planKey) => {
+                const inputId = `${idPrefix}-plan-${planKey}`;
+                const isChecked = selectedPlans.includes(planKey);
 
-                  return (
-                    <label
-                      key={planKey}
-                      htmlFor={inputId}
-                      className={cn(
-                        "border-border/70 bg-surface-elevated/55 hover:border-primary/35 hover:bg-primary/8 flex cursor-pointer items-start gap-3 rounded-2xl border px-3 py-3 transition-colors",
-                        isChecked && "border-primary/45 bg-primary/10",
-                      )}
-                    >
-                      <Checkbox
-                        id={inputId}
-                        checked={isChecked}
-                        onCheckedChange={() => handlePlanToggle(planKey)}
-                        className="mt-0.5"
-                      />
-                      <span className="flex flex-col gap-0.5">
-                        <span className="text-sm font-medium">
-                          {t(`filters.plan.options.${planKey}.label`)}
-                        </span>
-                        <span className="text-muted-foreground text-xs leading-5">
-                          {t(`filters.plan.options.${planKey}.description`)}
-                        </span>
+                return (
+                  <Label
+                    key={planKey}
+                    htmlFor={inputId}
+                    className={cn(
+                      "border-border/70 bg-surface-elevated/55 hover:border-primary/35 hover:bg-primary/8 flex cursor-pointer items-start gap-3 rounded-2xl border px-3 py-3 transition-colors",
+                      isChecked && "border-primary/45 bg-primary/10",
+                    )}
+                  >
+                    <Checkbox
+                      id={inputId}
+                      checked={isChecked}
+                      onCheckedChange={() => onPlanToggle(planKey)}
+                      className="mt-0.5"
+                    />
+                    <span className="flex flex-col gap-0.5">
+                      <span className="text-sm font-medium">
+                        {t(`filters.plan.options.${planKey}.label`)}
                       </span>
-                    </label>
-                  );
-                })}
-              </div>
-              {showButtonIn("plan") && (
-                <Button
-                  type="button"
-                  className="h-10 w-full"
-                  onClick={onApply}
-                  disabled={isCountFetching}
-                  aria-live="polite"
-                  aria-atomic="true"
-                >
-                  {countLabel}
-                </Button>
-              )}
+                      <span className="text-muted-foreground text-xs leading-5">
+                        {t(`filters.plan.options.${planKey}.description`)}
+                      </span>
+                    </span>
+                  </Label>
+                );
+              })}
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -309,53 +252,37 @@ function CatalogFilters({
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-col gap-2.5">
-                {catalogFormatValues.map((formatValue) => {
-                  const inputId = `${idPrefix}-format-${formatValue}`;
-                  const isChecked = selectedFormats.includes(formatValue);
+            <div className="flex flex-col gap-2.5">
+              {catalogFormatValues.map((formatValue) => {
+                const inputId = `${idPrefix}-format-${formatValue}`;
+                const isChecked = selectedFormats.includes(formatValue);
 
-                  return (
-                    <label
-                      key={formatValue}
-                      htmlFor={inputId}
-                      className={cn(
-                        "border-border/70 bg-surface-elevated/55 hover:border-primary/35 hover:bg-primary/8 flex cursor-pointer items-start gap-3 rounded-2xl border px-3 py-3 transition-colors",
-                        isChecked && "border-primary/45 bg-primary/10",
-                      )}
-                    >
-                      <Checkbox
-                        id={inputId}
-                        checked={isChecked}
-                        onCheckedChange={() => handleFormatToggle(formatValue)}
-                        className="mt-0.5"
-                      />
-                      <span className="flex flex-col gap-0.5">
-                        <span className="text-sm font-medium uppercase">
-                          {t(`filters.format.options.${formatValue}.label`)}
-                        </span>
-                        <span className="text-muted-foreground text-xs leading-5">
-                          {t(
-                            `filters.format.options.${formatValue}.description`,
-                          )}
-                        </span>
+                return (
+                  <Label
+                    key={formatValue}
+                    htmlFor={inputId}
+                    className={cn(
+                      "border-border/70 bg-surface-elevated/55 hover:border-primary/35 hover:bg-primary/8 flex cursor-pointer items-start gap-3 rounded-2xl border px-3 py-3 transition-colors",
+                      isChecked && "border-primary/45 bg-primary/10",
+                    )}
+                  >
+                    <Checkbox
+                      id={inputId}
+                      checked={isChecked}
+                      onCheckedChange={() => onFormatToggle(formatValue)}
+                      className="mt-0.5"
+                    />
+                    <span className="flex flex-col gap-0.5">
+                      <span className="text-sm font-medium uppercase">
+                        {t(`filters.format.options.${formatValue}.label`)}
                       </span>
-                    </label>
-                  );
-                })}
-              </div>
-              {showButtonIn("format") && (
-                <Button
-                  type="button"
-                  className="h-10 w-full"
-                  onClick={onApply}
-                  disabled={isCountFetching}
-                  aria-live="polite"
-                  aria-atomic="true"
-                >
-                  {countLabel}
-                </Button>
-              )}
+                      <span className="text-muted-foreground text-xs leading-5">
+                        {t(`filters.format.options.${formatValue}.description`)}
+                      </span>
+                    </span>
+                  </Label>
+                );
+              })}
             </div>
           </AccordionContent>
         </AccordionItem>
