@@ -16,6 +16,8 @@ export type CatalogFilterOption<TValue extends string = string> = {
   description?: string;
 };
 
+export type CatalogFilterSection = "category" | "plan" | "format";
+
 export type CatalogModel = {
   id: string;
   slug: string;

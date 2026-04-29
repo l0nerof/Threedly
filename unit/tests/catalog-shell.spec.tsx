@@ -11,18 +11,27 @@ import {
   within,
 } from "../fixtures";
 
+let mockSearchParamsValue = "";
+let mockPushFn = vi.fn();
+
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: vi.fn() }),
-  useSearchParams: () => new URLSearchParams(),
+  useRouter: () => ({ push: mockPushFn }),
+  useSearchParams: () => new URLSearchParams(mockSearchParamsValue),
+  usePathname: () => "/en/catalog",
 }));
 
 vi.mock("@tanstack/react-query", () => ({
-  useQuery: () => ({
-    data: undefined,
-    isLoading: true,
-    isError: false,
-    isFetching: false,
-  }),
+  useQuery: ({ queryKey }: { queryKey: readonly unknown[] }) => {
+    if (Array.isArray(queryKey) && queryKey[1] === "count") {
+      return { data: 42, isLoading: false, isError: false, isFetching: false };
+    }
+    return {
+      data: undefined,
+      isLoading: true,
+      isError: false,
+      isFetching: false,
+    };
+  },
 }));
 
 const messages = {
@@ -39,6 +48,8 @@ const messages = {
     filtersPanel: {
       title: "Filters",
       description: "Refine the catalog for your workflow.",
+      showCount: "{count, plural, one {Show # model} other {Show # models}}",
+      countLoading: "Searching...",
     },
     filters: {
       category: {
@@ -50,36 +61,18 @@ const messages = {
         title: "Plan",
         description: "Filter by access tier.",
         options: {
-          free: {
-            label: "Free",
-            description: "Entry",
-          },
-          pro: {
-            label: "Pro",
-            description: "Professional",
-          },
-          max: {
-            label: "Max",
-            description: "Highest tier",
-          },
+          free: { label: "Free", description: "Entry" },
+          pro: { label: "Pro", description: "Professional" },
+          max: { label: "Max", description: "Highest tier" },
         },
       },
       format: {
         title: "Format",
         description: "Filter by file format.",
         options: {
-          glb: {
-            label: "GLB",
-            description: "Preview friendly",
-          },
-          fbx: {
-            label: "FBX",
-            description: "Exchange format",
-          },
-          max: {
-            label: "MAX",
-            description: "3ds Max",
-          },
+          glb: { label: "GLB", description: "Preview friendly" },
+          fbx: { label: "FBX", description: "Exchange format" },
+          max: { label: "MAX", description: "3ds Max" },
         },
       },
     },
@@ -92,10 +85,7 @@ const messages = {
         label: "Newest arrivals",
         description: "Latest additions first",
       },
-      downloads: {
-        label: "Most downloaded",
-        description: "Demand-led order",
-      },
+      downloads: { label: "Most downloaded", description: "Demand-led order" },
     },
     resultsArea: {
       ariaLabel: "Catalog results area",
@@ -105,6 +95,7 @@ const messages = {
       pageOf: "Page {page} of {total}",
       empty: "No models found.",
       error: "Failed to load models.",
+      paginationLabel: "Pagination",
       previousPage: "Previous page",
       nextPage: "Next page",
       modelCard: {
@@ -122,13 +113,11 @@ const categories = [
   { value: "lighting", label: "Lighting" },
 ];
 
-function renderCatalogShell(initialCategories: string[] = []) {
+function renderCatalogShell(paramsString = "") {
+  mockSearchParamsValue = paramsString;
   return render(
     <NextIntlClientProvider locale="en" messages={messages}>
-      <CatalogShell
-        categories={categories}
-        initialCategories={initialCategories}
-      />
+      <CatalogShell categories={categories} />
     </NextIntlClientProvider>,
   );
 }
@@ -144,46 +133,62 @@ describe("CatalogShell", () => {
     expect(screen.getByRole("dialog")).not.toBeNull();
   });
 
-  it("updates local filter state and resets back to defaults", () => {
+  it("pushes category param to router via deferred apply button", () => {
+    mockPushFn = vi.fn();
     renderCatalogShell();
 
     const searchInput = screen.getByRole("textbox", {
       name: "Search catalog",
     }) as HTMLInputElement;
     const desktopFilters = screen.getAllByLabelText("Filters")[0];
-    const activeFilters = screen.getByLabelText("Active filters");
 
+    // Typing updates the local input immediately (debounce handles URL sync async)
     fireEvent.change(searchInput, { target: { value: "oak" } });
+    expect(searchInput.value).toBe("oak");
+
+    // Toggle → apply button appears → clicking it commits to router
     fireEvent.click(
       within(desktopFilters).getByRole("checkbox", { name: "Lighting" }),
     );
     fireEvent.click(
-      within(desktopFilters).getByRole("checkbox", { name: /Pro/i }),
+      within(desktopFilters).getByRole("button", { name: "Show 42 models" }),
     );
-
-    expect(
-      within(activeFilters).getByRole("button", { name: /oak/i }),
-    ).not.toBeNull();
-    expect(
-      within(activeFilters).getByRole("button", { name: /Lighting/i }),
-    ).not.toBeNull();
-    expect(
-      within(activeFilters).getByRole("button", { name: /Pro/i }),
-    ).not.toBeNull();
-
-    fireEvent.click(screen.getAllByRole("button", { name: "Reset" })[0]);
-
-    expect(searchInput.value).toBe("");
-    expect(activeFilters.textContent).toContain("No active filters yet");
-    expect(
-      within(desktopFilters)
-        .getByRole("checkbox", { name: /Pro/i })
-        .getAttribute("data-state"),
-    ).toBe("unchecked");
+    expect(mockPushFn).toHaveBeenCalledWith(
+      expect.stringContaining("category=lighting"),
+      expect.anything(),
+    );
   });
 
-  it("applies the initial category as the default selected filter", () => {
-    renderCatalogShell(["chairs"]);
+  it("pushes plan param to router via deferred apply button", () => {
+    mockPushFn = vi.fn();
+    renderCatalogShell();
+
+    const desktopFilters = screen.getAllByLabelText("Filters")[0];
+
+    // Toggle plan → apply button appears → clicking it commits to router
+    fireEvent.click(
+      within(desktopFilters).getByRole("checkbox", { name: /Pro/i }),
+    );
+    fireEvent.click(
+      within(desktopFilters).getByRole("button", { name: "Show 42 models" }),
+    );
+    expect(mockPushFn).toHaveBeenCalledWith(
+      expect.stringContaining("plans=pro"),
+      expect.anything(),
+    );
+  });
+
+  it("navigates to clean pathname when Reset is clicked", () => {
+    mockPushFn = vi.fn();
+    // Pre-set URL params so hasActiveFilters = true and Reset button is visible
+    renderCatalogShell("category=chairs");
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Reset" })[0]);
+    expect(mockPushFn).toHaveBeenCalledWith("/en/catalog", expect.anything());
+  });
+
+  it("pre-selects categories from URL search params", () => {
+    renderCatalogShell("category=chairs");
 
     const activeFilters = screen.getByLabelText("Active filters");
     const desktopFilters = screen.getAllByLabelText("Filters")[0];
