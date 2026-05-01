@@ -1,5 +1,6 @@
 "use client";
 
+import ModelsPagination from "@/src/business/components/ModelsPagination";
 import { CATALOG_PAGE_SIZE } from "@/src/business/constants/catalogConfig";
 import { useCatalogModels } from "@/src/business/hooks/useCatalogModels";
 import type {
@@ -11,7 +12,6 @@ import { Separator } from "@/src/shared/components/Separator";
 import { cn } from "@/src/shared/utils/cn";
 import { useLocale, useTranslations } from "next-intl";
 import CatalogModelCard from "../CatalogModelCard";
-import CatalogPagination from "../CatalogPagination";
 import CatalogResultsMessage from "../CatalogResultsMessage";
 import CatalogResultsSkeleton from "../CatalogResultsSkeleton";
 
@@ -99,21 +99,16 @@ function CatalogResults({
 
       <Separator />
 
-      <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-        <p className="text-muted-foreground shrink-0 text-sm">
-          {t("pageOf", {
-            from: (page - 1) * CATALOG_PAGE_SIZE + 1,
-            to: Math.min(page * CATALOG_PAGE_SIZE, totalCount),
-            total: totalCount,
-          })}
-        </p>
-
-        <CatalogPagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={onPageChange}
-        />
-      </div>
+      <ModelsPagination
+        currentPage={page}
+        totalPages={totalPages}
+        totalCount={totalCount}
+        pageSize={CATALOG_PAGE_SIZE}
+        formatPageOf={(from, to, total) => t("pageOf", { from, to, total })}
+        previousPageLabel={t("previousPage")}
+        nextPageLabel={t("nextPage")}
+        onPageChange={onPageChange}
+      />
     </section>
   );
 }

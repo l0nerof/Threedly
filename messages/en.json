@@ -462,7 +462,10 @@
       "list": {
         "title": "Uploaded models",
         "description": "These models are already linked to your profile.",
-        "unknownFormat": "Unknown format"
+        "unknownFormat": "Unknown format",
+        "previousPage": "Previous page",
+        "nextPage": "Next page",
+        "pageOf": "Showing {from}–{to} of {total} models"
       },
       "status": {
         "draft": "Draft",
