@@ -5,7 +5,7 @@ import type { CatalogSortValue } from "@/src/business/types/catalog";
 import { Separator } from "@/src/shared/components/Separator";
 import { cn } from "@/src/shared/utils/cn";
 import { useLocale, useTranslations } from "next-intl";
-import { useCatalogModels } from "../../hooks/useCatalogModels";
+import { useCatalogModels } from "../../../../../../business/hooks/useCatalogModels";
 import CatalogModelCard from "../CatalogModelCard";
 import CatalogPagination from "../CatalogPagination";
 import CatalogResultsMessage from "../CatalogResultsMessage";

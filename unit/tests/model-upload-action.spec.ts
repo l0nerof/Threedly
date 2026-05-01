@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => ({
   insertModelSingleMock: vi.fn(),
   insertModelFileMock: vi.fn(),
   deleteModelEqMock: vi.fn(),
+  revalidatePathMock: vi.fn(),
 }));
 
 vi.mock("@/src/business/utils/isLocaleCode", () => ({
@@ -51,7 +52,7 @@ vi.mock("@/src/business/utils/supabase/server", () => ({
 }));
 
 vi.mock("next/cache", () => ({
-  revalidatePath: vi.fn(),
+  revalidatePath: mocks.revalidatePathMock,
 }));
 
 type BuildValidFormDataOptions = {
@@ -143,6 +144,10 @@ describe("uploadModelAction", () => {
     const modelFilePayload = getInsertedModelFilePayload();
     expect(modelFilePayload.bucket).toBe("models");
     expect(modelFilePayload.object_path).toBe(`user-1/${modelId}/chair.glb`);
+    expect(mocks.revalidatePathMock).toHaveBeenCalledWith(
+      "/ua/profile/uploads",
+    );
+    expect(mocks.revalidatePathMock).not.toHaveBeenCalledWith("/ua/catalog");
   });
 
   it("uploads an optional lightweight preview model and stores its path", async () => {

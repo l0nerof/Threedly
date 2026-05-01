@@ -1,9 +1,26 @@
 "use client";
 
+import {
+  MODEL_UPLOAD_DEFAULT_MINIMUM_PLAN,
+  modelUploadMinimumPlanOptions,
+  modelUploadPlanLabelKeys,
+} from "@/src/business/constants/modelUploadForm";
+import { catalogQueryKeys } from "@/src/business/queries/catalog";
+import { modelUploadFormSchema } from "@/src/business/schemas/modelUpload";
+import type { CatalogPlanKey } from "@/src/business/types/catalog";
 import type {
-  ModelUploadActionError,
   ModelUploadActionResult,
+  ModelUploadFieldErrors,
+  ModelUploadFormFieldName,
 } from "@/src/business/types/modelUpload";
+import {
+  buildModelUploadFieldErrors,
+  buildModelUploadFormValues,
+  fieldError,
+  getModelUploadControlValidationProps,
+  resolveModelUploadActionErrorMessageKey,
+  resolveModelUploadValidationMessageKey,
+} from "@/src/business/utils/modelUploadForm";
 import { Button } from "@/src/shared/components/Button";
 import {
   CardContent,
@@ -15,16 +32,26 @@ import {
 import {
   Field,
   FieldContent,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/src/shared/components/Field";
 import { Input } from "@/src/shared/components/Input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/shared/components/Select";
 import { Textarea } from "@/src/shared/components/Textarea";
+import { useQueryClient } from "@tanstack/react-query";
 import { UploadCloudIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { FormEvent, useRef, useState } from "react";
+import { type FormEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 
 type CategoryOption = {
@@ -40,41 +67,27 @@ type ModelUploadFormProps = {
 function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
   const t = useTranslations("Profile.uploads.form");
   const router = useRouter();
+  const queryClient = useQueryClient();
   const formRef = useRef<HTMLFormElement>(null);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<ModelUploadFieldErrors>({});
+  const [categoryId, setCategoryId] = useState("");
+  const [minimumPlan, setMinimumPlan] = useState<CatalogPlanKey>(
+    MODEL_UPLOAD_DEFAULT_MINIMUM_PLAN,
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const resolveActionError = (error: ModelUploadActionError) => {
-    switch (error) {
-      case "invalidMetadata":
-        return t("errors.invalidMetadata");
-      case "invalidFile":
-        return t("errors.invalidFile");
-      case "invalidCoverImage":
-        return t("errors.invalidCoverImage");
-      case "fileTooLarge":
-        return t("errors.fileTooLarge");
-      case "coverImageTooLarge":
-        return t("errors.coverImageTooLarge");
-      case "previewFileTooLarge":
-        return t("errors.previewFileTooLarge");
-      case "unsupportedFileType":
-        return t("errors.unsupportedFileType");
-      case "unsupportedCoverImageType":
-        return t("errors.unsupportedCoverImageType");
-      case "unsupportedPreviewFileType":
-        return t("errors.unsupportedPreviewFileType");
-      case "unauthorized":
-        return t("errors.unauthorized");
-      case "uploadFailed":
-        return t("errors.uploadFailed");
-      case "metadataSaveFailed":
-        return t("errors.metadataSaveFailed");
-      case "invalidLocale":
-      case "generic":
-      default:
-        return t("errors.generic");
-    }
+  const clearFieldError = (fieldName: ModelUploadFormFieldName) => {
+    setFieldErrors((currentErrors) => {
+      if (!currentErrors[fieldName]) {
+        return currentErrors;
+      }
+
+      const nextErrors = { ...currentErrors };
+      delete nextErrors[fieldName];
+
+      return nextErrors;
+    });
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -83,15 +96,40 @@ function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
       return;
     }
 
+    const formData = new FormData(event.currentTarget);
+    formData.set("categoryId", categoryId);
+    formData.set("minimumPlan", minimumPlan);
+
+    const parsedForm = modelUploadFormSchema.safeParse(
+      buildModelUploadFormValues({
+        formData,
+        categoryId,
+        minimumPlan,
+      }),
+    );
+
+    if (!parsedForm.success) {
+      setServerError(null);
+      setFieldErrors(
+        buildModelUploadFieldErrors(parsedForm.error.issues, (message) =>
+          t(resolveModelUploadValidationMessageKey(message)),
+        ),
+      );
+      toast.error(t("errors.validationFailed"));
+      return;
+    }
+
     setServerError(null);
+    setFieldErrors({});
     setIsSubmitting(true);
 
     try {
-      const formData = new FormData(event.currentTarget);
       const result = await onUploadAction(formData);
 
       if (!result.ok) {
-        const message = resolveActionError(result.error);
+        const message = t(
+          resolveModelUploadActionErrorMessageKey(result.error),
+        );
         setServerError(message);
         toast.error(message);
         return;
@@ -99,6 +137,11 @@ function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
 
       toast.success(t("success"));
       formRef.current?.reset();
+      setCategoryId("");
+      setMinimumPlan(MODEL_UPLOAD_DEFAULT_MINIMUM_PLAN);
+      void queryClient.invalidateQueries({
+        queryKey: catalogQueryKeys.models(),
+      });
       router.refresh();
     } finally {
       setIsSubmitting(false);
@@ -106,7 +149,7 @@ function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
   };
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="contents">
+    <form ref={formRef} onSubmit={handleSubmit} className="contents" noValidate>
       <CardHeader className="p-0">
         <CardTitle>
           <h2>{t("title")}</h2>
@@ -119,113 +162,254 @@ function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
       <CardContent className="p-0">
         <FieldGroup>
           <div className="grid gap-4 md:grid-cols-2">
-            <Field>
-              <FieldLabel htmlFor="titleUa">{t("titleUa")}</FieldLabel>
+            <Field data-invalid={Boolean(fieldErrors.titleUa)}>
+              <FieldLabel htmlFor="titleUa">
+                {t("titleUa")}
+                <span aria-hidden className="text-destructive">
+                  *
+                </span>
+              </FieldLabel>
               <FieldContent>
-                <Input id="titleUa" name="titleUa" required minLength={2} />
+                <Input
+                  id="titleUa"
+                  name="titleUa"
+                  aria-required
+                  onChange={() => clearFieldError("titleUa")}
+                  {...getModelUploadControlValidationProps(
+                    fieldErrors,
+                    "titleUa",
+                  )}
+                />
+                <FieldError
+                  id="titleUa-error"
+                  errors={fieldError(fieldErrors.titleUa)}
+                />
               </FieldContent>
             </Field>
 
-            <Field>
-              <FieldLabel htmlFor="titleEn">{t("titleEn")}</FieldLabel>
+            <Field data-invalid={Boolean(fieldErrors.titleEn)}>
+              <FieldLabel htmlFor="titleEn">
+                {t("titleEn")}
+                <span aria-hidden className="text-destructive">
+                  *
+                </span>
+              </FieldLabel>
               <FieldContent>
-                <Input id="titleEn" name="titleEn" required minLength={2} />
+                <Input
+                  id="titleEn"
+                  name="titleEn"
+                  aria-required
+                  onChange={() => clearFieldError("titleEn")}
+                  {...getModelUploadControlValidationProps(
+                    fieldErrors,
+                    "titleEn",
+                  )}
+                />
+                <FieldError
+                  id="titleEn-error"
+                  errors={fieldError(fieldErrors.titleEn)}
+                />
               </FieldContent>
             </Field>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <Field>
+            <Field data-invalid={Boolean(fieldErrors.descriptionUa)}>
               <FieldLabel htmlFor="descriptionUa">
                 {t("descriptionUa")}
               </FieldLabel>
               <FieldContent>
-                <Textarea id="descriptionUa" name="descriptionUa" rows={4} />
+                <Textarea
+                  id="descriptionUa"
+                  name="descriptionUa"
+                  rows={4}
+                  onChange={() => clearFieldError("descriptionUa")}
+                  {...getModelUploadControlValidationProps(
+                    fieldErrors,
+                    "descriptionUa",
+                  )}
+                />
+                <FieldError
+                  id="descriptionUa-error"
+                  errors={fieldError(fieldErrors.descriptionUa)}
+                />
               </FieldContent>
             </Field>
 
-            <Field>
+            <Field data-invalid={Boolean(fieldErrors.descriptionEn)}>
               <FieldLabel htmlFor="descriptionEn">
                 {t("descriptionEn")}
               </FieldLabel>
               <FieldContent>
-                <Textarea id="descriptionEn" name="descriptionEn" rows={4} />
+                <Textarea
+                  id="descriptionEn"
+                  name="descriptionEn"
+                  rows={4}
+                  onChange={() => clearFieldError("descriptionEn")}
+                  {...getModelUploadControlValidationProps(
+                    fieldErrors,
+                    "descriptionEn",
+                  )}
+                />
+                <FieldError
+                  id="descriptionEn-error"
+                  errors={fieldError(fieldErrors.descriptionEn)}
+                />
               </FieldContent>
             </Field>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <Field>
-              <FieldLabel htmlFor="categoryId">{t("category")}</FieldLabel>
+            <Field
+              data-disabled={categories.length === 0}
+              data-invalid={Boolean(fieldErrors.categoryId)}
+            >
+              <FieldLabel htmlFor="categoryId">
+                {t("category")}
+                <span aria-hidden className="text-destructive">
+                  *
+                </span>
+              </FieldLabel>
               <FieldContent>
-                <select
-                  id="categoryId"
+                <Select
                   name="categoryId"
-                  required
-                  defaultValue=""
+                  value={categoryId}
+                  onValueChange={(value) => {
+                    setCategoryId(value);
+                    clearFieldError("categoryId");
+                  }}
                   disabled={categories.length === 0}
-                  className="border-input bg-background placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <option value="" disabled>
-                    {t("categoryPlaceholder")}
-                  </option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.label}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger
+                    id="categoryId"
+                    className="w-full"
+                    aria-required
+                    {...getModelUploadControlValidationProps(
+                      fieldErrors,
+                      "categoryId",
+                    )}
+                  >
+                    <SelectValue placeholder={t("categoryPlaceholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <FieldError
+                  id="categoryId-error"
+                  errors={fieldError(fieldErrors.categoryId)}
+                />
               </FieldContent>
             </Field>
 
-            <Field>
-              <FieldLabel htmlFor="minimumPlan">{t("minimumPlan")}</FieldLabel>
+            <Field data-invalid={Boolean(fieldErrors.minimumPlan)}>
+              <FieldLabel htmlFor="minimumPlan">
+                {t("minimumPlan")}
+                <span aria-hidden className="text-destructive">
+                  *
+                </span>
+              </FieldLabel>
               <FieldContent>
-                <select
-                  id="minimumPlan"
+                <Select
                   name="minimumPlan"
-                  defaultValue="free"
-                  className="border-input bg-background placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                  value={minimumPlan}
+                  onValueChange={(value) => {
+                    setMinimumPlan(value as CatalogPlanKey);
+                    clearFieldError("minimumPlan");
+                  }}
                 >
-                  <option value="free">{t("plans.free")}</option>
-                  <option value="pro">{t("plans.pro")}</option>
-                  <option value="max">{t("plans.max")}</option>
-                </select>
+                  <SelectTrigger
+                    id="minimumPlan"
+                    className="w-full"
+                    aria-required
+                    {...getModelUploadControlValidationProps(
+                      fieldErrors,
+                      "minimumPlan",
+                    )}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {modelUploadMinimumPlanOptions.map((plan) => (
+                        <SelectItem key={plan} value={plan}>
+                          {t(modelUploadPlanLabelKeys[plan])}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <FieldError
+                  id="minimumPlan-error"
+                  errors={fieldError(fieldErrors.minimumPlan)}
+                />
               </FieldContent>
             </Field>
           </div>
 
-          <Field>
-            <FieldLabel htmlFor="coverImage">{t("coverImage")}</FieldLabel>
+          <Field data-invalid={Boolean(fieldErrors.coverImage)}>
+            <FieldLabel htmlFor="coverImage">
+              {t("coverImage")}
+              <span aria-hidden className="text-destructive">
+                *
+              </span>
+            </FieldLabel>
             <FieldContent>
               <Input
                 id="coverImage"
                 name="coverImage"
                 type="file"
                 accept="image/jpeg,image/png,image/webp"
-                required
+                aria-required
+                onChange={() => clearFieldError("coverImage")}
+                {...getModelUploadControlValidationProps(
+                  fieldErrors,
+                  "coverImage",
+                )}
               />
-              <p className="text-muted-foreground text-xs">
-                {t("coverImageHint")}
-              </p>
+              <FieldDescription>{t("coverImageHint")}</FieldDescription>
+              <FieldError
+                id="coverImage-error"
+                errors={fieldError(fieldErrors.coverImage)}
+              />
             </FieldContent>
           </Field>
 
-          <Field>
-            <FieldLabel htmlFor="modelFile">{t("file")}</FieldLabel>
+          <Field data-invalid={Boolean(fieldErrors.modelFile)}>
+            <FieldLabel htmlFor="modelFile">
+              {t("file")}
+              <span aria-hidden className="text-destructive">
+                *
+              </span>
+            </FieldLabel>
             <FieldContent>
               <Input
                 id="modelFile"
                 name="modelFile"
                 type="file"
                 accept=".glb,.gltf,.fbx,.obj,.max,.blend,.zip"
-                required
+                aria-required
+                onChange={() => clearFieldError("modelFile")}
+                {...getModelUploadControlValidationProps(
+                  fieldErrors,
+                  "modelFile",
+                )}
               />
-              <p className="text-muted-foreground text-xs">{t("fileHint")}</p>
+              <FieldDescription>{t("fileHint")}</FieldDescription>
+              <FieldError
+                id="modelFile-error"
+                errors={fieldError(fieldErrors.modelFile)}
+              />
             </FieldContent>
           </Field>
 
-          <Field>
+          <Field data-invalid={Boolean(fieldErrors.previewModelFile)}>
             <FieldLabel htmlFor="previewModelFile">
               {t("previewModelFile")}
             </FieldLabel>
@@ -235,14 +419,21 @@ function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
                 name="previewModelFile"
                 type="file"
                 accept=".glb,.gltf"
+                onChange={() => clearFieldError("previewModelFile")}
+                {...getModelUploadControlValidationProps(
+                  fieldErrors,
+                  "previewModelFile",
+                )}
               />
-              <p className="text-muted-foreground text-xs">
-                {t("previewModelFileHint")}
-              </p>
+              <FieldDescription>{t("previewModelFileHint")}</FieldDescription>
+              <FieldError
+                id="previewModelFile-error"
+                errors={fieldError(fieldErrors.previewModelFile)}
+              />
             </FieldContent>
           </Field>
 
-          <FieldError errors={serverError ? [{ message: serverError }] : []} />
+          <FieldError errors={fieldError(serverError ?? undefined)} />
         </FieldGroup>
       </CardContent>
 

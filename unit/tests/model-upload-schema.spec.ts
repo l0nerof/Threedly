@@ -1,4 +1,7 @@
-import { modelUploadMetadataSchema } from "@/src/business/schemas/modelUpload";
+import {
+  modelUploadFormSchema,
+  modelUploadMetadataSchema,
+} from "@/src/business/schemas/modelUpload";
 import { describe, expect, it } from "../fixtures";
 
 const validValues = {
@@ -47,5 +50,56 @@ describe("modelUploadMetadataSchema", () => {
     });
 
     expect(result.success).toBe(false);
+  });
+});
+
+describe("modelUploadFormSchema", () => {
+  const validFormValues = {
+    ...validValues,
+    modelFile: new File(["model"], "chair.glb"),
+    coverImage: new File(["cover"], "cover.webp", { type: "image/webp" }),
+    previewModelFile: null,
+  };
+
+  it("accepts valid metadata with required upload files", () => {
+    const result = modelUploadFormSchema.safeParse(validFormValues);
+
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects missing required upload fields with field-level messages", () => {
+    const result = modelUploadFormSchema.safeParse({
+      ...validFormValues,
+      titleUa: "",
+      categoryId: "",
+      modelFile: null,
+      coverImage: null,
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.flatten().fieldErrors).toMatchObject({
+        titleUa: ["errors.titleRequired"],
+        categoryId: ["errors.categoryRequired"],
+        modelFile: ["errors.invalidFile"],
+        coverImage: ["errors.invalidCoverImage"],
+      });
+    }
+  });
+
+  it("rejects unsupported cover image and preview model types", () => {
+    const result = modelUploadFormSchema.safeParse({
+      ...validFormValues,
+      coverImage: new File(["cover"], "cover.gif", { type: "image/gif" }),
+      previewModelFile: new File(["preview"], "preview.fbx"),
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.flatten().fieldErrors).toMatchObject({
+        coverImage: ["errors.unsupportedCoverImageType"],
+        previewModelFile: ["errors.unsupportedPreviewFileType"],
+      });
+    }
   });
 });

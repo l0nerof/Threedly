@@ -435,6 +435,12 @@
         "submitting": "Uploading...",
         "success": "Model uploaded and published to the catalog.",
         "errors": {
+          "validationFailed": "Check the required fields.",
+          "titleRequired": "The title must be at least 2 characters.",
+          "titleTooLong": "The title must be no longer than 90 characters.",
+          "descriptionTooLong": "The description must be no longer than 600 characters.",
+          "categoryRequired": "Choose a category.",
+          "minimumPlanRequired": "Choose a minimum plan.",
           "invalidMetadata": "Check the titles, category, and access level.",
           "invalidFile": "Add a model file.",
           "invalidCoverImage": "Add a preview image for the model.",
