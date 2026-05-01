@@ -154,7 +154,9 @@
     "removeFilter": "Remove filter",
     "filtersPanel": {
       "title": "Filters",
-      "description": "Refine the catalog for your workflow."
+      "description": "Refine the catalog for your workflow.",
+      "showCount": "Show ({count})",
+      "countLoading": "..."
     },
     "filters": {
       "category": {
@@ -221,6 +223,7 @@
       "pageOf": "Showing {from}–{to} of {total} models",
       "empty": "No models found for your query.",
       "error": "Failed to load models. Please try again.",
+      "paginationLabel": "Pagination",
       "previousPage": "Previous page",
       "nextPage": "Next page",
       "modelCard": {

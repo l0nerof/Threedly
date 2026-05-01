@@ -7,12 +7,39 @@ describe("catalog queries", () => {
   });
 
   it("builds the paginated catalog models query key from the shared prefix", () => {
-    expect(catalogQueryKeys.modelList({ page: 2, sort: "fresh" })).toEqual([
+    expect(
+      catalogQueryKeys.modelList({
+        page: 2,
+        sort: "fresh",
+        search: "chair",
+        categories: ["chairs"],
+        plans: ["pro"],
+        formats: ["glb"],
+      }),
+    ).toEqual([
       "catalog",
       "models",
       {
+        categories: ["chairs"],
+        formats: ["glb"],
         page: 2,
+        plans: ["pro"],
+        search: "chair",
         sort: "fresh",
+      },
+    ]);
+  });
+
+  it("builds the filtered catalog count query key from the shared prefix", () => {
+    expect(catalogQueryKeys.modelCount({ categories: ["lighting"] })).toEqual([
+      "catalog",
+      "models",
+      "count",
+      {
+        categories: ["lighting"],
+        formats: undefined,
+        plans: undefined,
+        search: undefined,
       },
     ]);
   });

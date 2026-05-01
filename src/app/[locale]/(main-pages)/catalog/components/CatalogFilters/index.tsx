@@ -16,6 +16,7 @@ import {
 import { Badge } from "@/src/shared/components/Badge";
 import { Button } from "@/src/shared/components/Button";
 import { Checkbox } from "@/src/shared/components/Checkbox";
+import { Label } from "@/src/shared/components/Label";
 import { Separator } from "@/src/shared/components/Separator";
 import { cn } from "@/src/shared/utils/cn";
 import { RefreshCcw } from "lucide-react";
@@ -30,8 +31,12 @@ type CatalogFiltersProps = {
   onCategoryToggle: (value: string) => void;
   onPlanToggle: (value: CatalogPlanKey) => void;
   onFormatToggle: (value: CatalogFormatValue) => void;
+  onApply?: () => void;
   onReset: () => void;
   idPrefix?: string;
+  filteredCount?: number;
+  isCountFetching?: boolean;
+  hasDraft?: boolean;
 };
 
 function CatalogFilters({
@@ -43,10 +48,18 @@ function CatalogFilters({
   onCategoryToggle,
   onPlanToggle,
   onFormatToggle,
+  onApply,
   onReset,
   idPrefix = "catalog-filters",
+  filteredCount,
+  isCountFetching,
+  hasDraft = false,
 }: CatalogFiltersProps) {
   const t = useTranslations("Catalog");
+
+  const countLabel = isCountFetching
+    ? t("filtersPanel.countLoading")
+    : t("filtersPanel.showCount", { count: filteredCount ?? 0 });
 
   return (
     <div
@@ -54,7 +67,7 @@ function CatalogFilters({
       className="border-border/60 bg-surface/95 flex flex-col gap-6 rounded-4xl border p-5 shadow-[0_26px_90px_hsl(var(--foreground)/0.07)] backdrop-blur-xl sm:p-6"
     >
       <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
           <h2 className="text-lg font-semibold tracking-tight">
             {t("filtersPanel.title")}
           </h2>
@@ -63,17 +76,33 @@ function CatalogFilters({
           </p>
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={onReset}
-          disabled={!showReset}
-          className="h-8 rounded-full px-3 text-xs"
-        >
-          <RefreshCcw className="size-3.5" aria-hidden />
-          {t("resetFilters")}
-        </Button>
+        <div className="flex min-w-[7rem] shrink-0 flex-col items-stretch gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onReset}
+            disabled={!showReset}
+            className="h-8 rounded-full px-3 text-xs"
+          >
+            <RefreshCcw className="size-3.5" aria-hidden />
+            {t("resetFilters")}
+          </Button>
+
+          {onApply !== undefined && hasDraft && (
+            <Button
+              type="button"
+              size="sm"
+              onClick={onApply}
+              disabled={isCountFetching}
+              className="h-8 rounded-full px-3 text-xs"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {countLabel}
+            </Button>
+          )}
+        </div>
       </div>
 
       <Separator />
@@ -113,7 +142,7 @@ function CatalogFilters({
                   const isChecked = selectedCategories.includes(category.value);
 
                   return (
-                    <label
+                    <Label
                       key={category.value}
                       htmlFor={inputId}
                       className={cn(
@@ -130,7 +159,7 @@ function CatalogFilters({
                       <span className="text-sm font-medium">
                         {category.label}
                       </span>
-                    </label>
+                    </Label>
                   );
                 })}
               </div>
@@ -171,7 +200,7 @@ function CatalogFilters({
                 const isChecked = selectedPlans.includes(planKey);
 
                 return (
-                  <label
+                  <Label
                     key={planKey}
                     htmlFor={inputId}
                     className={cn(
@@ -193,7 +222,7 @@ function CatalogFilters({
                         {t(`filters.plan.options.${planKey}.description`)}
                       </span>
                     </span>
-                  </label>
+                  </Label>
                 );
               })}
             </div>
@@ -229,7 +258,7 @@ function CatalogFilters({
                 const isChecked = selectedFormats.includes(formatValue);
 
                 return (
-                  <label
+                  <Label
                     key={formatValue}
                     htmlFor={inputId}
                     className={cn(
@@ -251,7 +280,7 @@ function CatalogFilters({
                         {t(`filters.format.options.${formatValue}.description`)}
                       </span>
                     </span>
-                  </label>
+                  </Label>
                 );
               })}
             </div>

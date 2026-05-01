@@ -1,41 +1,36 @@
-import { fetchCatalogModels } from "@/src/app/[locale]/(main-pages)/catalog/actions";
-import { catalogSortValues } from "@/src/business/constants/catalogConfig";
+import { fetchCatalogModelsCount } from "@/src/app/[locale]/(main-pages)/catalog/actions";
 import { catalogQueryKeys } from "@/src/business/queries/catalog";
 import type {
   CatalogFormatValue,
   CatalogPlanKey,
-  CatalogSortValue,
 } from "@/src/business/types/catalog";
 import { useQuery } from "@tanstack/react-query";
 
-type UseCatalogModelsParams = {
-  page: number;
-  sort?: CatalogSortValue;
+type UseCatalogModelsCountParams = {
   search?: string;
   categories?: string[];
   plans?: CatalogPlanKey[];
   formats?: CatalogFormatValue[];
+  enabled: boolean;
 };
 
-export function useCatalogModels({
-  page,
-  sort = catalogSortValues[0],
+export function useCatalogModelsCount({
   search,
   categories,
   plans,
   formats,
-}: UseCatalogModelsParams) {
+  enabled,
+}: UseCatalogModelsCountParams) {
   return useQuery({
-    queryKey: catalogQueryKeys.modelList({
-      page,
-      sort,
+    queryKey: catalogQueryKeys.modelCount({
       search,
       categories,
       plans,
       formats,
     }),
     queryFn: () =>
-      fetchCatalogModels({ page, sort, search, categories, plans, formats }),
+      fetchCatalogModelsCount({ search, categories, plans, formats }),
+    enabled,
     placeholderData: (previousData) => previousData,
   });
 }
