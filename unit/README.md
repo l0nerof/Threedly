@@ -24,18 +24,34 @@ This file documents the Vitest coverage in this repository and should stay in sy
 - [x] Reset returns the shell to its default local state
 - [x] Initial category from route state appears in the active filter UI
 
+## Model Upload MVP
+
+- [x] Upload helper returns supported file extensions in lowercase
+- [x] Upload helper rejects unsupported file names
+- [x] Upload helper builds user/model-scoped storage paths
+- [x] Upload helper builds cover image and lightweight preview paths
+- [x] Upload metadata schema accepts bilingual model metadata
+- [x] Upload metadata schema rejects missing titles and invalid categories
+- [x] Upload server action stores source file, cover image, and model metadata through mocked Supabase
+- [x] Upload server action publishes uploaded models immediately
+- [x] Upload server action stores optional lightweight 3D preview paths
+- [x] Upload server action rejects unsupported files before storage writes
+- [x] Upload server action rejects unsupported cover and preview files before storage writes
+- [x] Upload server action removes stored source, preview, and cover files when metadata save fails
+
 ## Coverage Map
 
-| Area             | Source                                                          | Spec                     | Status        |
-| ---------------- | --------------------------------------------------------------- | ------------------------ | ------------- |
-| Shared hook      | `src/shared/hooks/use-mobile.ts`                                | `use-mobile.spec.ts`     | `[x] Covered` |
-| Catalog UI shell | `src/app/[locale]/(main-pages)/catalog/components/CatalogShell` | `catalog-shell.spec.tsx` | `[x] Covered` |
+| Area                 | Source                                                          | Spec                          | Status        |
+| -------------------- | --------------------------------------------------------------- | ----------------------------- | ------------- |
+| Shared hook          | `src/shared/hooks/use-mobile.ts`                                | `use-mobile.spec.ts`          | `[x] Covered` |
+| Catalog UI shell     | `src/app/[locale]/(main-pages)/catalog/components/CatalogShell` | `catalog-shell.spec.tsx`      | `[x] Covered` |
+| Model upload helpers | `src/business/utils/modelUpload.ts`                             | `model-upload-utils.spec.ts`  | `[x] Covered` |
+| Model upload schema  | `src/business/schemas/modelUpload.ts`                           | `model-upload-schema.spec.ts` | `[x] Covered` |
+| Model upload action  | `src/app/[locale]/(main-pages)/profile/uploads/actions.ts`      | `model-upload-action.spec.ts` | `[x] Covered` |
 
 ## Known Gaps
 
 - [ ] No shared utility coverage yet
-- [ ] No business-layer helper coverage yet
-- [ ] No schema validation coverage yet
 - [ ] Async server components are not covered here and should remain primarily in e2e coverage
 
 ## Authoring Notes

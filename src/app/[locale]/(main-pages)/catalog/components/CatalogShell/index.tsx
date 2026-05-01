@@ -7,6 +7,7 @@ import {
   catalogPlanKeys,
   catalogSortValues,
 } from "@/src/business/constants/catalogConfig";
+import { useCatalogModelsCount } from "@/src/business/hooks/useCatalogModelsCount";
 import type {
   CatalogFilterOption,
   CatalogFormatValue,
@@ -27,7 +28,6 @@ import { Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useCatalogModelsCount } from "../../hooks/useCatalogModelsCount";
 import CatalogFilters from "../CatalogFilters";
 import CatalogResults from "../CatalogResults";
 import CatalogSortDropdown from "../CatalogSortDropdown";

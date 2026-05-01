@@ -22,7 +22,11 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@tanstack/react-query", () => ({
   useQuery: ({ queryKey }: { queryKey: readonly unknown[] }) => {
-    if (Array.isArray(queryKey) && queryKey[1] === "count") {
+    if (
+      queryKey[0] === "catalog" &&
+      queryKey[1] === "models" &&
+      queryKey[2] === "count"
+    ) {
       return { data: 42, isLoading: false, isError: false, isFetching: false };
     }
     return {

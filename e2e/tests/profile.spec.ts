@@ -14,6 +14,8 @@ test.describe("profile — unauthenticated", () => {
 });
 
 test.describe("profile — authenticated", () => {
+  test.describe.configure({ mode: "serial" });
+
   test.use({ storageState: STORAGE_STATE_PATH });
 
   test("overview page renders heading and plan badge", async ({
@@ -53,14 +55,18 @@ test.describe("profile — authenticated", () => {
     ).toBeVisible();
   });
 
-  test("uploads page renders heading and empty state", async ({
+  test("uploads page renders the model upload form", async ({
     profileUploadsPage,
   }) => {
     await profileUploadsPage.open();
     await profileUploadsPage.expectLoaded();
-    await expect(
-      profileUploadsPage.page.getByText(/у вас поки немає моделей/i),
-    ).toBeVisible();
+    await expect(profileUploadsPage.uploadTitleUaInput).toBeVisible();
+    await expect(profileUploadsPage.uploadTitleEnInput).toBeVisible();
+    await expect(profileUploadsPage.uploadCoverImageInput).toBeVisible();
+    await expect(profileUploadsPage.uploadModelFileInput).toBeVisible();
+    await expect(profileUploadsPage.uploadPreviewModelFileInput).toBeVisible();
+    await expect(profileUploadsPage.uploadSubmitButton).toBeVisible();
+    await expect(profileUploadsPage.uploadedModelsHeading).toBeVisible();
   });
 
   test("sidebar navigation: overview → settings", async ({

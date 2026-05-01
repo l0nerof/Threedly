@@ -1,6 +1,7 @@
 "use client";
 
 import { CATALOG_PAGE_SIZE } from "@/src/business/constants/catalogConfig";
+import { useCatalogModels } from "@/src/business/hooks/useCatalogModels";
 import type {
   CatalogFormatValue,
   CatalogPlanKey,
@@ -9,7 +10,6 @@ import type {
 import { Separator } from "@/src/shared/components/Separator";
 import { cn } from "@/src/shared/utils/cn";
 import { useLocale, useTranslations } from "next-intl";
-import { useCatalogModels } from "../../hooks/useCatalogModels";
 import CatalogModelCard from "../CatalogModelCard";
 import CatalogPagination from "../CatalogPagination";
 import CatalogResultsMessage from "../CatalogResultsMessage";

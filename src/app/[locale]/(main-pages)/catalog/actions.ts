@@ -10,6 +10,7 @@ import type {
   CatalogPlanKey,
   CatalogSortValue,
 } from "@/src/business/types/catalog";
+import { resolveModelCoverImageUrl } from "@/src/business/utils/modelUpload";
 import { createClient } from "@/src/business/utils/supabase/server";
 
 const SORT_COLUMN: Record<
@@ -97,7 +98,11 @@ export async function fetchCatalogModels({
   }
 
   return {
-    models: data ?? [],
+    models:
+      data?.map((model) => ({
+        ...model,
+        cover_image_path: resolveModelCoverImageUrl(model.cover_image_path),
+      })) ?? [],
     totalCount: count ?? 0,
   };
 }

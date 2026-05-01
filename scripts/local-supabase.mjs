@@ -184,6 +184,18 @@ async function ensureSupabaseStarted() {
   return status;
 }
 
+async function removeLocalSupabaseForReset() {
+  try {
+    await runCommand(supabaseBin, ["stop", "--no-backup"]);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+
+    console.warn(
+      `Could not stop existing local Supabase containers before reset: ${message}`,
+    );
+  }
+}
+
 async function requireRunningSupabase(commandName) {
   const status = await getSupabaseStatus();
 
@@ -267,7 +279,8 @@ async function main() {
       return;
     }
     case "reset": {
-      await runCommand(supabaseBin, ["db", "reset", "--local", "--yes"]);
+      await removeLocalSupabaseForReset();
+      await runCommand(supabaseBin, ["start", "--yes"]);
       const status = await requireRunningSupabase("db:reset");
       await runPostSeed(status);
       return;

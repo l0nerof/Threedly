@@ -1,11 +1,12 @@
+import { fetchCatalogModels } from "@/src/app/[locale]/(main-pages)/catalog/actions";
 import { catalogSortValues } from "@/src/business/constants/catalogConfig";
+import { catalogQueryKeys } from "@/src/business/queries/catalog";
 import type {
   CatalogFormatValue,
   CatalogPlanKey,
   CatalogSortValue,
 } from "@/src/business/types/catalog";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCatalogModels } from "../actions";
 
 type UseCatalogModelsParams = {
   page: number;
@@ -25,16 +26,14 @@ export function useCatalogModels({
   formats,
 }: UseCatalogModelsParams) {
   return useQuery({
-    queryKey: [
-      "catalog",
-      "models",
+    queryKey: catalogQueryKeys.modelList({
       page,
       sort,
       search,
       categories,
       plans,
       formats,
-    ],
+    }),
     queryFn: () =>
       fetchCatalogModels({ page, sort, search, categories, plans, formats }),
     placeholderData: (previousData) => previousData,

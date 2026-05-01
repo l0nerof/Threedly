@@ -405,12 +405,69 @@
 
     "uploads": {
       "title": "Uploads",
-      "subtitle": "Manage your published models.",
+      "subtitle": "Upload models, catalog preview images, and optional 3D previews.",
+      "loadError": "Could not load the model upload page data.",
       "uploadCta": "Upload model",
       "secondaryCta": "Open settings",
       "empty": {
         "title": "You do not have models yet",
-        "description": "Add your first model."
+        "description": "Add your first model and it will appear here and in the catalog."
+      },
+      "form": {
+        "title": "New 3D model",
+        "description": "The MVP publishes the model to the catalog as soon as the files upload successfully.",
+        "titleUa": "Ukrainian title",
+        "titleEn": "English title",
+        "descriptionUa": "Ukrainian description",
+        "descriptionEn": "English description",
+        "category": "Category",
+        "categoryPlaceholder": "Choose a category",
+        "minimumPlan": "Minimum plan",
+        "plans": {
+          "free": "Free",
+          "pro": "Pro",
+          "max": "Max"
+        },
+        "coverImage": "Preview image",
+        "coverImageHint": "JPG, PNG, or WEBP up to 5 MB. This image appears in the catalog.",
+        "file": "Model file",
+        "fileHint": "Supports GLB, GLTF, FBX, OBJ, MAX, BLEND, and ZIP up to 50 MB.",
+        "previewModelFile": "Lightweight 3D preview",
+        "previewModelFileHint": "Optional: GLB or GLTF up to 50 MB for the future model detail viewer.",
+        "submit": "Upload model",
+        "submitting": "Uploading...",
+        "success": "Model uploaded and published to the catalog.",
+        "errors": {
+          "validationFailed": "Check the required fields.",
+          "titleRequired": "The title must be at least 2 characters.",
+          "titleTooLong": "The title must be no longer than 90 characters.",
+          "descriptionTooLong": "The description must be no longer than 600 characters.",
+          "categoryRequired": "Choose a category.",
+          "minimumPlanRequired": "Choose a minimum plan.",
+          "invalidMetadata": "Check the titles, category, and access level.",
+          "invalidFile": "Add a model file.",
+          "invalidCoverImage": "Add a preview image for the model.",
+          "fileTooLarge": "The file must be no larger than 50 MB.",
+          "coverImageTooLarge": "The preview image must be no larger than 5 MB.",
+          "previewFileTooLarge": "The 3D preview must be no larger than 50 MB.",
+          "unsupportedFileType": "This file format is not supported yet.",
+          "unsupportedCoverImageType": "The preview image must be JPG, PNG, or WEBP.",
+          "unsupportedPreviewFileType": "The 3D preview must be GLB or GLTF.",
+          "unauthorized": "Sign in to upload a model.",
+          "uploadFailed": "Could not upload the file to storage.",
+          "metadataSaveFailed": "The file uploaded, but the model metadata was not saved. Try again.",
+          "generic": "Could not upload the model. Try again."
+        }
+      },
+      "list": {
+        "title": "Uploaded models",
+        "description": "These models are already linked to your profile.",
+        "unknownFormat": "Unknown format"
+      },
+      "status": {
+        "draft": "Draft",
+        "published": "Published",
+        "archived": "Archived"
       }
     },
 

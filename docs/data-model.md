@@ -110,6 +110,9 @@ Stores the main content record for each 3D model visible in the marketplace.
 - `cover_image_path` is stored directly on `models` because MVP only needs one primary image per model.
 - `preview_model_path` is intentionally separate from downloadable files so the product can use a lighter preview asset on the detail page.
 - Catalog pages should use only the image preview, not the live 3D asset.
+- Uploaded cover images are stored in the public `model-images` bucket.
+- Downloadable source files and optional lightweight 3D previews are stored in the private `models` bucket.
+- The current upload MVP publishes successful uploads immediately; `draft` remains a schema-supported status for a future moderation or review workflow.
 
 ## `model_files`
 
@@ -202,6 +205,7 @@ To protect catalog performance:
 - the model detail page may render a 3D preview from `preview_model_path`;
 - the downloadable source asset should remain in `model_files`;
 - the 3D preview asset should be lightweight and optimized separately from the full downloadable source file.
+- if `preview_model_path` is empty, the detail page should fall back to the cover image until a preview-ready GLB/GLTF exists.
 
 This separation allows the product to keep a premium browsing experience without forcing every page view to load heavy 3D files.
 

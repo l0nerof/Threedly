@@ -58,14 +58,14 @@ How local mode works:
 - `npm run dev` starts local Supabase if needed and ensures the local demo user exists
 - the wrapper injects the local URL and publishable key directly into the `next dev` process
 - `.env.local` is not rewritten during local startup
-- Supabase Studio is available at `http://127.0.0.1:54323`
+- Supabase Studio is available at `http://127.0.0.1:55323`
 - local demo user credentials are written to `.env.demo-user.local` and kept in sync with the local auth seed
 - `.env.remote.local` and `.env.supabase.local` are no longer part of the workflow
 
 Local DB command behavior:
 
 - `npm run db:start` starts the local Supabase stack and syncs the demo auth user
-- `npm run db:reset` resets local database state, reapplies migrations and SQL seeds, then runs the demo-user post-seed
+- `npm run db:reset` removes local Supabase containers and data volumes, starts a fresh stack, reapplies migrations and SQL seeds, then runs the demo-user post-seed
 - `npm run db:seed` reapplies SQL seeds and demo-user post-seed against an already running local stack
 - `npm run db:seed` should fail fast if local Supabase is not running instead of starting Docker automatically
 
@@ -150,7 +150,14 @@ Current observed usage:
 - username availability RPC: `is_username_available`
 - profile/avatar storage
 
-Current large-file storage strategy for marketplace model files is not finalized. Avoid hard-coding irreversible assumptions about final production storage for uploaded 3D assets unless that work is explicitly being implemented.
+Current MVP storage strategy for marketplace assets:
+
+- source model files and optional lightweight 3D previews use the private `models` bucket;
+- catalog cover images use the public `model-images` bucket;
+- downloadable source files are tracked through `model_files`;
+- the optional viewer-ready asset is tracked through `models.preview_model_path`.
+
+Avoid hard-coding assumptions beyond this MVP shape unless that work is explicitly being implemented.
 
 ## Current Product Reality
 

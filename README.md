@@ -112,7 +112,7 @@ npm run format
 Local database workflow:
 
 - `npm run db:start` starts the local Supabase stack and syncs the local demo user.
-- `npm run db:reset` resets the local database state, reapplies migrations and seeds, then exits.
+- `npm run db:reset` removes the local Supabase containers and data volumes, starts a fresh stack, reapplies migrations and seeds, then exits.
 - `npm run db:seed` reapplies seed data to an already running local Supabase stack and does not start Docker containers for you.
 
 ## Unit Testing
@@ -175,9 +175,9 @@ There is no need to keep `.env.remote.local` or `.env.supabase.local` anymore. T
 
 Local Supabase URLs:
 
-- Studio: `http://127.0.0.1:54323`
-- API: `http://127.0.0.1:54321`
-- Postgres: `postgresql://postgres:postgres@127.0.0.1:54322/postgres`
+- Studio: `http://127.0.0.1:55323`
+- API: `http://127.0.0.1:55321`
+- Postgres: `postgresql://postgres:postgres@127.0.0.1:55322/postgres`
 
 Environment values are used by the browser, server, and session proxy helpers in `src/business/utils/supabase/*`.
 
