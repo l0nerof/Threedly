@@ -1,6 +1,9 @@
 import {
+  buildModelCoverImageStoragePath,
+  buildModelPreviewStoragePath,
   buildModelUploadSlug,
   buildModelUploadStoragePath,
+  getModelCoverImageExtension,
   getModelUploadFileExtension,
   sanitizeModelUploadFileName,
 } from "@/src/business/utils/modelUpload";
@@ -32,7 +35,32 @@ describe("model upload utils", () => {
     ).toBe("user-1/model-1/soft-chair-final.glb");
   });
 
-  it("builds a stable catalog-safe draft slug", () => {
+  it("returns a supported cover image extension from a MIME type", () => {
+    expect(getModelCoverImageExtension("image/webp")).toBe("webp");
+    expect(getModelCoverImageExtension("image/gif")).toBeNull();
+  });
+
+  it("builds a stable cover image storage path", () => {
+    expect(
+      buildModelCoverImageStoragePath({
+        userId: "user-1",
+        modelId: "model-1",
+        mimeType: "image/jpeg",
+      }),
+    ).toBe("user-1/model-1/cover.jpg");
+  });
+
+  it("builds a lightweight viewer preview path", () => {
+    expect(
+      buildModelPreviewStoragePath({
+        userId: "user-1",
+        modelId: "model-1",
+        fileName: "Preview.GLB",
+      }),
+    ).toBe("user-1/model-1/preview.glb");
+  });
+
+  it("builds a stable catalog-safe model slug", () => {
     expect(
       buildModelUploadSlug(
         "Soft Chair Final",

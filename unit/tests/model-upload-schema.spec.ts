@@ -6,12 +6,12 @@ const validValues = {
   titleEn: "Soft chair",
   descriptionUa: "",
   descriptionEn: "",
-  categoryId: "11111111-1111-4111-8111-111111111111",
+  categoryId: "00000000-0000-0000-0000-000000000001",
   minimumPlan: "free",
 };
 
 describe("modelUploadMetadataSchema", () => {
-  it("accepts valid bilingual draft metadata", () => {
+  it("accepts valid bilingual model metadata", () => {
     const result = modelUploadMetadataSchema.safeParse(validValues);
 
     expect(result.success).toBe(true);
@@ -19,6 +19,15 @@ describe("modelUploadMetadataSchema", () => {
       expect(result.data.descriptionUa).toBeNull();
       expect(result.data.descriptionEn).toBeNull();
     }
+  });
+
+  it("accepts the local seeded category id shape", () => {
+    const result = modelUploadMetadataSchema.safeParse({
+      ...validValues,
+      categoryId: "00000000-0000-0000-0000-000000000004",
+    });
+
+    expect(result.success).toBe(true);
   });
 
   it("rejects missing titles", () => {

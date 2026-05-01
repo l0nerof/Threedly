@@ -50,10 +50,20 @@ function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
         return t("errors.invalidMetadata");
       case "invalidFile":
         return t("errors.invalidFile");
+      case "invalidCoverImage":
+        return t("errors.invalidCoverImage");
       case "fileTooLarge":
         return t("errors.fileTooLarge");
+      case "coverImageTooLarge":
+        return t("errors.coverImageTooLarge");
+      case "previewFileTooLarge":
+        return t("errors.previewFileTooLarge");
       case "unsupportedFileType":
         return t("errors.unsupportedFileType");
+      case "unsupportedCoverImageType":
+        return t("errors.unsupportedCoverImageType");
+      case "unsupportedPreviewFileType":
+        return t("errors.unsupportedPreviewFileType");
       case "unauthorized":
         return t("errors.unauthorized");
       case "uploadFailed":
@@ -186,6 +196,22 @@ function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
           </div>
 
           <Field>
+            <FieldLabel htmlFor="coverImage">{t("coverImage")}</FieldLabel>
+            <FieldContent>
+              <Input
+                id="coverImage"
+                name="coverImage"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                required
+              />
+              <p className="text-muted-foreground text-xs">
+                {t("coverImageHint")}
+              </p>
+            </FieldContent>
+          </Field>
+
+          <Field>
             <FieldLabel htmlFor="modelFile">{t("file")}</FieldLabel>
             <FieldContent>
               <Input
@@ -196,6 +222,23 @@ function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
                 required
               />
               <p className="text-muted-foreground text-xs">{t("fileHint")}</p>
+            </FieldContent>
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="previewModelFile">
+              {t("previewModelFile")}
+            </FieldLabel>
+            <FieldContent>
+              <Input
+                id="previewModelFile"
+                name="previewModelFile"
+                type="file"
+                accept=".glb,.gltf"
+              />
+              <p className="text-muted-foreground text-xs">
+                {t("previewModelFileHint")}
+              </p>
             </FieldContent>
           </Field>
 

@@ -3,8 +3,10 @@ import { vi } from "vitest";
 import { beforeEach, describe, expect, it } from "../fixtures";
 
 const mocks = vi.hoisted(() => ({
+  storageFromMock: vi.fn(),
   uploadMock: vi.fn(),
   removeMock: vi.fn(),
+  insertModelMock: vi.fn(),
   insertModelSelectMock: vi.fn(),
   insertModelSingleMock: vi.fn(),
   insertModelFileMock: vi.fn(),
@@ -23,17 +25,18 @@ vi.mock("@/src/business/utils/supabase/server", () => ({
       })),
     },
     storage: {
-      from: vi.fn(() => ({
-        upload: mocks.uploadMock,
-        remove: mocks.removeMock,
-      })),
+      from: mocks.storageFromMock,
     },
     from: vi.fn((table: string) => {
       if (table === "models") {
         return {
-          insert: vi.fn(() => ({
-            select: mocks.insertModelSelectMock,
-          })),
+          insert: (payload: unknown) => {
+            mocks.insertModelMock(payload);
+
+            return {
+              select: mocks.insertModelSelectMock,
+            };
+          },
           delete: vi.fn(() => ({
             eq: mocks.deleteModelEqMock,
           })),
@@ -41,7 +44,7 @@ vi.mock("@/src/business/utils/supabase/server", () => ({
       }
 
       return {
-        insert: mocks.insertModelFileMock,
+        insert: (payload: unknown) => mocks.insertModelFileMock(payload),
       };
     }),
   })),
@@ -51,22 +54,58 @@ vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
 }));
 
-function buildValidFormData(file: File): FormData {
+type BuildValidFormDataOptions = {
+  coverImage?: File;
+  previewModelFile?: File;
+};
+
+function buildValidFormData(
+  file: File,
+  options: BuildValidFormDataOptions = {},
+): FormData {
   const formData = new FormData();
-  formData.set("titleUa", "М'яке крісло");
+  formData.set("titleUa", "Рњ'СЏРєРµ РєСЂС–СЃР»Рѕ");
   formData.set("titleEn", "Soft chair");
   formData.set("descriptionUa", "");
   formData.set("descriptionEn", "");
-  formData.set("categoryId", "11111111-1111-4111-8111-111111111111");
+  formData.set("categoryId", "00000000-0000-0000-0000-000000000001");
   formData.set("minimumPlan", "free");
   formData.set("modelFile", file);
+  formData.set(
+    "coverImage",
+    options.coverImage ??
+      new File(["cover"], "cover.webp", { type: "image/webp" }),
+  );
+
+  if (options.previewModelFile) {
+    formData.set("previewModelFile", options.previewModelFile);
+  }
 
   return formData;
+}
+
+function getInsertedModelPayload(): Record<string, unknown> {
+  const payload = mocks.insertModelMock.mock.calls[0]?.[0];
+  expect(payload).toBeTruthy();
+
+  return payload as Record<string, unknown>;
+}
+
+function getInsertedModelFilePayload(): Record<string, unknown> {
+  const payload = mocks.insertModelFileMock.mock.calls[0]?.[0];
+  expect(payload).toBeTruthy();
+
+  return payload as Record<string, unknown>;
 }
 
 describe("uploadModelAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.storageFromMock.mockImplementation((bucket: string) => ({
+      upload: (path: string, file: File, options: unknown) =>
+        mocks.uploadMock(bucket, path, file, options),
+      remove: (paths: string[]) => mocks.removeMock(bucket, paths),
+    }));
     mocks.uploadMock.mockResolvedValue({ error: null });
     mocks.removeMock.mockResolvedValue({ error: null });
     mocks.insertModelSelectMock.mockReturnValue({
@@ -80,18 +119,47 @@ describe("uploadModelAction", () => {
     mocks.deleteModelEqMock.mockResolvedValue({ error: null });
   });
 
-  it("uploads the file and saves model metadata", async () => {
+  it("uploads the source file and cover image and saves model metadata", async () => {
     const result = await uploadModelAction(
       "ua",
       buildValidFormData(new File(["model"], "chair.glb")),
     );
 
+    const modelPayload = getInsertedModelPayload();
+    const modelId = String(modelPayload.id);
+
     expect(result).toEqual({
       ok: true,
       modelId: "11111111-2222-3333-4444-555555555555",
     });
-    expect(mocks.uploadMock).toHaveBeenCalledOnce();
-    expect(mocks.insertModelFileMock).toHaveBeenCalledOnce();
+    expect(mocks.storageFromMock).toHaveBeenCalledWith("models");
+    expect(mocks.storageFromMock).toHaveBeenCalledWith("model-images");
+    expect(mocks.uploadMock).toHaveBeenCalledTimes(2);
+    expect(modelPayload.cover_image_path).toBe(`user-1/${modelId}/cover.webp`);
+    expect(modelPayload.preview_model_path).toBeNull();
+    expect(modelPayload.status).toBe("published");
+    expect(modelPayload.published_at).toEqual(expect.any(String));
+
+    const modelFilePayload = getInsertedModelFilePayload();
+    expect(modelFilePayload.bucket).toBe("models");
+    expect(modelFilePayload.object_path).toBe(`user-1/${modelId}/chair.glb`);
+  });
+
+  it("uploads an optional lightweight preview model and stores its path", async () => {
+    await uploadModelAction(
+      "ua",
+      buildValidFormData(new File(["model"], "chair.blend"), {
+        previewModelFile: new File(["preview"], "Preview.GLB"),
+      }),
+    );
+
+    const modelPayload = getInsertedModelPayload();
+    const modelId = String(modelPayload.id);
+
+    expect(mocks.uploadMock).toHaveBeenCalledTimes(3);
+    expect(modelPayload.preview_model_path).toBe(
+      `user-1/${modelId}/preview.glb`,
+    );
   });
 
   it("rejects unsupported files before storage upload", async () => {
@@ -104,7 +172,31 @@ describe("uploadModelAction", () => {
     expect(mocks.uploadMock).not.toHaveBeenCalled();
   });
 
-  it("removes the stored file if metadata save fails", async () => {
+  it("rejects unsupported cover images before storage upload", async () => {
+    const result = await uploadModelAction(
+      "ua",
+      buildValidFormData(new File(["model"], "chair.glb"), {
+        coverImage: new File(["cover"], "cover.gif", { type: "image/gif" }),
+      }),
+    );
+
+    expect(result).toEqual({ ok: false, error: "unsupportedCoverImageType" });
+    expect(mocks.uploadMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects unsupported lightweight preview models before storage upload", async () => {
+    const result = await uploadModelAction(
+      "ua",
+      buildValidFormData(new File(["model"], "chair.glb"), {
+        previewModelFile: new File(["preview"], "preview.fbx"),
+      }),
+    );
+
+    expect(result).toEqual({ ok: false, error: "unsupportedPreviewFileType" });
+    expect(mocks.uploadMock).not.toHaveBeenCalled();
+  });
+
+  it("removes stored files if metadata save fails", async () => {
     mocks.insertModelSingleMock.mockResolvedValueOnce({
       data: null,
       error: { message: "insert failed" },
@@ -112,10 +204,22 @@ describe("uploadModelAction", () => {
 
     const result = await uploadModelAction(
       "ua",
-      buildValidFormData(new File(["model"], "chair.glb")),
+      buildValidFormData(new File(["model"], "chair.glb"), {
+        previewModelFile: new File(["preview"], "preview.glb"),
+      }),
     );
 
     expect(result).toEqual({ ok: false, error: "metadataSaveFailed" });
-    expect(mocks.removeMock).toHaveBeenCalledOnce();
+    expect(mocks.removeMock).toHaveBeenCalledWith(
+      "models",
+      expect.arrayContaining([
+        expect.stringMatching(/\/chair\.glb$/),
+        expect.stringMatching(/\/preview\.glb$/),
+      ]),
+    );
+    expect(mocks.removeMock).toHaveBeenCalledWith(
+      "model-images",
+      expect.arrayContaining([expect.stringMatching(/\/cover\.webp$/)]),
+    );
   });
 });

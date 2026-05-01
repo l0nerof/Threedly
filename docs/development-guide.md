@@ -150,7 +150,14 @@ Current observed usage:
 - username availability RPC: `is_username_available`
 - profile/avatar storage
 
-Current large-file storage strategy for marketplace model files is not finalized. Avoid hard-coding irreversible assumptions about final production storage for uploaded 3D assets unless that work is explicitly being implemented.
+Current MVP storage strategy for marketplace assets:
+
+- source model files and optional lightweight 3D previews use the private `models` bucket;
+- catalog cover images use the public `model-images` bucket;
+- downloadable source files are tracked through `model_files`;
+- the optional viewer-ready asset is tracked through `models.preview_model_path`.
+
+Avoid hard-coding assumptions beyond this MVP shape unless that work is explicitly being implemented.
 
 ## Current Product Reality
 

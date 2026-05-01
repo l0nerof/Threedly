@@ -62,9 +62,11 @@ test.describe("profile — authenticated", () => {
     await profileUploadsPage.expectLoaded();
     await expect(profileUploadsPage.uploadTitleUaInput).toBeVisible();
     await expect(profileUploadsPage.uploadTitleEnInput).toBeVisible();
+    await expect(profileUploadsPage.uploadCoverImageInput).toBeVisible();
     await expect(profileUploadsPage.uploadModelFileInput).toBeVisible();
+    await expect(profileUploadsPage.uploadPreviewModelFileInput).toBeVisible();
     await expect(profileUploadsPage.uploadSubmitButton).toBeVisible();
-    await expect(profileUploadsPage.uploadedDraftsHeading).toBeVisible();
+    await expect(profileUploadsPage.uploadedModelsHeading).toBeVisible();
   });
 
   test("sidebar navigation: overview → settings", async ({

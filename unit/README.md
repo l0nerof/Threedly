@@ -29,11 +29,15 @@ This file documents the Vitest coverage in this repository and should stay in sy
 - [x] Upload helper returns supported file extensions in lowercase
 - [x] Upload helper rejects unsupported file names
 - [x] Upload helper builds user/model-scoped storage paths
-- [x] Upload metadata schema accepts bilingual draft metadata
+- [x] Upload helper builds cover image and lightweight preview paths
+- [x] Upload metadata schema accepts bilingual model metadata
 - [x] Upload metadata schema rejects missing titles and invalid categories
-- [x] Upload server action stores a file and model metadata through mocked Supabase
+- [x] Upload server action stores source file, cover image, and model metadata through mocked Supabase
+- [x] Upload server action publishes uploaded models immediately
+- [x] Upload server action stores optional lightweight 3D preview paths
 - [x] Upload server action rejects unsupported files before storage writes
-- [x] Upload server action removes stored files when metadata save fails
+- [x] Upload server action rejects unsupported cover and preview files before storage writes
+- [x] Upload server action removes stored source, preview, and cover files when metadata save fails
 
 ## Coverage Map
 

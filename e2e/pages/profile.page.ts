@@ -71,9 +71,11 @@ export class ProfileUploadsPage extends BasePage {
   readonly heading: Locator;
   readonly uploadTitleUaInput: Locator;
   readonly uploadTitleEnInput: Locator;
+  readonly uploadCoverImageInput: Locator;
   readonly uploadModelFileInput: Locator;
+  readonly uploadPreviewModelFileInput: Locator;
   readonly uploadSubmitButton: Locator;
-  readonly uploadedDraftsHeading: Locator;
+  readonly uploadedModelsHeading: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -81,11 +83,13 @@ export class ProfileUploadsPage extends BasePage {
     this.uploadTitleUaInput = page.getByLabel("Назва українською");
     this.uploadTitleEnInput = page.getByLabel("Назва англійською");
     this.uploadModelFileInput = page.getByLabel("Файл моделі");
+    this.uploadCoverImageInput = page.locator("#coverImage");
+    this.uploadPreviewModelFileInput = page.locator("#previewModelFile");
     this.uploadSubmitButton = page.getByRole("button", {
       name: "Завантажити модель",
     });
-    this.uploadedDraftsHeading = page.getByRole("heading", {
-      name: "Завантажені чернетки",
+    this.uploadedModelsHeading = page.getByRole("heading", {
+      name: "Завантажені моделі",
     });
   }
 

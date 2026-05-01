@@ -6,11 +6,31 @@ insert into storage.buckets (
   allowed_mime_types
 )
 values (
-  'marketplace-files',
-  'marketplace-files',
+  'models',
+  'models',
   false,
   52428800,
   null
+)
+on conflict (id) do update
+set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
+insert into storage.buckets (
+  id,
+  name,
+  public,
+  file_size_limit,
+  allowed_mime_types
+)
+values (
+  'model-images',
+  'model-images',
+  true,
+  5242880,
+  array['image/jpeg', 'image/png', 'image/webp']
 )
 on conflict (id) do update
 set
@@ -35,25 +55,23 @@ create policy "Creators can read their own models"
   to authenticated
   using (creator_id = (select auth.uid()));
 
-drop policy if exists "Creators can insert draft models" on public.models;
-create policy "Creators can insert draft models"
+drop policy if exists "Creators can insert published models" on public.models;
+create policy "Creators can insert published models"
   on public.models
   for insert
   to authenticated
   with check (
     creator_id = (select auth.uid())
-    and status = 'draft'
+    and status = 'published'
+    and published_at is not null
   );
 
-drop policy if exists "Creators can delete own draft models" on public.models;
-create policy "Creators can delete own draft models"
+drop policy if exists "Creators can delete own models" on public.models;
+create policy "Creators can delete own models"
   on public.models
   for delete
   to authenticated
-  using (
-    creator_id = (select auth.uid())
-    and status = 'draft'
-  );
+  using (creator_id = (select auth.uid()));
 
 drop policy if exists "Creators can read their own model file rows" on public.model_files;
 create policy "Creators can read their own model file rows"
@@ -103,7 +121,7 @@ create policy "Creators can read their own stored model files"
   for select
   to authenticated
   using (
-    bucket_id = 'marketplace-files'
+    bucket_id = 'models'
     and (storage.foldername(name))[1] = (select auth.uid()::text)
   );
 
@@ -113,7 +131,7 @@ create policy "Creators can upload their own model files"
   for insert
   to authenticated
   with check (
-    bucket_id = 'marketplace-files'
+    bucket_id = 'models'
     and (storage.foldername(name))[1] = (select auth.uid()::text)
   );
 
@@ -123,6 +141,33 @@ create policy "Creators can delete their own stored model files"
   for delete
   to authenticated
   using (
-    bucket_id = 'marketplace-files'
+    bucket_id = 'models'
+    and (storage.foldername(name))[1] = (select auth.uid()::text)
+  );
+
+drop policy if exists "Model images are publicly readable" on storage.objects;
+create policy "Model images are publicly readable"
+  on storage.objects
+  for select
+  to anon, authenticated
+  using (bucket_id = 'model-images');
+
+drop policy if exists "Creators can upload their own model images" on storage.objects;
+create policy "Creators can upload their own model images"
+  on storage.objects
+  for insert
+  to authenticated
+  with check (
+    bucket_id = 'model-images'
+    and (storage.foldername(name))[1] = (select auth.uid()::text)
+  );
+
+drop policy if exists "Creators can delete their own model images" on storage.objects;
+create policy "Creators can delete their own model images"
+  on storage.objects
+  for delete
+  to authenticated
+  using (
+    bucket_id = 'model-images'
     and (storage.foldername(name))[1] = (select auth.uid()::text)
   );
