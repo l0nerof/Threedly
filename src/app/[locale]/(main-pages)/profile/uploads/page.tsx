@@ -1,3 +1,5 @@
+import ModelsPagination from "@/src/business/components/ModelsPagination";
+import { UPLOADS_PAGE_SIZE } from "@/src/business/constants/profileConfig";
 import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
 import { createClient } from "@/src/business/utils/supabase/server";
 import { Badge } from "@/src/shared/components/Badge";
@@ -16,6 +18,7 @@ import ModelUploadForm from "./components/ModelUploadForm";
 
 type Props = {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ page?: string }>;
 };
 
 type CategoryRow = {
@@ -44,7 +47,10 @@ function formatFileSize(size: number | null): string {
   return `${(size / 1024 / 1024).toFixed(1)} MB`;
 }
 
-export default async function ProfileUploadsPage({ params }: Props) {
+export default async function ProfileUploadsPage({
+  params,
+  searchParams,
+}: Props) {
   const { locale } = await params;
 
   if (!isLocaleCode(locale)) {
@@ -52,6 +58,11 @@ export default async function ProfileUploadsPage({ params }: Props) {
   }
 
   setRequestLocale(locale);
+
+  const { page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
+  const from = (currentPage - 1) * UPLOADS_PAGE_SIZE;
+  const to = from + UPLOADS_PAGE_SIZE - 1;
 
   const t = await getTranslations("Profile");
   const supabase = await createClient();
@@ -65,7 +76,7 @@ export default async function ProfileUploadsPage({ params }: Props) {
 
   const [
     { data: categories, error: categoriesError },
-    { data: uploadedModels, error: uploadedModelsError },
+    { data: uploadedModels, error: uploadedModelsError, count },
   ] = await Promise.all([
     supabase
       .from("categories")
@@ -75,9 +86,11 @@ export default async function ProfileUploadsPage({ params }: Props) {
       .from("models")
       .select(
         "id, title_ua, title_en, status, file_format, file_size_bytes, created_at",
+        { count: "exact" },
       )
       .eq("creator_id", user.id)
-      .order("created_at", { ascending: false }),
+      .order("created_at", { ascending: false })
+      .range(from, to),
   ]);
 
   const uploadModelWithLocale = uploadModelAction.bind(null, locale);
@@ -89,6 +102,14 @@ export default async function ProfileUploadsPage({ params }: Props) {
     }),
   );
   const modelRows = (uploadedModels ?? []) as UploadedModelRow[];
+  const totalPages = Math.ceil((count ?? 0) / UPLOADS_PAGE_SIZE);
+  const pageFrom = (currentPage - 1) * UPLOADS_PAGE_SIZE + 1;
+  const pageTo = Math.min(currentPage * UPLOADS_PAGE_SIZE, count ?? 0);
+  const pageOfLabel = t("uploads.list.pageOf", {
+    from: pageFrom,
+    to: pageTo,
+    total: count ?? 0,
+  });
 
   return (
     <section className="flex flex-col gap-5">
@@ -126,31 +147,41 @@ export default async function ProfileUploadsPage({ params }: Props) {
         </CardHeader>
         <CardContent className="p-0">
           {modelRows.length > 0 ? (
-            <div className="divide-border/60 divide-y">
-              {modelRows.map((model) => {
-                const title = locale === "ua" ? model.title_ua : model.title_en;
+            <>
+              <div className="divide-border/60 divide-y">
+                {modelRows.map((model) => {
+                  const title =
+                    locale === "ua" ? model.title_ua : model.title_en;
 
-                return (
-                  <article
-                    key={model.id}
-                    className="flex flex-col gap-2 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <div className="flex flex-col gap-1">
-                      <h2 className="text-sm font-medium">{title}</h2>
-                      <p className="text-muted-foreground text-xs">
-                        {model.file_format?.toUpperCase() ??
-                          t("uploads.list.unknownFormat")}
-                        {" · "}
-                        {formatFileSize(model.file_size_bytes)}
-                      </p>
-                    </div>
-                    <Badge variant="outline" className="w-fit rounded-full">
-                      {t(`uploads.status.${model.status}`)}
-                    </Badge>
-                  </article>
-                );
-              })}
-            </div>
+                  return (
+                    <article
+                      key={model.id}
+                      className="flex flex-col gap-2 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div className="flex flex-col gap-1">
+                        <h2 className="text-sm font-medium">{title}</h2>
+                        <p className="text-muted-foreground text-xs">
+                          {model.file_format?.toUpperCase() ??
+                            t("uploads.list.unknownFormat")}
+                          {" · "}
+                          {formatFileSize(model.file_size_bytes)}
+                        </p>
+                      </div>
+                      <Badge variant="outline" className="w-fit rounded-full">
+                        {t(`uploads.status.${model.status}`)}
+                      </Badge>
+                    </article>
+                  );
+                })}
+              </div>
+              <ModelsPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageOfLabel={pageOfLabel}
+                previousPageLabel={t("uploads.list.previousPage")}
+                nextPageLabel={t("uploads.list.nextPage")}
+              />
+            </>
           ) : (
             <div className="flex flex-col gap-2">
               <p className="text-sm font-medium">{t("uploads.empty.title")}</p>
