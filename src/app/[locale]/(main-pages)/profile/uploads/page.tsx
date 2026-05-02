@@ -1,3 +1,4 @@
+import ModelsPagination from "@/src/business/components/ModelsPagination";
 import { UPLOADS_PAGE_SIZE } from "@/src/business/constants/profileConfig";
 import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
 import { createClient } from "@/src/business/utils/supabase/server";
@@ -14,7 +15,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { uploadModelAction } from "./actions";
 import ModelUploadForm from "./components/ModelUploadForm";
-import UploadedModelsPagination from "./components/UploadedModelsPagination";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -103,6 +103,13 @@ export default async function ProfileUploadsPage({
   );
   const modelRows = (uploadedModels ?? []) as UploadedModelRow[];
   const totalPages = Math.ceil((count ?? 0) / UPLOADS_PAGE_SIZE);
+  const pageFrom = (currentPage - 1) * UPLOADS_PAGE_SIZE + 1;
+  const pageTo = Math.min(currentPage * UPLOADS_PAGE_SIZE, count ?? 0);
+  const pageOfLabel = t("uploads.list.pageOf", {
+    from: pageFrom,
+    to: pageTo,
+    total: count ?? 0,
+  });
 
   return (
     <section className="flex flex-col gap-5">
@@ -167,10 +174,12 @@ export default async function ProfileUploadsPage({
                   );
                 })}
               </div>
-              <UploadedModelsPagination
+              <ModelsPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                totalCount={count ?? 0}
+                pageOfLabel={pageOfLabel}
+                previousPageLabel={t("uploads.list.previousPage")}
+                nextPageLabel={t("uploads.list.nextPage")}
               />
             </>
           ) : (

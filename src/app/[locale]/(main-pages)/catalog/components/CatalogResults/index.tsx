@@ -59,6 +59,13 @@ function CatalogResults({
   const models = data?.models ?? [];
   const totalCount = data?.totalCount ?? 0;
   const totalPages = Math.ceil(totalCount / CATALOG_PAGE_SIZE);
+  const pageFrom = (page - 1) * CATALOG_PAGE_SIZE + 1;
+  const pageTo = Math.min(page * CATALOG_PAGE_SIZE, totalCount);
+  const pageOfLabel = t("pageOf", {
+    from: pageFrom,
+    to: pageTo,
+    total: totalCount,
+  });
 
   if (models.length === 0) {
     return (
@@ -102,9 +109,7 @@ function CatalogResults({
       <ModelsPagination
         currentPage={page}
         totalPages={totalPages}
-        totalCount={totalCount}
-        pageSize={CATALOG_PAGE_SIZE}
-        formatPageOf={(from, to, total) => t("pageOf", { from, to, total })}
+        pageOfLabel={pageOfLabel}
         previousPageLabel={t("previousPage")}
         nextPageLabel={t("nextPage")}
         onPageChange={onPageChange}

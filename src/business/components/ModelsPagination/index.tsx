@@ -9,16 +9,15 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/src/shared/components/Pagination/pagination";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type ModelsPaginationProps = {
   currentPage: number;
   totalPages: number;
-  totalCount: number;
-  pageSize: number;
-  formatPageOf: (from: number, to: number, total: number) => string;
+  pageOfLabel: string;
   previousPageLabel: string;
   nextPageLabel: string;
-  onPageChange: (page: number) => void;
+  onPageChange?: (page: number) => void;
 };
 
 function buildPageWindow(current: number, total: number): number[] {
@@ -34,15 +33,25 @@ function buildPageWindow(current: number, total: number): number[] {
 function ModelsPagination({
   currentPage,
   totalPages,
-  totalCount,
-  pageSize,
-  formatPageOf,
+  pageOfLabel,
   previousPageLabel,
   nextPageLabel,
   onPageChange,
 }: ModelsPaginationProps) {
-  const from = (currentPage - 1) * pageSize + 1;
-  const to = Math.min(currentPage * pageSize, totalCount);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const handlePageChange =
+    onPageChange ??
+    ((nextPage: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (nextPage === 1) {
+        params.delete("page");
+      } else {
+        params.set("page", String(nextPage));
+      }
+      router.push(`?${params.toString()}`, { scroll: false });
+    });
 
   if (totalPages <= 1) {
     return null;
@@ -56,9 +65,7 @@ function ModelsPagination({
 
   return (
     <div className="flex flex-col items-center sm:flex-row sm:justify-between">
-      <p className="text-muted-foreground shrink-0 text-sm">
-        {formatPageOf(from, to, totalCount)}
-      </p>
+      <p className="text-muted-foreground shrink-0 text-sm">{pageOfLabel}</p>
 
       <Pagination className="sm:justify-end">
         <PaginationContent>
@@ -71,7 +78,7 @@ function ModelsPagination({
               }
               onClick={(e) => {
                 e.preventDefault();
-                if (currentPage > 1) onPageChange(currentPage - 1);
+                if (currentPage > 1) handlePageChange(currentPage - 1);
               }}
               href="#"
             />
@@ -83,7 +90,7 @@ function ModelsPagination({
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  onPageChange(1);
+                  handlePageChange(1);
                 }}
               >
                 1
@@ -104,7 +111,7 @@ function ModelsPagination({
                 isActive={page === currentPage}
                 onClick={(e) => {
                   e.preventDefault();
-                  onPageChange(page);
+                  handlePageChange(page);
                 }}
               >
                 {page}
@@ -124,7 +131,7 @@ function ModelsPagination({
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  onPageChange(totalPages);
+                  handlePageChange(totalPages);
                 }}
               >
                 {totalPages}
@@ -143,7 +150,7 @@ function ModelsPagination({
               }
               onClick={(e) => {
                 e.preventDefault();
-                if (currentPage < totalPages) onPageChange(currentPage + 1);
+                if (currentPage < totalPages) handlePageChange(currentPage + 1);
               }}
               href="#"
             />
