@@ -4,26 +4,19 @@ import { cn } from "@/src/shared/utils/cn";
 import { Download } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
-const MOCK_FILES = [
+const FILE_FORMATS = [
   {
     format: "GLB",
     label: "GLB file",
     description: "Useful for quick previews.",
-    size: "4.2 MB",
   },
   {
     format: "FBX",
     label: "FBX file",
     description: "Best for animation pipelines.",
-    size: "8.7 MB",
   },
-  {
-    format: "OBJ",
-    label: "OBJ file",
-    description: "Universal mesh export.",
-    size: "3.1 MB",
-  },
-];
+  { format: "OBJ", label: "OBJ file", description: "Universal mesh export." },
+] as const;
 
 async function FilesTab() {
   const t = await getTranslations("ModelPage.tabs");
@@ -34,7 +27,7 @@ async function FilesTab() {
         {t("filesAndFormatsDescription")}
       </p>
       <div className="flex flex-col gap-3">
-        {MOCK_FILES.map((file) => (
+        {FILE_FORMATS.map((file) => (
           <div
             key={file.format}
             className="border-border/60 flex items-center justify-between gap-4 rounded-xl border p-4"
@@ -57,7 +50,6 @@ async function FilesTab() {
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-4">
-              <span className="text-muted-foreground text-sm">{file.size}</span>
               <Button size="sm" className="rounded-xl">
                 <Download className="size-4" aria-hidden />
                 {t("filesAndFormatsDownload")}
