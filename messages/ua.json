@@ -233,9 +233,37 @@
           "pro": "Pro",
           "max": "Max"
         },
+        "favoriteButton": "Додати в улюблені",
         "previewButton": "Прев'ю",
         "downloadButton": "Завантажити"
       }
+    }
+  },
+
+  "ModelPage": {
+    "hero": {
+      "byPrefix": "від",
+      "downloads": "{count} завантажень",
+      "updated": "Оновлено {date}",
+      "specificationsTitle": "Специфікації",
+      "planInfo": "Ця модель доступна на плані {plan}. Підписка не потрібна для завантаження.",
+      "previewButton": "Прев'ю",
+      "downloadButton": "Завантажити"
+    },
+    "tabs": {
+      "overview": "Огляд",
+      "filesAndFormats": "Файли та формати",
+      "filesAndFormatsDescription": "Завантажте окремі формати файлів нижче. Усі пакети включають текстури та матеріали.",
+      "filesAndFormatsDownload": "Завантажити",
+      "aboutTitle": "Про модель",
+      "aboutEmpty": "Опис відсутній.",
+      "designerTitle": "Дизайнер",
+      "designerViewProfile": "Переглянути профіль"
+    },
+    "relatedModels": {
+      "ariaLabel": "Схожі моделі",
+      "title": "Схожі моделі",
+      "viewAll": "Дивитись всі"
     }
   },
 

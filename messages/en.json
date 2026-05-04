@@ -233,9 +233,37 @@
           "pro": "Pro",
           "max": "Max"
         },
+        "favoriteButton": "Add to favorites",
         "previewButton": "Preview",
         "downloadButton": "Download"
       }
+    }
+  },
+
+  "ModelPage": {
+    "hero": {
+      "byPrefix": "by",
+      "downloads": "{count} downloads",
+      "updated": "Updated {date}",
+      "specificationsTitle": "Specifications",
+      "planInfo": "This model is available on the {plan} plan. No subscription required to download.",
+      "previewButton": "Preview",
+      "downloadButton": "Download"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "filesAndFormats": "Files & Formats",
+      "filesAndFormatsDescription": "Download individual file formats below. All bundles include textures and materials.",
+      "filesAndFormatsDownload": "Download",
+      "aboutTitle": "About this model",
+      "aboutEmpty": "No description available.",
+      "designerTitle": "Designer",
+      "designerViewProfile": "View profile"
+    },
+    "relatedModels": {
+      "ariaLabel": "Related models",
+      "title": "Related Models",
+      "viewAll": "View all"
     }
   },
 

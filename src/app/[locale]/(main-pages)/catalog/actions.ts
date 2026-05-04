@@ -53,7 +53,7 @@ export async function fetchCatalogModels({
   let query = supabase
     .from("models")
     .select(
-      "id, slug, title_ua, title_en, cover_image_path, minimum_plan, file_format, download_count, is_featured, published_at",
+      "id, slug, title_ua, title_en, description_ua, description_en, cover_image_path, minimum_plan, file_format, download_count, is_featured, published_at",
       { count: "exact" },
     )
     .eq("status", "published")
@@ -104,6 +104,30 @@ export async function fetchCatalogModels({
         cover_image_path: resolveModelCoverImageUrl(model.cover_image_path),
       })) ?? [],
     totalCount: count ?? 0,
+  };
+}
+
+export async function fetchModelBySlug(
+  slug: string,
+): Promise<CatalogModelsResult["models"][number] | null> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("models")
+    .select(
+      "id, slug, title_ua, title_en, description_ua, description_en, cover_image_path, minimum_plan, file_format, download_count, is_featured, published_at",
+    )
+    .eq("slug", slug)
+    .eq("status", "published")
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    ...data,
+    cover_image_path: resolveModelCoverImageUrl(data.cover_image_path),
   };
 }
 

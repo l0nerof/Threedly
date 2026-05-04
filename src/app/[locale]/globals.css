@@ -65,6 +65,22 @@
   --shadow-2xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.25);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
+
+  /* Plan badge colors */
+  --plan-free-text: #2e7d32;
+  --plan-free-bg: #e8f5e9;
+  --plan-pro-text: #e65100;
+  --plan-pro-bg: #fff3e0;
+  --plan-max-text: #6a1b9a;
+  --plan-max-bg: #f3e5f5;
+
+  /* Format badge colors */
+  --format-glb-text: #1565c0;
+  --format-glb-bg: #e3f2fd;
+  --format-fbx-text: #880e4f;
+  --format-fbx-bg: #fce4ec;
+  --format-obj-text: #283593;
+  --format-obj-bg: #e8eaf6;
 }
 
 .dark {
@@ -127,6 +143,22 @@
   --shadow-xl:
     0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 8px 10px -1px hsl(0 0% 0% / 0.1);
   --shadow-2xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.25);
+
+  /* Plan badge colors */
+  --plan-free-text: #4caf50;
+  --plan-free-bg: #1b2e1c;
+  --plan-pro-text: #ff8a50;
+  --plan-pro-bg: #2e1a0e;
+  --plan-max-text: #ce93d8;
+  --plan-max-bg: #2a1230;
+
+  /* Format badge colors */
+  --format-glb-text: #64b5f6;
+  --format-glb-bg: #0d2137;
+  --format-fbx-text: #f48fb1;
+  --format-fbx-bg: #2a0d1a;
+  --format-obj-text: #9fa8da;
+  --format-obj-bg: #111827;
 }
 
 @theme inline {
@@ -166,6 +198,22 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Plan badge tokens */
+  --color-plan-free-text: var(--plan-free-text);
+  --color-plan-free-bg: var(--plan-free-bg);
+  --color-plan-pro-text: var(--plan-pro-text);
+  --color-plan-pro-bg: var(--plan-pro-bg);
+  --color-plan-max-text: var(--plan-max-text);
+  --color-plan-max-bg: var(--plan-max-bg);
+
+  /* Format badge tokens */
+  --color-format-glb-text: var(--format-glb-text);
+  --color-format-glb-bg: var(--format-glb-bg);
+  --color-format-fbx-text: var(--format-fbx-text);
+  --color-format-fbx-bg: var(--format-fbx-bg);
+  --color-format-obj-text: var(--format-obj-text);
+  --color-format-obj-bg: var(--format-obj-bg);
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
