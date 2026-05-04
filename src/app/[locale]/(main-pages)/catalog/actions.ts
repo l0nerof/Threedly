@@ -27,6 +27,7 @@ const SORT_COLUMN: Record<
 
 type FilterParams = {
   search?: string;
+  groups?: string[];
   categories?: string[];
   plans?: CatalogPlanKey[];
   formats?: CatalogFormatValue[];
@@ -41,6 +42,7 @@ export async function fetchCatalogModels({
   page,
   sort = catalogSortValues[0],
   search,
+  groups,
   categories,
   plans,
   formats,
@@ -76,15 +78,18 @@ export async function fetchCatalogModels({
     query = query.in("file_format", formats);
   }
 
-  if (categories && categories.length > 0) {
-    const { data: categoryRows } = await supabase
-      .from("categories")
-      .select("id")
-      .in("slug", categories);
-    const categoryIds = categoryRows?.map((r) => r.id) ?? [];
-    if (categoryIds.length > 0) {
-      query = query.in("category_id", categoryIds);
+  const categoryIds = await resolveCategoryIds({
+    categories,
+    groups,
+    supabase,
+  });
+
+  if (categoryIds) {
+    if (categoryIds.length === 0) {
+      return { models: [], totalCount: 0 };
     }
+
+    query = query.in("category_id", categoryIds);
   }
 
   for (const { column, ascending } of SORT_COLUMN[sort]) {
@@ -109,6 +114,7 @@ export async function fetchCatalogModels({
 
 export async function fetchCatalogModelsCount({
   search,
+  groups,
   categories,
   plans,
   formats,
@@ -137,15 +143,18 @@ export async function fetchCatalogModelsCount({
     query = query.in("file_format", formats);
   }
 
-  if (categories && categories.length > 0) {
-    const { data: categoryRows } = await supabase
-      .from("categories")
-      .select("id")
-      .in("slug", categories);
-    const categoryIds = categoryRows?.map((r) => r.id) ?? [];
-    if (categoryIds.length > 0) {
-      query = query.in("category_id", categoryIds);
+  const categoryIds = await resolveCategoryIds({
+    categories,
+    groups,
+    supabase,
+  });
+
+  if (categoryIds) {
+    if (categoryIds.length === 0) {
+      return 0;
     }
+
+    query = query.in("category_id", categoryIds);
   }
 
   const { count, error } = await query;
@@ -155,4 +164,57 @@ export async function fetchCatalogModelsCount({
   }
 
   return count ?? 0;
+}
+
+type CatalogSupabaseClient = Awaited<ReturnType<typeof createClient>>;
+
+async function resolveCategoryIds({
+  categories,
+  groups,
+  supabase,
+}: Pick<FilterParams, "categories" | "groups"> & {
+  supabase: CatalogSupabaseClient;
+}): Promise<string[] | null> {
+  if (categories && categories.length > 0) {
+    const { data: categoryRows, error } = await supabase
+      .from("categories")
+      .select("id")
+      .in("slug", categories);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return categoryRows?.map((row) => row.id) ?? [];
+  }
+
+  if (groups && groups.length > 0) {
+    const { data: groupRows, error: groupError } = await supabase
+      .from("category_groups")
+      .select("id")
+      .in("slug", groups);
+
+    if (groupError) {
+      throw new Error(groupError.message);
+    }
+
+    const groupIds = groupRows?.map((row) => row.id) ?? [];
+
+    if (groupIds.length === 0) {
+      return [];
+    }
+
+    const { data: categoryRows, error } = await supabase
+      .from("categories")
+      .select("id")
+      .in("group_id", groupIds);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return categoryRows?.map((row) => row.id) ?? [];
+  }
+
+  return null;
 }

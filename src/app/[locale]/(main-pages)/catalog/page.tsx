@@ -1,3 +1,4 @@
+import { mapCategoryGroupRowsToOptions } from "@/src/business/utils/categories";
 import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
 import { createClient } from "@/src/business/utils/supabase/server";
 import type { Metadata } from "next";
@@ -35,16 +36,17 @@ export default async function CatalogPage({ params }: Props) {
 
   const supabase = await createClient();
 
-  const { data: categoriesData } = await supabase
-    .from("categories")
-    .select("slug, name_ua, name_en")
-    .order("created_at");
+  const { data: categoryGroupsData } = await supabase
+    .from("category_groups")
+    .select(
+      "id, slug, name_ua, name_en, sort_order, categories(id, slug, name_ua, name_en, sort_order, is_featured)",
+    )
+    .order("sort_order", { ascending: true });
 
-  const categories =
-    categoriesData?.map((category) => ({
-      value: category.slug,
-      label: locale === "ua" ? category.name_ua : category.name_en,
-    })) ?? [];
+  const categoryGroups = mapCategoryGroupRowsToOptions(
+    categoryGroupsData ?? [],
+    locale,
+  );
 
-  return <CatalogShell categories={categories} />;
+  return <CatalogShell categoryGroups={categoryGroups} />;
 }

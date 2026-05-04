@@ -19,6 +19,7 @@ type CatalogResultsProps = {
   page: number;
   sort: CatalogSortValue;
   search?: string;
+  groups?: string[];
   categories?: string[];
   plans?: CatalogPlanKey[];
   formats?: CatalogFormatValue[];
@@ -29,6 +30,7 @@ function CatalogResults({
   page,
   sort,
   search,
+  groups,
   categories,
   plans,
   formats,
@@ -41,6 +43,7 @@ function CatalogResults({
     page,
     sort,
     search,
+    groups,
     categories,
     plans,
     formats,

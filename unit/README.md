@@ -21,8 +21,12 @@ This file documents the Vitest coverage in this repository and should stay in sy
 
 - [x] Mobile filter sheet opens from the catalog toolbar
 - [x] Local filter state updates without any real data filtering
+- [x] Category groups can be selected and pushed to the URL
 - [x] Reset returns the shell to its default local state
 - [x] Initial category from route state appears in the active filter UI
+- [x] Initial group from route state appears in the active filter UI
+- [x] Catalog query keys include group filters
+- [x] Catalog filter helpers flatten grouped category options
 
 ## Model Upload MVP
 

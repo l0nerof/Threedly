@@ -12,6 +12,7 @@ describe("catalog queries", () => {
         page: 2,
         sort: "fresh",
         search: "chair",
+        groups: ["furniture", "decor"],
         categories: ["chairs"],
         plans: ["pro"],
         formats: ["glb"],
@@ -22,6 +23,7 @@ describe("catalog queries", () => {
       {
         categories: ["chairs"],
         formats: ["glb"],
+        groups: ["furniture", "decor"],
         page: 2,
         plans: ["pro"],
         search: "chair",
@@ -31,13 +33,19 @@ describe("catalog queries", () => {
   });
 
   it("builds the filtered catalog count query key from the shared prefix", () => {
-    expect(catalogQueryKeys.modelCount({ categories: ["lighting"] })).toEqual([
+    expect(
+      catalogQueryKeys.modelCount({
+        groups: ["decor"],
+        categories: ["lighting"],
+      }),
+    ).toEqual([
       "catalog",
       "models",
       "count",
       {
         categories: ["lighting"],
         formats: undefined,
+        groups: ["decor"],
         plans: undefined,
         search: undefined,
       },

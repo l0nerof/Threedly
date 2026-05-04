@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 
 type UseCatalogModelsCountParams = {
   search?: string;
+  groups?: string[];
   categories?: string[];
   plans?: CatalogPlanKey[];
   formats?: CatalogFormatValue[];
@@ -16,6 +17,7 @@ type UseCatalogModelsCountParams = {
 
 export function useCatalogModelsCount({
   search,
+  groups,
   categories,
   plans,
   formats,
@@ -24,12 +26,13 @@ export function useCatalogModelsCount({
   return useQuery({
     queryKey: catalogQueryKeys.modelCount({
       search,
+      groups,
       categories,
       plans,
       formats,
     }),
     queryFn: () =>
-      fetchCatalogModelsCount({ search, categories, plans, formats }),
+      fetchCatalogModelsCount({ search, groups, categories, plans, formats }),
     enabled,
     placeholderData: (previousData) => previousData,
   });

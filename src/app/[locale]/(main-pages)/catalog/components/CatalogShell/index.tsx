@@ -13,7 +13,13 @@ import type {
   CatalogFormatValue,
   CatalogPlanKey,
 } from "@/src/business/types/catalog";
-import { resolveOptionLabel } from "@/src/business/utils/catalogFilters";
+import type { CategoryGroupOption } from "@/src/business/types/category";
+import {
+  flattenCategoryGroups,
+  haveSameValues,
+  resolveCategoryGroupLabel,
+  resolveOptionLabel,
+} from "@/src/business/utils/catalogFilters";
 import { Button } from "@/src/shared/components/Button";
 import { Input } from "@/src/shared/components/Input";
 import {
@@ -33,7 +39,7 @@ import CatalogResults from "../CatalogResults";
 import CatalogSortDropdown from "../CatalogSortDropdown";
 
 type CatalogShellProps = {
-  categories: CatalogFilterOption[];
+  categoryGroups: CategoryGroupOption[];
 };
 
 function splitParam(value: string | null): string[] {
@@ -51,11 +57,13 @@ function parseListParam<T extends string>(
     .filter((v): v is T => (allowed as readonly string[]).includes(v));
 }
 
-function CatalogShell({ categories }: CatalogShellProps) {
+function CatalogShell({ categoryGroups }: CatalogShellProps) {
   const t = useTranslations("Catalog");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const categories: CatalogFilterOption[] =
+    flattenCategoryGroups(categoryGroups);
 
   // ── Committed state from URL ───────────────────────────────────────────────
   const page = Math.max(1, Number(searchParams.get("page") ?? 1));
@@ -64,20 +72,33 @@ function CatalogShell({ categories }: CatalogShellProps) {
     catalogSortValues[0];
 
   const categoriesParam = searchParams.get("category") ?? "";
+  const groupParam = searchParams.get("group") ?? "";
   const plansParam = searchParams.get("plans") ?? "";
   const formatsParam = searchParams.get("formats") ?? "";
 
   const selectedCategories = splitParam(categoriesParam);
+  const selectedGroups =
+    selectedCategories.length > 0 ? [] : splitParam(groupParam);
   const selectedPlans = parseListParam(plansParam, catalogPlanKeys);
   const selectedFormats = parseListParam(formatsParam, catalogFormatValues);
 
   // ── Draft state (what user is selecting before applying) ───────────────────
+  const [draftGroups, setDraftGroups] = useState(selectedGroups);
   const [draftCategories, setDraftCategories] = useState(selectedCategories);
   const [draftPlans, setDraftPlans] = useState<CatalogPlanKey[]>(selectedPlans);
   const [draftFormats, setDraftFormats] =
     useState<CatalogFormatValue[]>(selectedFormats);
 
   // Sync drafts when URL changes externally (back/forward, reset)
+  useEffect(() => {
+    if (categoriesParam) {
+      setDraftGroups([]);
+      return;
+    }
+
+    setDraftGroups(splitParam(groupParam));
+  }, [categoriesParam, groupParam]);
+
   useEffect(() => {
     setDraftCategories(splitParam(categoriesParam));
   }, [categoriesParam]);
@@ -146,7 +167,17 @@ function CatalogShell({ categories }: CatalogShellProps) {
   };
 
   // ── Draft toggle handlers (checkbox clicks — update draft only) ────────────
+  const handleGroupToggle = (value: string) => {
+    setDraftGroups((prev) =>
+      prev.includes(value)
+        ? prev.filter((group) => group !== value)
+        : [...prev, value],
+    );
+    setDraftCategories([]);
+  };
+
   const handleCategoryToggle = (value: string) => {
+    setDraftGroups([]);
     setDraftCategories((prev) =>
       prev.includes(value) ? prev.filter((c) => c !== value) : [...prev, value],
     );
@@ -171,8 +202,13 @@ function CatalogShell({ categories }: CatalogShellProps) {
 
     if (draftCategories.length > 0) {
       params.set("category", draftCategories.join(","));
+      params.delete("group");
+    } else if (draftGroups.length > 0) {
+      params.set("group", draftGroups.join(","));
+      params.delete("category");
     } else {
       params.delete("category");
+      params.delete("group");
     }
     if (draftPlans.length > 0) {
       params.set("plans", draftPlans.join(","));
@@ -196,6 +232,7 @@ function CatalogShell({ categories }: CatalogShellProps) {
   // ── Reset ──────────────────────────────────────────────────────────────────
   const handleReset = () => {
     setSearchValue("");
+    setDraftGroups([]);
     setDraftCategories([]);
     setDraftPlans([]);
     setDraftFormats([]);
@@ -206,6 +243,7 @@ function CatalogShell({ categories }: CatalogShellProps) {
   // Committed filters (for chips and reset visibility)
   const hasCommittedFilters =
     urlSearch.length > 0 ||
+    selectedGroups.length > 0 ||
     selectedCategories.length > 0 ||
     selectedPlans.length > 0 ||
     selectedFormats.length > 0;
@@ -213,6 +251,7 @@ function CatalogShell({ categories }: CatalogShellProps) {
   // Draft includes uncommitted selections → shows reset button
   const hasActiveFilters =
     hasCommittedFilters ||
+    draftGroups.length > 0 ||
     draftCategories.length > 0 ||
     draftPlans.length > 0 ||
     draftFormats.length > 0;
@@ -229,13 +268,24 @@ function CatalogShell({ categories }: CatalogShellProps) {
           },
         }
       : null,
+    ...selectedGroups.map((group) => ({
+      key: `group-${group}`,
+      label: resolveCategoryGroupLabel(categoryGroups, group),
+      onRemove: () => {
+        const next = selectedGroups.filter(
+          (selectedGroup) => selectedGroup !== group,
+        );
+        setDraftGroups(next);
+        applyFilter({ group: next.join(",") || null, category: null });
+      },
+    })),
     ...selectedCategories.map((category) => ({
       key: `category-${category}`,
       label: resolveOptionLabel(categories, category),
       onRemove: () => {
         const next = selectedCategories.filter((c) => c !== category);
         setDraftCategories(next);
-        applyFilter({ category: next.join(",") || null });
+        applyFilter({ category: next.join(",") || null, group: null });
       },
     })),
     ...selectedPlans.map((plan) => ({
@@ -265,26 +315,24 @@ function CatalogShell({ categories }: CatalogShellProps) {
       : undefined;
 
   // ── Draft diff — true when any draft differs from committed URL state ────────
-  const sortedJoin = (arr: string[]) => [...arr].sort().join(",");
   const hasDraft =
-    sortedJoin(draftCategories) !== sortedJoin(selectedCategories) ||
-    sortedJoin(draftPlans) !== sortedJoin(selectedPlans) ||
-    sortedJoin(draftFormats) !== sortedJoin(selectedFormats);
+    !haveSameValues(draftGroups, selectedGroups) ||
+    !haveSameValues(draftCategories, selectedCategories) ||
+    !haveSameValues(draftPlans, selectedPlans) ||
+    !haveSameValues(draftFormats, selectedFormats);
 
   // ── Filtered models count (runs on draft state for live feedback) ──────────
-  const hasDraftFilters =
-    urlSearch.length > 0 ||
-    draftCategories.length > 0 ||
-    draftPlans.length > 0 ||
-    draftFormats.length > 0;
-
   const { data: filteredCount, isFetching: isCountFetching } =
     useCatalogModelsCount({
       search: activeSearch,
+      groups:
+        draftCategories.length === 0 && draftGroups.length > 0
+          ? draftGroups
+          : undefined,
       categories: draftCategories.length > 0 ? draftCategories : undefined,
       plans: draftPlans.length > 0 ? draftPlans : undefined,
       formats: draftFormats.length > 0 ? draftFormats : undefined,
-      enabled: hasDraftFilters || isMobileFiltersOpen,
+      enabled: hasDraft || isMobileFiltersOpen,
     });
 
   const countLabel = isCountFetching
@@ -354,21 +402,23 @@ function CatalogShell({ categories }: CatalogShellProps) {
 
         {/* Desktop filters */}
         <div className="grid gap-6 lg:grid-cols-[minmax(260px,300px)_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[minmax(290px,320px)_minmax(0,1fr)]">
-          <aside className="hidden lg:block">
+          <aside className="hidden self-start lg:sticky lg:top-28 lg:block">
             <CatalogFilters
-              categories={categories}
+              categoryGroups={categoryGroups}
+              selectedGroups={draftGroups}
               selectedCategories={draftCategories}
               selectedPlans={draftPlans}
               selectedFormats={draftFormats}
               showReset={hasActiveFilters}
+              onGroupToggle={handleGroupToggle}
               onCategoryToggle={handleCategoryToggle}
               onPlanToggle={handlePlanToggle}
               onFormatToggle={handleFormatToggle}
               onApply={applyAllDrafts}
               onReset={handleReset}
               idPrefix="catalog-sidebar"
-              filteredCount={hasDraftFilters ? filteredCount : undefined}
-              isCountFetching={hasDraftFilters ? isCountFetching : undefined}
+              filteredCount={hasDraft ? filteredCount : undefined}
+              isCountFetching={hasDraft ? isCountFetching : undefined}
               hasDraft={hasDraft}
             />
           </aside>
@@ -378,6 +428,11 @@ function CatalogShell({ categories }: CatalogShellProps) {
               page={page}
               sort={selectedSort}
               search={activeSearch}
+              groups={
+                selectedCategories.length === 0 && selectedGroups.length > 0
+                  ? selectedGroups
+                  : undefined
+              }
               categories={
                 selectedCategories.length > 0 ? selectedCategories : undefined
               }
@@ -403,11 +458,13 @@ function CatalogShell({ categories }: CatalogShellProps) {
           {/* Scrollable filter content */}
           <div className="flex-1 overflow-y-auto p-4">
             <CatalogFilters
-              categories={categories}
+              categoryGroups={categoryGroups}
+              selectedGroups={draftGroups}
               selectedCategories={draftCategories}
               selectedPlans={draftPlans}
               selectedFormats={draftFormats}
               showReset={hasActiveFilters}
+              onGroupToggle={handleGroupToggle}
               onCategoryToggle={handleCategoryToggle}
               onPlanToggle={handlePlanToggle}
               onFormatToggle={handleFormatToggle}

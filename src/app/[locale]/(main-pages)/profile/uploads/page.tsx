@@ -1,5 +1,7 @@
 import ModelsPagination from "@/src/business/components/ModelsPagination";
 import { UPLOADS_PAGE_SIZE } from "@/src/business/constants/profileConfig";
+import type { CategoryGroupRow } from "@/src/business/types/category";
+import { mapCategoryGroupRowsToOptions } from "@/src/business/utils/categories";
 import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
 import { createClient } from "@/src/business/utils/supabase/server";
 import { Badge } from "@/src/shared/components/Badge";
@@ -19,12 +21,6 @@ import ModelUploadForm from "./components/ModelUploadForm";
 type Props = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ page?: string }>;
-};
-
-type CategoryRow = {
-  id: string;
-  name_ua: string;
-  name_en: string;
 };
 
 type UploadedModelStatus = "draft" | "published" | "archived";
@@ -75,13 +71,15 @@ export default async function ProfileUploadsPage({
   }
 
   const [
-    { data: categories, error: categoriesError },
+    { data: categoryGroups, error: categoryGroupsError },
     { data: uploadedModels, error: uploadedModelsError, count },
   ] = await Promise.all([
     supabase
-      .from("categories")
-      .select("id, name_ua, name_en")
-      .order(locale === "ua" ? "name_ua" : "name_en", { ascending: true }),
+      .from("category_groups")
+      .select(
+        "id, slug, name_ua, name_en, sort_order, categories(id, slug, name_ua, name_en, sort_order, is_featured)",
+      )
+      .order("sort_order", { ascending: true }),
     supabase
       .from("models")
       .select(
@@ -94,12 +92,10 @@ export default async function ProfileUploadsPage({
   ]);
 
   const uploadModelWithLocale = uploadModelAction.bind(null, locale);
-  const hasLoadError = Boolean(categoriesError || uploadedModelsError);
-  const categoryOptions = ((categories ?? []) as CategoryRow[]).map(
-    (category) => ({
-      id: category.id,
-      label: locale === "ua" ? category.name_ua : category.name_en,
-    }),
+  const hasLoadError = Boolean(categoryGroupsError || uploadedModelsError);
+  const categoryOptions = mapCategoryGroupRowsToOptions(
+    (categoryGroups ?? []) as CategoryGroupRow[],
+    locale,
   );
   const modelRows = (uploadedModels ?? []) as UploadedModelRow[];
   const totalPages = Math.ceil((count ?? 0) / UPLOADS_PAGE_SIZE);
@@ -133,7 +129,7 @@ export default async function ProfileUploadsPage({
 
       <Card className="border-border/60 gap-4 rounded-2xl p-6 shadow-none">
         <ModelUploadForm
-          categories={categoryOptions}
+          categoryGroups={categoryOptions}
           onUploadAction={uploadModelWithLocale}
         />
       </Card>

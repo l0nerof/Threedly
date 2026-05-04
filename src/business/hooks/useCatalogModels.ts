@@ -12,6 +12,7 @@ type UseCatalogModelsParams = {
   page: number;
   sort?: CatalogSortValue;
   search?: string;
+  groups?: string[];
   categories?: string[];
   plans?: CatalogPlanKey[];
   formats?: CatalogFormatValue[];
@@ -21,6 +22,7 @@ export function useCatalogModels({
   page,
   sort = catalogSortValues[0],
   search,
+  groups,
   categories,
   plans,
   formats,
@@ -30,12 +32,21 @@ export function useCatalogModels({
       page,
       sort,
       search,
+      groups,
       categories,
       plans,
       formats,
     }),
     queryFn: () =>
-      fetchCatalogModels({ page, sort, search, categories, plans, formats }),
+      fetchCatalogModels({
+        page,
+        sort,
+        search,
+        groups,
+        categories,
+        plans,
+        formats,
+      }),
     placeholderData: (previousData) => previousData,
   });
 }

@@ -9,6 +9,7 @@ type CatalogModelListQueryKeyParams = {
   page: number;
   sort?: CatalogSortValue;
   search?: string;
+  groups?: string[];
   categories?: string[];
   plans?: CatalogPlanKey[];
   formats?: CatalogFormatValue[];
@@ -16,6 +17,7 @@ type CatalogModelListQueryKeyParams = {
 
 type CatalogModelCountQueryKeyParams = {
   search?: string;
+  groups?: string[];
   categories?: string[];
   plans?: CatalogPlanKey[];
   formats?: CatalogFormatValue[];
@@ -28,16 +30,18 @@ export const catalogQueryKeys = {
     page,
     sort = catalogSortValues[0],
     search,
+    groups,
     categories,
     plans,
     formats,
   }: CatalogModelListQueryKeyParams) =>
     [
       ...catalogQueryKeys.models(),
-      { categories, formats, page, plans, search, sort },
+      { categories, formats, groups, page, plans, search, sort },
     ] as const,
   modelCount: ({
     search,
+    groups,
     categories,
     plans,
     formats,
@@ -45,6 +49,6 @@ export const catalogQueryKeys = {
     [
       ...catalogQueryKeys.models(),
       "count",
-      { categories, formats, plans, search },
+      { categories, formats, groups, plans, search },
     ] as const,
 };

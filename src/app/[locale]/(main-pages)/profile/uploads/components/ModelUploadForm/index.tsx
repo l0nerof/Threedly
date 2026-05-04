@@ -8,6 +8,7 @@ import {
 import { catalogQueryKeys } from "@/src/business/queries/catalog";
 import { modelUploadFormSchema } from "@/src/business/schemas/modelUpload";
 import type { CatalogPlanKey } from "@/src/business/types/catalog";
+import type { CategoryGroupOption } from "@/src/business/types/category";
 import type {
   ModelUploadActionResult,
   ModelUploadFieldErrors,
@@ -30,6 +31,14 @@ import {
   CardTitle,
 } from "@/src/shared/components/Card";
 import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/src/shared/components/Combobox";
+import {
   Field,
   FieldContent,
   FieldDescription,
@@ -51,20 +60,26 @@ import { useQueryClient } from "@tanstack/react-query";
 import { UploadCloudIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { type FormEvent, useRef, useState } from "react";
+import { type FormEvent, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
-type CategoryOption = {
-  id: string;
-  label: string;
-};
-
 type ModelUploadFormProps = {
-  categories: CategoryOption[];
+  categoryGroups: CategoryGroupOption[];
   onUploadAction: (formData: FormData) => Promise<ModelUploadActionResult>;
 };
 
-function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
+type UploadCategoryOption = {
+  id: string;
+  value: string;
+  label: string;
+  groupLabel: string;
+  searchLabel: string;
+};
+
+function ModelUploadForm({
+  categoryGroups,
+  onUploadAction,
+}: ModelUploadFormProps) {
   const t = useTranslations("Profile.uploads.form");
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -76,6 +91,21 @@ function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
     MODEL_UPLOAD_DEFAULT_MINIMUM_PLAN,
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const categories = useMemo<UploadCategoryOption[]>(
+    () =>
+      categoryGroups.flatMap((group) =>
+        group.categories.map((category) => ({
+          id: category.id,
+          value: category.value,
+          label: category.label,
+          groupLabel: group.label,
+          searchLabel: `${group.label} ${category.label}`,
+        })),
+      ),
+    [categoryGroups],
+  );
+  const selectedCategory =
+    categories.find((category) => category.id === categoryId) ?? null;
 
   const clearFieldError = (fieldName: ModelUploadFormFieldName) => {
     setFieldErrors((currentErrors) => {
@@ -271,36 +301,54 @@ function ModelUploadForm({ categories, onUploadAction }: ModelUploadFormProps) {
                 </span>
               </FieldLabel>
               <FieldContent>
-                <Select
+                <Combobox
                   name="categoryId"
-                  value={categoryId}
-                  onValueChange={(value) => {
-                    setCategoryId(value);
+                  items={categories}
+                  value={selectedCategory}
+                  onValueChange={(category) => {
+                    setCategoryId(category?.id ?? "");
                     clearFieldError("categoryId");
                   }}
+                  itemToStringLabel={(category) => category.label}
+                  itemToStringValue={(category) => category.id}
+                  isItemEqualToValue={(item, value) => item.id === value.id}
+                  filter={(category, query) =>
+                    category.searchLabel
+                      .toLocaleLowerCase()
+                      .includes(query.toLocaleLowerCase())
+                  }
                   disabled={categories.length === 0}
+                  autoHighlight
                 >
-                  <SelectTrigger
+                  <ComboboxInput
                     id="categoryId"
-                    className="w-full"
+                    placeholder={t("categoryPlaceholder")}
+                    aria-label={t("category")}
                     aria-required
+                    showClear
+                    disabled={categories.length === 0}
+                    className="w-full"
                     {...getModelUploadControlValidationProps(
                       fieldErrors,
                       "categoryId",
                     )}
-                  >
-                    <SelectValue placeholder={t("categoryPlaceholder")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                  />
+                  <ComboboxContent>
+                    <ComboboxEmpty>{t("categoryEmpty")}</ComboboxEmpty>
+                    <ComboboxList>
+                      {(category: UploadCategoryOption) => (
+                        <ComboboxItem key={category.id} value={category}>
+                          <span className="flex min-w-0 flex-col gap-0.5">
+                            <span className="truncate">{category.label}</span>
+                            <span className="text-muted-foreground truncate text-xs">
+                              {category.groupLabel}
+                            </span>
+                          </span>
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
                 <FieldError
                   id="categoryId-error"
                   errors={fieldError(fieldErrors.categoryId)}

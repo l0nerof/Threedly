@@ -22,6 +22,7 @@ const messages = {
         descriptionEn: "English description",
         category: "Category",
         categoryPlaceholder: "Choose a category",
+        categoryEmpty: "No categories found.",
         minimumPlan: "Minimum plan",
         plans: {
           free: "Free",
@@ -70,8 +71,18 @@ function renderModelUploadForm() {
     <QueryClientProvider client={queryClient}>
       <NextIntlClientProvider locale="en" messages={messages}>
         <ModelUploadForm
-          categories={[
-            { id: "00000000-0000-0000-0000-000000000001", label: "Chairs" },
+          categoryGroups={[
+            {
+              value: "furniture",
+              label: "Furniture",
+              categories: [
+                {
+                  id: "00000000-0000-0000-0000-000000000001",
+                  value: "chairs",
+                  label: "Chairs",
+                },
+              ],
+            },
           ]}
           onUploadAction={vi.fn()}
         />
@@ -89,5 +100,15 @@ describe("ModelUploadForm", () => {
     }) as HTMLButtonElement;
 
     expect(submitButton.disabled).toBe(false);
+  });
+
+  it("uses a searchable category combobox instead of a large select menu", () => {
+    renderModelUploadForm();
+
+    expect(
+      screen
+        .getByRole("combobox", { name: /Category/i })
+        .getAttribute("placeholder"),
+    ).toBe("Choose a category");
   });
 });
