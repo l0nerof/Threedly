@@ -1,6 +1,11 @@
 "use client";
 
 import { ProfileAvatar } from "@/src/business/components/ProfileAvatar";
+import { HEADER_FEATURED_CATEGORY_LIMIT } from "@/src/business/constants/header";
+import { LocaleCode } from "@/src/business/constants/localization";
+import type { CategoryGroupOption } from "@/src/business/types/category";
+import type { NavItemConfig } from "@/src/business/types/navItemsConfig";
+import { mapCategoryGroupRowsToOptions } from "@/src/business/utils/categories";
 import { createClient } from "@/src/business/utils/supabase/client";
 import { Link } from "@/src/i18n/routing";
 import {
@@ -12,8 +17,6 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { navItems } from "../../constants/navItems";
-import { Category } from "../../types/category";
-import { NavItemConfig } from "../../types/navItemsConfig";
 import { LanguageToggle } from "../LanguageToggle";
 import {
   MobileNav,
@@ -34,7 +37,9 @@ function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoryGroups, setCategoryGroups] = useState<CategoryGroupOption[]>(
+    [],
+  );
   const t = useTranslations("Header");
   const locale = useLocale();
 
@@ -43,11 +48,15 @@ function Header() {
 
     const loadCategories = async () => {
       const { data } = await supabase
-        .from("categories")
-        .select("slug, name_ua, name_en")
-        .order("created_at");
+        .from("category_groups")
+        .select(
+          "id, slug, name_ua, name_en, sort_order, categories(id, slug, name_ua, name_en, sort_order, is_featured)",
+        )
+        .order("sort_order", { ascending: true });
 
-      setCategories(data ?? []);
+      setCategoryGroups(
+        mapCategoryGroupRowsToOptions(data ?? [], locale as LocaleCode),
+      );
     };
 
     const loadCurrentUser = async () => {
@@ -107,24 +116,37 @@ function Header() {
         handleAvatarUpdated,
       );
     };
-  }, []);
+  }, [locale]);
 
   const navItemsWithCategories: NavItemConfig[] = navItems.map((item) => {
-    if (item.name === "nav.categories" && categories.length > 0) {
+    if (item.name === "nav.categories" && categoryGroups.length > 0) {
       return {
         name: item.name,
-        dropdown: categories.map((cat) => ({
-          label: locale === "ua" ? cat.name_ua : cat.name_en,
-          href: `/catalog?category=${cat.slug}`,
+        dropdownGroups: categoryGroups.map((group) => ({
+          label: group.label,
+          href: `/catalog?group=${group.value}`,
+          items: group.categories
+            .filter((category) => category.isFeatured)
+            .slice(0, HEADER_FEATURED_CATEGORY_LIMIT)
+            .map((category) => ({
+              label: category.label,
+              href: `/catalog?category=${category.value}`,
+            })),
         })),
+        dropdownFooter: {
+          label: t("allCategories"),
+          href: "/catalog",
+        },
       };
     }
+
     return item;
   });
 
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
   return (
     <Navbar>
-      {/* Desktop Navigation */}
       <NavBody>
         <NavbarLogo />
         <NavItems items={navItemsWithCategories} />
@@ -156,7 +178,6 @@ function Header() {
         </div>
       </NavBody>
 
-      {/* Mobile Navigation */}
       <MobileNav>
         <MobileNavHeader>
           <NavbarLogo />
@@ -166,12 +187,49 @@ function Header() {
           />
         </MobileNavHeader>
 
-        <MobileNavMenu
-          isOpen={isMobileMenuOpen}
-          onClose={() => setIsMobileMenuOpen(false)}
-        >
+        <MobileNavMenu isOpen={isMobileMenuOpen} onClose={closeMobileMenu}>
           {navItemsWithCategories.map((item, idx) => {
-            if (item.dropdown) {
+            if ("dropdownGroups" in item) {
+              return (
+                <Accordion
+                  key={`mobile-link-${idx}`}
+                  type="single"
+                  collapsible
+                  className="w-full"
+                >
+                  <AccordionItem value="categories" className="border-b-0">
+                    <AccordionTrigger className="text-foreground py-1 text-base font-normal hover:no-underline">
+                      {t(item.name)}
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-0">
+                      <div className="flex flex-col gap-2">
+                        <div className="grid grid-cols-2 gap-2">
+                          {item.dropdownGroups.map((group) => (
+                            <Link
+                              key={group.href}
+                              href={group.href}
+                              onClick={closeMobileMenu}
+                              className="border-border/60 bg-surface-elevated/45 text-foreground hover:border-primary/35 hover:bg-primary/8 rounded-xl border px-3 py-2 text-sm font-medium transition-colors"
+                            >
+                              {group.label}
+                            </Link>
+                          ))}
+                        </div>
+                        <Link
+                          href={item.dropdownFooter.href}
+                          onClick={closeMobileMenu}
+                          className="text-muted-foreground hover:text-foreground px-1 pt-1 text-sm font-medium transition-colors"
+                        >
+                          {item.dropdownFooter.label}
+                        </Link>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              );
+            }
+
+            if ("dropdown" in item && item.dropdown) {
               return (
                 <Accordion
                   key={`mobile-link-${idx}`}
@@ -185,29 +243,28 @@ function Header() {
                     </AccordionTrigger>
                     <AccordionContent className="pb-0">
                       <div className="flex flex-col gap-2 pl-3">
-                        {item.dropdown.map(
-                          (child: { label: string; href: string }) => (
-                            <Link
-                              key={child.href}
-                              href={child.href}
-                              onClick={() => setIsMobileMenuOpen(false)}
-                              className="text-muted-foreground text-sm"
-                            >
-                              {child.label}
-                            </Link>
-                          ),
-                        )}
+                        {item.dropdown.map((child) => (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            onClick={closeMobileMenu}
+                            className="text-muted-foreground text-sm"
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
                       </div>
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
               );
             }
+
             return (
               <Link
                 key={`mobile-link-${idx}`}
                 href={item.link}
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
                 className="text-foreground relative"
               >
                 {t(item.name)}
@@ -225,7 +282,7 @@ function Header() {
               <NavbarButton
                 as={Link}
                 href="/profile"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
                 variant="primary"
                 className="w-full"
               >
@@ -236,7 +293,7 @@ function Header() {
                 <NavbarButton
                   as={Link}
                   href="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                   variant="primary"
                   className="w-full"
                 >
@@ -245,7 +302,7 @@ function Header() {
                 <NavbarButton
                   as={Link}
                   href="/signup"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                   variant="primary"
                   className="w-full"
                 >

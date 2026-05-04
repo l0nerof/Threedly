@@ -4,17 +4,26 @@ import { Link } from "@/src/i18n/routing";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/src/shared/components/DropdownMenu";
 import { cn } from "@/src/shared/utils/cn";
 import { ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
+import type {
+  NavDropdownGroupConfig,
+  NavDropdownItemConfig,
+} from "../../types/navItemsConfig";
 
 type NavDropdownProps = {
   label: string;
-  items: { label: string; href: string }[];
+  items?: NavDropdownItemConfig[];
+  groups?: NavDropdownGroupConfig[];
+  footerItem?: NavDropdownItemConfig;
   idx: number;
   hovered: number | null;
   setHovered: (idx: number | null) => void;
@@ -24,6 +33,8 @@ type NavDropdownProps = {
 export const NavDropdown = ({
   label,
   items,
+  groups,
+  footerItem,
   idx,
   hovered,
   setHovered,
@@ -88,17 +99,69 @@ export const NavDropdown = ({
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <div className="bg-popover text-popover-foreground min-w-44 rounded-xl border p-1.5 shadow-md">
-          {items.map((child) => (
-            <DropdownMenuItem key={child.href} asChild>
-              <Link
-                href={child.href}
-                onClick={onItemClick}
-                className="rounded-lg px-3 py-2 text-sm"
-              >
-                {child.label}
-              </Link>
-            </DropdownMenuItem>
-          ))}
+          {groups && groups.length > 0 ? (
+            <>
+              <div className="grid max-w-[min(52rem,calc(100vw-2rem))] min-w-[42rem] grid-cols-3 gap-1">
+                {groups.map((group) => (
+                  <DropdownMenuGroup key={group.href} className="p-1">
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={group.href}
+                        onClick={onItemClick}
+                        className="rounded-lg px-3 py-2 text-sm font-semibold"
+                      >
+                        {group.label}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuLabel className="sr-only">
+                      {group.label}
+                    </DropdownMenuLabel>
+                    {group.items.map((child) => (
+                      <DropdownMenuItem key={child.href} asChild>
+                        <Link
+                          href={child.href}
+                          onClick={onItemClick}
+                          className="text-muted-foreground rounded-lg px-3 py-1.5 text-sm"
+                        >
+                          {child.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuGroup>
+                ))}
+              </div>
+              {footerItem ? (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={footerItem.href}
+                        onClick={onItemClick}
+                        className="rounded-lg px-3 py-2 text-sm font-medium"
+                      >
+                        {footerItem.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </>
+              ) : null}
+            </>
+          ) : (
+            <DropdownMenuGroup>
+              {(items ?? []).map((child) => (
+                <DropdownMenuItem key={child.href} asChild>
+                  <Link
+                    href={child.href}
+                    onClick={onItemClick}
+                    className="rounded-lg px-3 py-2 text-sm"
+                  >
+                    {child.label}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+          )}
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

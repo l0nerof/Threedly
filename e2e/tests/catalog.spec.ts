@@ -34,4 +34,15 @@ test.describe("catalog", () => {
     await catalogPage.expectLoaded();
     await catalogPage.expectActiveCategoryChip(/Стільці|Chairs/i);
   });
+
+  test("group query preselects the matching filter chip", async ({
+    page,
+    catalogPage,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 1200 });
+
+    await catalogPage.open("/ua/catalog?group=furniture");
+    await catalogPage.expectLoaded();
+    await catalogPage.expectActiveCategoryChip(/Меблі|Furniture/i);
+  });
 });

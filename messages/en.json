@@ -20,7 +20,8 @@
     },
     "login": "Login",
     "signup": "Sign up",
-    "profile": "Profile"
+    "profile": "Profile",
+    "allCategories": "All categories"
   },
 
   "Hero": {
@@ -159,10 +160,22 @@
       "countLoading": "..."
     },
     "filters": {
+      "group": {
+        "title": "Category group",
+        "description": "Select a whole catalog area."
+      },
       "category": {
         "title": "Category",
         "description": "You can select more than one category.",
-        "empty": "Categories are not available right now."
+        "empty": "Categories are not available right now.",
+        "pickerButton": "Choose categories",
+        "pickerTitle": "Choose categories",
+        "pickerDescription": "Search groups and categories quickly.",
+        "searchPlaceholder": "Search categories",
+        "emptySearch": "No matching categories.",
+        "pickerDone": "Done",
+        "showMore": "Show {count} more",
+        "showLess": "Show less"
       },
       "plan": {
         "title": "Minimum plan",
@@ -422,6 +435,7 @@
         "descriptionEn": "English description",
         "category": "Category",
         "categoryPlaceholder": "Choose a category",
+        "categoryEmpty": "No categories found.",
         "minimumPlan": "Minimum plan",
         "plans": {
           "free": "Free",

@@ -39,8 +39,6 @@ create table public.categories (
   slug text not null unique,
   name_ua text not null,
   name_en text not null,
-  description_ua text,
-  description_en text,
   created_at timestamptz not null default timezone('utc', now())
 );
 

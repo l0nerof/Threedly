@@ -1,0 +1,1 @@
+export const HEADER_FEATURED_CATEGORY_LIMIT = 6;

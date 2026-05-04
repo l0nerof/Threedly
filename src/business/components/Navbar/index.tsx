@@ -129,12 +129,18 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       )}
     >
       {items.map((item, idx) => {
-        if (item.dropdown) {
+        if ("dropdown" in item || "dropdownGroups" in item) {
           return (
             <NavDropdown
               key={`link-${idx}`}
               label={t(item.name)}
-              items={item.dropdown}
+              items={"dropdown" in item ? item.dropdown : undefined}
+              groups={
+                "dropdownGroups" in item ? item.dropdownGroups : undefined
+              }
+              footerItem={
+                "dropdownFooter" in item ? item.dropdownFooter : undefined
+              }
               idx={idx}
               hovered={hovered}
               setHovered={setHovered}
@@ -230,7 +236,7 @@ export const MobileNavMenu = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className={cn(
-            "bg-surface absolute inset-x-0 top-20 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg px-4 py-8 shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
+            "bg-surface border-border/60 absolute inset-x-0 top-16 z-50 flex max-h-[calc(100dvh-5rem)] w-full flex-col items-start justify-start gap-4 overflow-y-auto rounded-2xl border px-4 py-5 shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
             className,
           )}
         >
@@ -290,7 +296,7 @@ export const NavbarLogo = () => {
   return (
     <Link
       href="/"
-      className="text-foreground relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal"
+      className="text-foreground relative z-20 mr-4 flex items-center gap-2 px-2 py-1 text-sm font-normal"
     >
       <Image src="/logo.png" alt="logo" width={40} height={40} />
       <span className="text-foreground text-xl font-medium">{t("logo")}</span>
