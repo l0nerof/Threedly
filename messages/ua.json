@@ -20,7 +20,8 @@
     },
     "login": "Увійти",
     "signup": "Зареєструватися",
-    "profile": "Профіль"
+    "profile": "Профіль",
+    "allCategories": "Усі категорії"
   },
 
   "Hero": {
@@ -159,10 +160,22 @@
       "countLoading": "..."
     },
     "filters": {
+      "group": {
+        "title": "Група категорій",
+        "description": "Оберіть цілий розділ каталогу."
+      },
       "category": {
         "title": "Категорія",
         "description": "Можна вибрати кілька категорій.",
-        "empty": "Категорії зараз недоступні."
+        "empty": "Категорії зараз недоступні.",
+        "pickerButton": "Обрати категорії",
+        "pickerTitle": "Обрати категорії",
+        "pickerDescription": "Швидко знайдіть групу або категорію.",
+        "searchPlaceholder": "Пошук категорій",
+        "emptySearch": "Категорій за цим запитом немає.",
+        "pickerDone": "Готово",
+        "showMore": "Показати ще {count}",
+        "showLess": "Показати менше"
       },
       "plan": {
         "title": "Мінімальний план",
@@ -450,6 +463,7 @@
         "descriptionEn": "Опис англійською",
         "category": "Категорія",
         "categoryPlaceholder": "Оберіть категорію",
+        "categoryEmpty": "Категорії не знайдено.",
         "minimumPlan": "Мінімальний план",
         "plans": {
           "free": "Free",

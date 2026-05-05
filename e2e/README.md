@@ -100,10 +100,11 @@ This file documents the Playwright coverage in this repository and should stay i
 - [x] Desktop viewport shows the filter sidebar shell
 - [x] Mobile viewport opens the filter sheet from the toolbar
 - [x] `/ua/catalog?category=chairs` preselects the matching category chip
+- [x] `/ua/catalog?group=furniture` preselects the matching group chip
 
 ## Known Gaps
 
-- [ ] No catalog e2e coverage (out of scope)
+- [ ] No catalog result-card filtering assertions yet
 - [ ] No reset-password flow coverage (requires real email link)
 - [ ] No verify-email flow coverage (requires real OTP)
 - [ ] No avatar upload coverage in profile settings
