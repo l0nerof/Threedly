@@ -23,6 +23,8 @@ export type CatalogModel = {
   slug: string;
   title_ua: string;
   title_en: string;
+  description_ua: string | null;
+  description_en: string | null;
   cover_image_path: string;
   minimum_plan: CatalogPlanKey;
   file_format: string | null;
