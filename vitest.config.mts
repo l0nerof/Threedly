@@ -11,5 +11,10 @@ export default defineConfig({
     include: ["unit/tests/**/*.spec.ts", "unit/tests/**/*.spec.tsx"],
     setupFiles: ["./vitest.setup.ts"],
     restoreMocks: true,
+    server: {
+      deps: {
+        inline: ["next-intl"],
+      },
+    },
   },
 });

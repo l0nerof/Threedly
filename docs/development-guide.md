@@ -234,6 +234,15 @@ When implementing testable features, prefer designs that make side effects injec
 - The initial unit smoke spec covers `src/shared/hooks/use-mobile.ts`.
 - Prefer unit coverage for hooks, utils, and synchronous client components.
 - Async server components should continue to be validated primarily through e2e tests.
+- `next-intl` must be listed in `server.deps.inline` in `vitest.config.mts` — without it Vitest cannot resolve `next/navigation` from inside the package under `next@16`.
+
+#### Mocking conventions
+
+- Mock external dependencies (`next/navigation`, `@tanstack/react-query`) at the module level with `vi.mock`.
+- When mocking `next/navigation` in tests that use `next-intl` navigation helpers, always include `redirect` and `permanentRedirect` in the mock — `next-intl` calls them internally.
+- Import real locale messages from `messages/en.json` instead of duplicating message objects inline in test files — inline copies drift out of sync with the real translations.
+- Import real constants, schemas, and types from `src/business` or `src/shared` instead of redefining them in tests.
+- Place shared mock factories and fixtures in `unit/fixtures/` or `unit/mocks/` so they can be reused across specs.
 
 ## Verification Expectations
 
