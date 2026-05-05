@@ -41,97 +41,6 @@ vi.mock("@tanstack/react-query", () => ({
   },
 }));
 
-<<<<<<< feat-model-details-page
-const categories = [
-  { value: "chairs", label: "Chairs" },
-  { value: "lighting", label: "Lighting" },
-=======
-const messages = {
-  Catalog: {
-    title: "Find 3D models faster",
-    searchLabel: "Search catalog",
-    searchPlaceholder: "Search by model or material",
-    mobileFiltersButton: "Filters",
-    sortLabel: "Sort",
-    resetFilters: "Reset",
-    activeFiltersLabel: "Active filters",
-    noActiveFilters: "No active filters yet",
-    removeFilter: "Remove filter",
-    filtersPanel: {
-      title: "Filters",
-      description: "Refine the catalog for your workflow.",
-      showCount: "{count, plural, one {Show # model} other {Show # models}}",
-      countLoading: "Searching...",
-    },
-    filters: {
-      group: {
-        title: "Group",
-        description: "Select a whole catalog area.",
-      },
-      category: {
-        title: "Category",
-        description: "You can select more than one category.",
-        empty: "Category data is not available yet",
-        pickerButton: "Choose categories",
-        pickerTitle: "Choose categories",
-        pickerDescription: "Search groups and categories.",
-        searchPlaceholder: "Search categories",
-        emptySearch: "No matching categories.",
-        pickerDone: "Done",
-        showMore: "Show {count} more",
-        showLess: "Show less",
-      },
-      plan: {
-        title: "Plan",
-        description: "Filter by access tier.",
-        options: {
-          free: { label: "Free", description: "Entry" },
-          pro: { label: "Pro", description: "Professional" },
-          max: { label: "Max", description: "Highest tier" },
-        },
-      },
-      format: {
-        title: "Format",
-        description: "Filter by file format.",
-        options: {
-          glb: { label: "GLB", description: "Preview friendly" },
-          fbx: { label: "FBX", description: "Exchange format" },
-          max: { label: "MAX", description: "3ds Max" },
-        },
-      },
-    },
-    sortOptions: {
-      curated: {
-        label: "Curated first",
-        description: "Premium discovery order",
-      },
-      fresh: {
-        label: "Newest arrivals",
-        description: "Latest additions first",
-      },
-      downloads: { label: "Most downloaded", description: "Demand-led order" },
-    },
-    resultsArea: {
-      ariaLabel: "Catalog results area",
-      title: "Model catalog",
-      description: "Browse available 3D models.",
-      count: "{count} models",
-      pageOf: "Page {page} of {total}",
-      empty: "No models found.",
-      error: "Failed to load models.",
-      paginationLabel: "Pagination",
-      previousPage: "Previous page",
-      nextPage: "Next page",
-      modelCard: {
-        downloads: "{count} downloads",
-        planBadge: { free: "Free", pro: "Pro", max: "Max" },
-        previewButton: "Preview",
-        downloadButton: "Download",
-      },
-    },
-  },
-};
-
 const categoryGroups = [
   {
     value: "furniture",
@@ -195,7 +104,6 @@ const denseCategoryGroups = [
       },
     ],
   },
->>>>>>> main
 ];
 
 function renderCatalogShell(paramsString = "", groups = categoryGroups) {
@@ -252,7 +160,7 @@ describe("CatalogShell", () => {
     fireEvent.click(within(picker).getByRole("checkbox", { name: "Lighting" }));
     closeCategoryPicker(picker);
     fireEvent.click(
-      within(desktopFilters).getByRole("button", { name: "Show 42 models" }),
+      within(desktopFilters).getByRole("button", { name: "Show (42)" }),
     );
     expect(mockPushFn).toHaveBeenCalledWith(
       expect.stringContaining("category=lighting"),
@@ -296,7 +204,7 @@ describe("CatalogShell", () => {
     fireEvent.click(within(picker).getByRole("checkbox", { name: "Decor" }));
     closeCategoryPicker(picker);
     fireEvent.click(
-      within(desktopFilters).getByRole("button", { name: "Show 42 models" }),
+      within(desktopFilters).getByRole("button", { name: "Show (42)" }),
     );
 
     const pushedUrl = String(mockPushFn.mock.calls.at(-1)?.[0]);
@@ -314,7 +222,7 @@ describe("CatalogShell", () => {
     fireEvent.click(within(picker).getByRole("checkbox", { name: "Lighting" }));
     closeCategoryPicker(picker);
     fireEvent.click(
-      within(desktopFilters).getByRole("button", { name: "Show 42 models" }),
+      within(desktopFilters).getByRole("button", { name: "Show (42)" }),
     );
 
     const pushedUrl = String(mockPushFn.mock.calls.at(-1)?.[0]);
@@ -405,7 +313,7 @@ describe("CatalogShell", () => {
     closeCategoryPicker(picker);
 
     expect(
-      within(desktopFilters).getByRole("button", { name: "Show 42 models" }),
+      within(desktopFilters).getByRole("button", { name: "Show (42)" }),
     ).not.toBeNull();
   });
 
