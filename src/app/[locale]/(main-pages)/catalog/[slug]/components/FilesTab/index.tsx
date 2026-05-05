@@ -52,7 +52,9 @@ async function FilesTab() {
             <div className="flex shrink-0 items-center gap-4">
               <Button size="sm" className="rounded-xl">
                 <Download className="size-4" aria-hidden />
-                {t("filesAndFormatsDownload")}
+                <span className="hidden sm:inline">
+                  {t("filesAndFormatsDownload")}
+                </span>
               </Button>
             </div>
           </div>

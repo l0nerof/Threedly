@@ -2,10 +2,10 @@ import { fetchModelBySlug } from "@/src/app/[locale]/(main-pages)/catalog/action
 import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import FilesTab from "./components/FilesTab";
 import ModelHero from "./components/ModelHero";
 import ModelTabs from "./components/ModelTabs";
-import FilesTab from "./components/ModelTabs/FilesTab";
-import OverviewTab from "./components/ModelTabs/OverviewTab";
+import OverviewTab from "./components/OverviewTab";
 import RelatedModels from "./components/RelatedModels";
 
 type Props = {
