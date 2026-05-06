@@ -11,10 +11,14 @@ This file documents the Playwright coverage in this repository and should stay i
 - Keep valid remote Supabase credentials in `.env.local` for the built-in web server mode.
 - The browser context is pinned to `uk-UA`, so locale-sensitive smoke tests are expected to resolve `/` to `/ua`.
 - If the app is already running on `http://localhost:3000`, Playwright reuses the existing server automatically.
+- Playwright runs with one worker to avoid Next dev cache races and keep app-server state deterministic.
 - In CI, Playwright switches to `node ./scripts/local-supabase.mjs dev` so e2e can run without remote Supabase secrets.
 - `global-setup.ts` logs in with the demo user once and stores the session in `e2e/.auth/demo-user.json`.
   - Demo credentials are read from `THREEDLY_DEMO_USER_EMAIL` / `THREEDLY_DEMO_USER_PASSWORD` env vars (defaults: `demo@threedly.local` / `ThreedlyDemo123!`).
   - `e2e/.auth/` is gitignored.
+- Shared Playwright exports live in `e2e/fixtures`; specs should import `test` and `expect` from there.
+- Playwright tests should not mock browser APIs, Next.js routing, Supabase clients, `fetch`, timers, or third-party UI/library behavior. Use the real app server and deterministic demo/seeded data instead.
+- Auth-required specs call `isDemoSessionAvailable()` and skip when the configured Supabase environment does not have the demo user.
 
 ## Smoke (`smoke.spec.ts`)
 
@@ -24,7 +28,7 @@ This file documents the Playwright coverage in this repository and should stay i
 - [x] Navigating from home reaches `/ua/pricing`
 - [x] The pricing page renders its primary heading
 - [x] The pricing page renders the three plan cards
-- [x] The pricing page renders the FAQ section heading
+- [x] The pricing page renders the FAQ accordion section
 
 ## Auth (`auth.spec.ts`)
 
@@ -134,6 +138,8 @@ This file documents the Playwright coverage in this repository and should stay i
 ## Authoring Notes
 
 - Prefer user-facing assertions such as `role`, visible text, URL transitions, and visible item counts.
+- Prefer route, role, structure, and state-transition assertions before exact localized copy.
 - Add new page objects under `e2e/pages` when a flow grows beyond a single spec.
 - Profile tests that require auth must use `test.use({ storageState: STORAGE_STATE_PATH })`.
+- Auth-required tests must also guard with `test.skip(!isDemoSessionAvailable(), "...")` so missing demo data does not block unrelated public flows.
 - Keep this file updated whenever a new spec is added, removed, or broadened.

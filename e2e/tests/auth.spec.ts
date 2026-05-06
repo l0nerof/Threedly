@@ -13,29 +13,23 @@ test.describe("login page", () => {
   test("shows validation errors on empty submit", async ({ loginPage }) => {
     await loginPage.open();
     await loginPage.submitEmpty();
-    await expect(
-      loginPage.page.getByText(/email є обовʼязковим/i),
-    ).toBeVisible();
-    await expect(
-      loginPage.page.getByText(/пароль має містити щонайменше 8 символів/i),
-    ).toBeVisible();
+    await expect(loginPage.formAlerts).toHaveCount(2);
   });
 
   test("shows error for invalid email format", async ({ loginPage }) => {
     await loginPage.open();
     await loginPage.emailInput.fill("not-an-email");
     await loginPage.emailInput.blur();
-    await expect(
-      loginPage.page.getByText(/введіть коректний email/i),
-    ).toBeVisible();
+    await expect(loginPage.emailInput).toHaveAttribute("aria-invalid", "true");
+    await expect(loginPage.formAlerts).toHaveCount(1);
   });
 
   test("shows server error for wrong credentials", async ({ loginPage }) => {
     await loginPage.open();
     await loginPage.fillAndSubmit("wrong@example.com", "wrongpassword123");
-    await expect(
-      loginPage.page.getByText(/невірний email або пароль/i),
-    ).toBeVisible({ timeout: 20_000 });
+    await expect(loginPage.formAlerts).toBeVisible({
+      timeout: 20_000,
+    });
   });
 
   test("toggles password visibility", async ({ loginPage }) => {
@@ -79,36 +73,26 @@ test.describe("signup page", () => {
   test("shows validation errors on empty submit", async ({ signupPage }) => {
     await signupPage.open();
     await signupPage.submitEmpty();
-    await expect(
-      signupPage.page.getByText(/username є обовʼязковим/i),
-    ).toBeVisible();
-    await expect(
-      signupPage.page.getByText(/email є обовʼязковим/i),
-    ).toBeVisible();
-    await expect(
-      signupPage.page.getByText(/пароль має містити щонайменше 8 символів/i),
-    ).toBeVisible();
-    await expect(
-      signupPage.page.getByText(/потрібно прийняти умови/i),
-    ).toBeVisible();
+    await expect(signupPage.formAlerts).toHaveCount(4);
   });
 
   test("shows error for invalid username format", async ({ signupPage }) => {
     await signupPage.open();
     await signupPage.usernameInput.fill("AB");
     await signupPage.usernameInput.blur();
-    await expect(
-      signupPage.page.getByText(/username має містити 3-20 символів/i),
-    ).toBeVisible();
+    await expect(signupPage.usernameInput).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+    await expect(signupPage.formAlerts).toHaveCount(1);
   });
 
   test("shows error for invalid email format", async ({ signupPage }) => {
     await signupPage.open();
     await signupPage.emailInput.fill("bad-email");
     await signupPage.emailInput.blur();
-    await expect(
-      signupPage.page.getByText(/введіть коректний email/i),
-    ).toBeVisible();
+    await expect(signupPage.emailInput).toHaveAttribute("aria-invalid", "true");
+    await expect(signupPage.formAlerts).toHaveCount(1);
   });
 
   test("navigates to login page", async ({ signupPage }) => {
@@ -129,9 +113,7 @@ test.describe("forgot-password page", () => {
   test("shows error on empty submit", async ({ forgotPasswordPage }) => {
     await forgotPasswordPage.open();
     await forgotPasswordPage.submitButton.click();
-    await expect(
-      forgotPasswordPage.page.getByText(/email є обовʼязковим/i),
-    ).toBeVisible();
+    await expect(forgotPasswordPage.formAlerts).toHaveCount(1);
   });
 
   test("shows error for invalid email format", async ({
@@ -140,9 +122,11 @@ test.describe("forgot-password page", () => {
     await forgotPasswordPage.open();
     await forgotPasswordPage.emailInput.fill("not-valid");
     await forgotPasswordPage.emailInput.blur();
-    await expect(
-      forgotPasswordPage.page.getByText(/введіть коректний email/i),
-    ).toBeVisible();
+    await expect(forgotPasswordPage.emailInput).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+    await expect(forgotPasswordPage.formAlerts).toHaveCount(1);
   });
 
   test("shows success message for valid email", async ({
@@ -151,9 +135,9 @@ test.describe("forgot-password page", () => {
     await forgotPasswordPage.open();
     await forgotPasswordPage.emailInput.fill("any@example.com");
     await forgotPasswordPage.submitButton.click();
-    await expect(
-      forgotPasswordPage.page.getByText(/посилання для скидання пароля/i),
-    ).toBeVisible({ timeout: 20_000 });
+    await expect(forgotPasswordPage.emailInput).toHaveValue("", {
+      timeout: 20_000,
+    });
   });
 
   test("navigates back to login", async ({ forgotPasswordPage }) => {

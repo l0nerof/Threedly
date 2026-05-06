@@ -14,9 +14,17 @@ export class PricingPage extends BasePage {
     this.pricingCards = page.locator('[data-slot="card"]');
   }
 
+  async open() {
+    await this.goto("/ua/pricing");
+  }
+
   async expectLoaded() {
     await this.expectPathname("/ua/pricing");
     await expect(this.heading).toBeVisible();
     await expect(this.pricingCards).toHaveCount(3);
+  }
+
+  async expectFaqVisible() {
+    await expect(this.page.locator('[data-slot="accordion"]')).toBeVisible();
   }
 }

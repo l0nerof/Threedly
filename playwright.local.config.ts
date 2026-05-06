@@ -5,6 +5,7 @@ export default defineConfig({
   globalSetup: "./e2e/global-setup.ts",
   fullyParallel: true,
   retries: 0,
+  workers: 1,
   timeout: 45_000,
   expect: { timeout: 8_000 },
   reporter: [["list"], ["html", { open: "never" }]],

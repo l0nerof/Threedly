@@ -9,14 +9,15 @@ export class LoginPage extends BasePage {
   readonly togglePasswordButton: Locator;
   readonly forgotPasswordLink: Locator;
   readonly signupLink: Locator;
+  readonly formAlerts: Locator;
 
   constructor(page: Page) {
     super(page);
     this.heading = page.locator('[data-slot="card-title"]', {
       hasText: /з поверненням/i,
     });
-    this.emailInput = page.locator("#email");
-    this.passwordInput = page.locator("#password");
+    this.emailInput = page.getByLabel(/^(email адреса|email address)$/i);
+    this.passwordInput = page.getByLabel(/^(пароль|password)$/i);
     this.submitButton = page.getByRole("button", { name: /увійти/i });
     this.togglePasswordButton = page.getByRole("button", {
       name: /показати пароль/i,
@@ -25,6 +26,7 @@ export class LoginPage extends BasePage {
       name: /забули пароль/i,
     });
     this.signupLink = page.getByRole("link", { name: /зареєструватися/i });
+    this.formAlerts = page.locator("form").getByRole("alert");
   }
 
   async open() {
@@ -56,18 +58,20 @@ export class SignupPage extends BasePage {
   readonly termsCheckbox: Locator;
   readonly submitButton: Locator;
   readonly loginLink: Locator;
+  readonly formAlerts: Locator;
 
   constructor(page: Page) {
     super(page);
     this.heading = page.locator('[data-slot="card-title"]', {
       hasText: /створити акаунт/i,
     });
-    this.usernameInput = page.locator("#username");
-    this.emailInput = page.locator("#email");
-    this.passwordInput = page.locator("#password");
+    this.usernameInput = page.getByLabel(/username/i);
+    this.emailInput = page.getByLabel(/^(email адреса|email address)$/i);
+    this.passwordInput = page.getByLabel(/^(пароль|password)$/i);
     this.termsCheckbox = page.getByRole("checkbox");
     this.submitButton = page.getByRole("button", { name: /створити акаунт/i });
     this.loginLink = page.getByRole("link", { name: /увійти/i });
+    this.formAlerts = page.locator("form").getByRole("alert");
   }
 
   async open() {
@@ -90,17 +94,19 @@ export class ForgotPasswordPage extends BasePage {
   readonly emailInput: Locator;
   readonly submitButton: Locator;
   readonly backToLoginLink: Locator;
+  readonly formAlerts: Locator;
 
   constructor(page: Page) {
     super(page);
     this.heading = page.locator('[data-slot="card-title"]', {
       hasText: /відновлення пароля/i,
     });
-    this.emailInput = page.locator("#email");
+    this.emailInput = page.getByLabel(/^(email адреса|email address)$/i);
     this.submitButton = page.getByRole("button", { name: /надіслати лист/i });
     this.backToLoginLink = page.getByRole("link", {
       name: /повернутися до входу/i,
     });
+    this.formAlerts = page.locator("form").getByRole("alert");
   }
 
   async open() {

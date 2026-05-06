@@ -1,4 +1,4 @@
-import { test as base } from "@playwright/test";
+import { test as base, expect } from "@playwright/test";
 import { ForgotPasswordPage, LoginPage, SignupPage } from "../pages/auth.page";
 import { CatalogPage } from "../pages/catalog.page";
 import { DesignerProfilePage, DesignersPage } from "../pages/designers.page";
@@ -88,4 +88,4 @@ export const test = base.extend<AppFixtures>({
   },
 });
 
-export { expect } from "@playwright/test";
+export { expect };
