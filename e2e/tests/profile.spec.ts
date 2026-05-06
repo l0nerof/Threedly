@@ -1,5 +1,5 @@
 import { expect, test } from "../fixtures";
-import { STORAGE_STATE_PATH } from "../global-setup";
+import { STORAGE_STATE_PATH, isDemoSessionAvailable } from "../global-setup";
 
 test.describe("profile — unauthenticated", () => {
   test("redirects to login when not logged in", async ({ page }) => {
@@ -15,6 +15,7 @@ test.describe("profile — unauthenticated", () => {
 
 test.describe("profile — authenticated", () => {
   test.describe.configure({ mode: "serial" });
+  test.skip(!isDemoSessionAvailable(), "Demo user session is unavailable");
 
   test.use({ storageState: STORAGE_STATE_PATH });
 
@@ -28,16 +29,7 @@ test.describe("profile — authenticated", () => {
   test("overview shows stat cards", async ({ profileOverviewPage }) => {
     await profileOverviewPage.open();
     await profileOverviewPage.expectLoaded();
-    await expect(
-      profileOverviewPage.page.getByText(/завантаження за місяць/i),
-    ).toBeVisible();
-    await expect(
-      profileOverviewPage.page.getByText(/залишилось завантажень/i),
-    ).toBeVisible();
-    await expect(
-      profileOverviewPage.page.getByText(/опубліковані моделі/i),
-    ).toBeVisible();
-    await expect(profileOverviewPage.page.getByText(/обране/i)).toBeVisible();
+    await expect(profileOverviewPage.cards).toHaveCount(6);
   });
 
   test("settings page renders heading", async ({ profileSettingsPage }) => {
@@ -50,9 +42,7 @@ test.describe("profile — authenticated", () => {
   }) => {
     await profileLibraryPage.open();
     await profileLibraryPage.expectLoaded();
-    await expect(
-      profileLibraryPage.page.getByText(/бібліотека порожня/i),
-    ).toBeVisible();
+    await expect(profileLibraryPage.cards).toHaveCount(1);
   });
 
   test("uploads page renders the model upload form", async ({

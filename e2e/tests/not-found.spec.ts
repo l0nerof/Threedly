@@ -1,7 +1,8 @@
 import { expect, test } from "../fixtures";
-import { STORAGE_STATE_PATH } from "../global-setup";
+import { STORAGE_STATE_PATH, isDemoSessionAvailable } from "../global-setup";
 
 test.describe("not-found page", () => {
+  test.skip(!isDemoSessionAvailable(), "Demo user session is unavailable");
   test.use({ storageState: STORAGE_STATE_PATH });
 
   test("renders for an unknown ua route", async ({ notFoundPage }) => {

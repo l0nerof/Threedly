@@ -106,6 +106,7 @@ The audience is visually demanding. Avoid generic SaaS-looking output.
   - for e2e, use the documented project workflow and keep assertions resilient to environment-specific timing
   - control time/randomness
   - avoid flaky waits
+- For Playwright E2E, import `test` and `expect` from `e2e/fixtures`, exercise the real app/browser stack without mocking framework, browser, Supabase, fetch, timer, or third-party UI behavior, and update `e2e/README.md` whenever coverage changes.
 
 ## SEO, Accessibility, And Performance
 

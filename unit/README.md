@@ -62,5 +62,7 @@ This file documents the Vitest coverage in this repository and should stay in sy
 
 - Prefer public behavior over implementation details.
 - Keep reusable mocks in `unit/mocks` instead of redefining them inside each spec.
+- Mock app/runtime boundaries only when the real dependency cannot run deterministically in jsdom, such as Supabase clients, Next runtime hooks, or missing browser APIs.
+- Do not mock Vitest, React Testing Library, React, or browser/library behavior that jsdom can exercise directly; use the real implementation instead.
 - Use `unit/fixtures` as the single import surface for shared Vitest and Testing Library helpers.
 - Keep this file updated whenever a new spec is added, removed, or broadened.

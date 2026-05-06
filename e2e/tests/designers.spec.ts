@@ -1,5 +1,5 @@
 import { expect, test } from "../fixtures";
-import { STORAGE_STATE_PATH } from "../global-setup";
+import { STORAGE_STATE_PATH, isDemoSessionAvailable } from "../global-setup";
 
 test.describe("designers list page", () => {
   test("renders the page heading", async ({ designersPage }) => {
@@ -16,6 +16,7 @@ test.describe("designers list page", () => {
 });
 
 test.describe("designer profile page", () => {
+  test.skip(!isDemoSessionAvailable(), "Demo user session is unavailable");
   test.use({ storageState: STORAGE_STATE_PATH });
 
   test("opens a designer profile by username", async ({

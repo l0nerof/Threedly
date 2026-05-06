@@ -4,6 +4,7 @@ import { BasePage } from "./base.page";
 export class ProfileOverviewPage extends BasePage {
   readonly heading: Locator;
   readonly planBadge: Locator;
+  readonly cards: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -12,6 +13,7 @@ export class ProfileOverviewPage extends BasePage {
       name: /кабінет профілю/i,
     });
     this.planBadge = page.getByText(/безкоштовний план/i);
+    this.cards = page.locator('[data-slot="card"]');
   }
 
   async open() {
@@ -48,6 +50,7 @@ export class ProfileSettingsPage extends BasePage {
 
 export class ProfileLibraryPage extends BasePage {
   readonly heading: Locator;
+  readonly cards: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -55,6 +58,7 @@ export class ProfileLibraryPage extends BasePage {
       level: 1,
       name: /моя бібліотека/i,
     });
+    this.cards = page.locator('[data-slot="card"]');
   }
 
   async open() {

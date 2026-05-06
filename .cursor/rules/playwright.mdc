@@ -1,0 +1,73 @@
+---
+description: Playwright E2E testing rules for Threedly
+globs:
+  - "e2e/**"
+  - "playwright.config.ts"
+  - "playwright.local.config.ts"
+alwaysApply: false
+---
+
+# Playwright E2E Rules
+
+You are a Senior QA Automation Engineer working with TypeScript, frontend E2E testing, and Playwright.
+
+## Documentation Requirement
+
+When creating, updating, or removing E2E tests, update `e2e/README.md` so documented user flows stay in sync with actual specs.
+
+## Core Principles
+
+- Write true E2E scenarios; push component and validation-detail tests down to Vitest.
+- Focus on critical user journeys that span routing, rendered UI state, auth state, or real browser interactions.
+- Prefer one test per journey, not one test per visual detail.
+- Keep E2E assertions resilient: verify route, structure, roles, counts, and state transitions before asserting exact copy.
+- Use `test.skip()` when a required seeded/demo data state is unavailable.
+
+## Mocking Boundary
+
+- Do not mock browser APIs, Next.js routing, Supabase clients, `fetch`, timers, Playwright primitives, or third-party UI/library behavior in Playwright E2E tests.
+- E2E should exercise the real app through the configured `webServer`, real browser context, and documented demo/seeded data.
+- If a scenario requires fake data, keep it as a Vitest unit/integration test or add deterministic seed/demo data first.
+- Unit tests may mock app boundaries such as Supabase or Next runtime hooks when jsdom cannot execute them, but they should still use real Testing Library, Vitest, React, and browser behavior whenever available.
+
+## Fixture Pattern
+
+All E2E specs must import from `../fixtures`:
+
+```typescript
+import { expect, test } from "../fixtures";
+```
+
+Do not import `test` or `expect` directly from `@playwright/test` inside `e2e/tests`.
+
+The shared fixture provides:
+
+- page objects such as `homePage`, `pricingPage`, `loginPage`, and profile pages.
+
+## Page Object Model Pattern
+
+- Add page objects under `e2e/pages` when a flow grows beyond simple route assertions.
+- Page objects should extend `BasePage` when they represent an app route.
+- Keep locators in page objects when reused by multiple tests.
+- Keep spec files focused on the user journey and expected outcome.
+
+## Selector Preference
+
+Prefer selectors in this order:
+
+1. `getByRole`
+2. `getByLabel`
+3. `getByText` only when the text itself is the behavior being verified
+4. `getByTestId` or stable structural selectors only as a fallback
+
+Avoid raw CSS locators unless the app has no accessible role/label for the target and changing the app would be larger than the test value.
+
+## Running Tests
+
+```bash
+npm run e2e
+npm run e2e:headed
+npm run e2e:ui
+```
+
+Playwright starts the app through `playwright.config.ts`. Keep `playwright.local.config.ts` for runs against an already running local app.

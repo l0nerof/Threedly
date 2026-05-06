@@ -1,4 +1,4 @@
-import { expect, test } from "../fixtures";
+import { test } from "../fixtures";
 
 test.describe("smoke", () => {
   test("ua user can open pricing from the home page", async ({
@@ -13,11 +13,9 @@ test.describe("smoke", () => {
   });
 
   test("pricing page renders FAQ section", async ({ pricingPage }) => {
-    await pricingPage.page.goto("/ua/pricing");
-    await expect(pricingPage.page.getByText(/поширені питання/i)).toBeVisible();
-    await expect(
-      pricingPage.page.getByRole("heading", { name: /часті запитання/i }),
-    ).toBeVisible();
+    await pricingPage.open();
+    await pricingPage.expectLoaded();
+    await pricingPage.expectFaqVisible();
   });
 
   test("root / redirects to /ua", async ({ homePage }) => {
