@@ -3,6 +3,7 @@ import { Badge } from "@/src/shared/components/Badge";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import FAQ from "./components/FAQ";
+import PricingBackground from "./components/PricingBackground";
 import PricingCards from "./components/PricingCards";
 
 type Props = {
@@ -22,10 +23,7 @@ export default async function PricingPage({ params }: Props) {
 
   return (
     <section className="bg-background text-foreground relative w-full overflow-hidden">
-      <div
-        aria-hidden
-        className="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_top_center,hsl(var(--primary)/0.16),transparent_50%)]"
-      />
+      <PricingBackground />
 
       <div className="relative container flex flex-col gap-14 py-32 sm:gap-16 sm:py-40">
         <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 text-center">
