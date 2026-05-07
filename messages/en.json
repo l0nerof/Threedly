@@ -373,6 +373,95 @@
     }
   },
 
+  "Designers": {
+    "shell": {
+      "pageTitle": "Designers",
+      "searchPlaceholder": "Search designers by username...",
+      "searchLabel": "Search designers",
+      "filtersButton": "Filters",
+      "noActiveFilters": "No active filters",
+      "activeFiltersLabel": "Active filters",
+      "removeFilter": "{label} — remove filter",
+      "mobileSheet": {
+        "title": "Filters",
+        "description": "Filter designers.",
+        "applyLoading": "Loading...",
+        "applyButton": "Show {count} designers"
+      }
+    },
+    "filters": {
+      "title": "Filters",
+      "description": "Filter designers.",
+      "reset": "Reset",
+      "applyLoading": "Loading...",
+      "applyButton": "Show {count} designers",
+      "specialization": {
+        "title": "Specialization",
+        "description": "Pick one or more focus areas.",
+        "labels": {
+          "furniture": "Furniture",
+          "decor": "Decor",
+          "materials": "Materials",
+          "lighting": "Lighting",
+          "kitchen": "Kitchen",
+          "bathroom": "Bathroom",
+          "exterior": "Exterior",
+          "plants": "Plants",
+          "technology": "Technology"
+        }
+      },
+      "level": {
+        "title": "Level",
+        "description": "Filter by community standing.",
+        "labels": {
+          "free": { "label": "Free", "description": "Free plan creators" },
+          "pro": {
+            "label": "Pro",
+            "description": "Pro plan — can upload models"
+          },
+          "max": { "label": "Max", "description": "Max plan — highest quota" }
+        }
+      },
+      "account": {
+        "title": "Account",
+        "description": "Show only verified or pro creators.",
+        "labels": {
+          "verified": {
+            "label": "Verified",
+            "description": "Identity confirmed."
+          },
+          "pro": {
+            "label": "Pro members",
+            "description": "Pro-tier publishers."
+          }
+        }
+      }
+    },
+    "results": {
+      "title": "Designers",
+      "description": "Meet the creators behind every model on Threedly. Browse their portfolios and download their work.",
+      "creators": "{count} creators",
+      "error": "Something went wrong. Please try again.",
+      "empty": "No designers found matching your filters.",
+      "sortLabel": "Sort",
+      "tabs": {
+        "all": "All",
+        "featured": "Featured",
+        "rising": "Rising",
+        "new": "New",
+        "following": "Following"
+      },
+      "sort": {
+        "popular": "Most popular",
+        "newest": "Newest",
+        "models": "Most models"
+      },
+      "pageOf": "Showing {from}–{to} of {total} designers",
+      "previousPage": "Previous page",
+      "nextPage": "Next page"
+    }
+  },
+
   "Footer": {
     "copyright": "© {year} Threedly. All rights reserved.",
     "terms": "Terms",

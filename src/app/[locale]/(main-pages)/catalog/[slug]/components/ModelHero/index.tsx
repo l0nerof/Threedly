@@ -1,7 +1,6 @@
-import {
-  FORMAT_BADGE_COLORS,
-  PLAN_BADGE_COLORS,
-} from "@/src/business/constants/catalogConfig";
+import FormatBadge from "@/src/business/components/FormatBadge";
+import PlanBadge from "@/src/business/components/PlanBadge";
+import { PLAN_BADGE_COLORS } from "@/src/business/constants/catalogConfig";
 import type { CatalogModel } from "@/src/business/types/catalog";
 import { Button } from "@/src/shared/components/Button";
 import { Download, Info, ScanEye } from "lucide-react";
@@ -43,18 +42,8 @@ async function ModelHero({ model, locale }: ModelHeroProps) {
       <div className="flex flex-col gap-4">
         <div className="bg-surface-elevated flex flex-col gap-3.5 rounded-2xl p-6">
           <div className="flex items-center gap-1.5">
-            <span
-              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium tracking-wide uppercase ${PLAN_BADGE_COLORS[model.minimum_plan] ?? "text-muted-foreground bg-muted"}`}
-            >
-              {model.minimum_plan}
-            </span>
-            {model.file_format && (
-              <span
-                className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium uppercase ${FORMAT_BADGE_COLORS[model.file_format.toUpperCase()] ?? "text-muted-foreground bg-muted"}`}
-              >
-                {model.file_format}
-              </span>
-            )}
+            <PlanBadge plan={model.minimum_plan} />
+            {model.file_format && <FormatBadge format={model.file_format} />}
           </div>
 
           <div className="flex flex-col gap-1.5">

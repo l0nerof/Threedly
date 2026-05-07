@@ -1,13 +1,10 @@
 "use client";
 
-import {
-  FORMAT_BADGE_COLORS,
-  PLAN_BADGE_COLORS,
-} from "@/src/business/constants/catalogConfig";
+import FormatBadge from "@/src/business/components/FormatBadge";
+import PlanBadge from "@/src/business/components/PlanBadge";
 import type { CatalogModel } from "@/src/business/types/catalog";
 import { Link } from "@/src/i18n/routing";
 import { Button } from "@/src/shared/components/Button";
-import { cn } from "@/src/shared/utils/cn";
 import { Download, Heart, ScanEye } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
@@ -51,26 +48,11 @@ function CatalogModelCard({ model, locale }: CatalogModelCardProps) {
 
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
-            <span
-              className={cn(
-                "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium tracking-wide uppercase",
-                PLAN_BADGE_COLORS[model.minimum_plan] ??
-                  "text-muted-foreground bg-muted",
-              )}
-            >
-              {t(`modelCard.planBadge.${model.minimum_plan}`)}
-            </span>
-            {model.file_format && (
-              <span
-                className={cn(
-                  "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium uppercase",
-                  FORMAT_BADGE_COLORS[model.file_format.toUpperCase()] ??
-                    "text-muted-foreground bg-muted",
-                )}
-              >
-                {model.file_format}
-              </span>
-            )}
+            <PlanBadge
+              plan={model.minimum_plan}
+              label={t(`modelCard.planBadge.${model.minimum_plan}`)}
+            />
+            {model.file_format && <FormatBadge format={model.file_format} />}
           </div>
 
           <h3 className="text-base leading-snug font-semibold tracking-tight sm:text-lg">
