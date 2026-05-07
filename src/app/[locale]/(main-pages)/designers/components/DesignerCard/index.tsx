@@ -18,7 +18,7 @@ function DesignerCard({ designer }: DesignerCardProps) {
   const initials = designer.username.slice(0, 2).toUpperCase();
 
   return (
-    <Link href="#" className="block">
+    <Link href={`/designers/${designer.username}`} className="block">
       <motion.article
         className="border-border/60 bg-surface-elevated/80 flex flex-col overflow-hidden rounded-[1.4rem] border"
         whileHover={{ y: -6 }}

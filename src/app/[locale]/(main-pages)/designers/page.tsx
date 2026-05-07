@@ -2,6 +2,7 @@ import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import DesignersShell from "./components/DesignersShell";
 
 type Props = {
@@ -33,5 +34,9 @@ export default async function DesignersPage({ params }: Props) {
 
   setRequestLocale(locale);
 
-  return <DesignersShell />;
+  return (
+    <Suspense>
+      <DesignersShell />
+    </Suspense>
+  );
 }
