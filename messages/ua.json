@@ -457,6 +457,40 @@
       "form": {
         "title": "Нова 3D-модель",
         "description": "MVP одразу публікує модель у каталозі після успішного завантаження файлів.",
+        "studioBadge": "Upload Studio",
+        "sections": {
+          "files": "Файли моделі",
+          "metadata": "Опис для каталогу",
+          "settings": "Каталог і доступ"
+        },
+        "fileZones": {
+          "coverTitle": "Обкладинка каталогу",
+          "coverDescription": "Додайте JPG, PNG або WEBP до 5 MB.",
+          "modelTitle": "Основний файл моделі",
+          "modelDescription": "GLB, GLTF, FBX, OBJ, MAX, BLEND або ZIP до 50 MB.",
+          "previewTitle": "Опційний 3D preview",
+          "previewDescription": "GLB або GLTF для майбутнього viewer.",
+          "empty": "Натисніть, щоб обрати файл",
+          "selected": "Файл обрано"
+        },
+        "preview": {
+          "title": "Preview картки",
+          "emptyTitle": "Назва моделі",
+          "emptyCategory": "Категорія",
+          "coverReady": "Обкладинка готова",
+          "coverMissing": "Очікує обкладинку"
+        },
+        "readiness": {
+          "title": "Готовність",
+          "modelFile": "Файл моделі",
+          "coverImage": "Обкладинка",
+          "titleUa": "Назва українською",
+          "titleEn": "Назва англійською",
+          "category": "Категорія",
+          "minimumPlan": "План доступу",
+          "complete": "Готово",
+          "missing": "Потрібно додати"
+        },
         "titleUa": "Назва українською",
         "titleEn": "Назва англійською",
         "descriptionUa": "Опис українською",
