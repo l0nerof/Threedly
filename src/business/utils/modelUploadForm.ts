@@ -4,6 +4,7 @@ import {
   modelUploadValidationMessageKeys,
 } from "@/src/business/constants/modelUploadForm";
 import type { CatalogPlanKey } from "@/src/business/types/catalog";
+import type { CategoryGroupOption } from "@/src/business/types/category";
 import type {
   ModelUploadActionError,
   ModelUploadFieldErrors,
@@ -13,6 +14,29 @@ import type {
   ModelUploadValidationIssue,
   ModelUploadValidationMessageKey,
 } from "@/src/business/types/modelUpload";
+import type {
+  ReadinessItem,
+  UploadCategoryOption,
+  UploadFileState,
+} from "@/src/business/types/upload";
+
+type ReadinessLabels = {
+  modelFile: string;
+  coverImage: string;
+  titleUa: string;
+  titleEn: string;
+  category: string;
+  minimumPlan: string;
+};
+
+type BuildReadinessItemsArgs = {
+  categoryId: string;
+  fileNames: UploadFileState;
+  labels: ReadinessLabels;
+  minimumPlan: CatalogPlanKey;
+  titleEnValue: string;
+  titleUaValue: string;
+};
 
 export function isModelUploadFormFieldName(
   value: unknown,
@@ -73,6 +97,62 @@ export function buildModelUploadFormValues({
     coverImage: readModelUploadFileValue(formData, "coverImage"),
     previewModelFile: readModelUploadFileValue(formData, "previewModelFile"),
   };
+}
+
+export function buildUploadCategoryOptions(
+  categoryGroups: CategoryGroupOption[],
+): UploadCategoryOption[] {
+  return categoryGroups.flatMap((group) =>
+    group.categories.map((category) => ({
+      id: category.id,
+      value: category.value,
+      label: category.label,
+      groupLabel: group.label,
+      searchLabel: `${group.label} ${category.label}`,
+    })),
+  );
+}
+
+export function buildReadinessItems({
+  categoryId,
+  fileNames,
+  labels,
+  minimumPlan,
+  titleEnValue,
+  titleUaValue,
+}: BuildReadinessItemsArgs): ReadinessItem[] {
+  return [
+    {
+      key: "modelFile",
+      label: labels.modelFile,
+      isComplete: Boolean(fileNames.modelFile),
+    },
+    {
+      key: "coverImage",
+      label: labels.coverImage,
+      isComplete: Boolean(fileNames.coverImage),
+    },
+    {
+      key: "titleUa",
+      label: labels.titleUa,
+      isComplete: titleUaValue.trim().length >= 2,
+    },
+    {
+      key: "titleEn",
+      label: labels.titleEn,
+      isComplete: titleEnValue.trim().length >= 2,
+    },
+    {
+      key: "category",
+      label: labels.category,
+      isComplete: Boolean(categoryId),
+    },
+    {
+      key: "minimumPlan",
+      label: labels.minimumPlan,
+      isComplete: Boolean(minimumPlan),
+    },
+  ];
 }
 
 export function resolveModelUploadValidationMessageKey(
