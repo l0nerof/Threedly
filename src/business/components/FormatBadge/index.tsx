@@ -1,4 +1,5 @@
 import { FORMAT_BADGE_COLORS } from "@/src/business/constants/catalogConfig";
+import { Badge } from "@/src/shared/components/Badge/index";
 import { cn } from "@/src/shared/utils/cn";
 
 type FormatBadgeProps = {
@@ -8,16 +9,17 @@ type FormatBadgeProps = {
 
 function FormatBadge({ format, className }: FormatBadgeProps) {
   return (
-    <span
+    <Badge
+      variant="outline"
       className={cn(
-        "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium uppercase",
+        "rounded-md uppercase",
         FORMAT_BADGE_COLORS[format.toUpperCase()] ??
           "text-muted-foreground bg-muted",
         className,
       )}
     >
       {format}
-    </span>
+    </Badge>
   );
 }
 

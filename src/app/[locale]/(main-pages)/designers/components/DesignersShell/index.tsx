@@ -25,10 +25,8 @@ function DesignersShell() {
     selectedSort,
     selectedSpecializations,
     selectedLevels,
-    selectedAccount,
     draftSpecializations,
     draftLevels,
-    draftAccount,
     searchValue,
     activeSearch,
     hasActiveFilters,
@@ -37,7 +35,6 @@ function DesignersShell() {
     setSearchValue,
     handleSpecializationToggle,
     handleLevelToggle,
-    handleAccountToggle,
     applyAllDrafts,
     handleReset,
     setPage,
@@ -50,7 +47,6 @@ function DesignersShell() {
       specializations:
         draftSpecializations.length > 0 ? draftSpecializations : undefined,
       levels: draftLevels.length > 0 ? draftLevels : undefined,
-      account: draftAccount.length > 0 ? draftAccount : undefined,
       enabled: hasDraft || isMobileFiltersOpen,
     });
 
@@ -78,11 +74,9 @@ function DesignersShell() {
             <DesignersFilters
               selectedSpecializations={draftSpecializations}
               selectedLevels={draftLevels}
-              selectedAccount={draftAccount}
               showReset={hasActiveFilters}
               onSpecializationToggle={handleSpecializationToggle}
               onLevelToggle={handleLevelToggle}
-              onAccountToggle={handleAccountToggle}
               onApply={applyAllDrafts}
               onReset={handleReset}
               idPrefix="designers-sidebar"
@@ -103,7 +97,6 @@ function DesignersShell() {
                   : undefined
               }
               levels={selectedLevels.length > 0 ? selectedLevels : undefined}
-              account={selectedAccount.length > 0 ? selectedAccount : undefined}
               onPageChange={setPage}
               onSortChange={(s) => applyFilter({ sort: s })}
             />
@@ -125,11 +118,9 @@ function DesignersShell() {
             <DesignersFilters
               selectedSpecializations={draftSpecializations}
               selectedLevels={draftLevels}
-              selectedAccount={draftAccount}
               showReset={hasActiveFilters}
               onSpecializationToggle={handleSpecializationToggle}
               onLevelToggle={handleLevelToggle}
-              onAccountToggle={handleAccountToggle}
               onReset={handleReset}
               idPrefix="designers-mobile-sheet"
             />

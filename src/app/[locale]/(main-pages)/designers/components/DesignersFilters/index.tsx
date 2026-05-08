@@ -1,10 +1,8 @@
 "use client";
 
 import {
-  type DesignerAccount,
   type DesignerLevel,
   type DesignerSpecialization,
-  designerAccountValues,
   designerLevelValues,
   designerSpecializationValues,
 } from "@/src/business/types/designer";
@@ -26,11 +24,9 @@ import { useTranslations } from "next-intl";
 type DesignersFiltersProps = {
   selectedSpecializations: DesignerSpecialization[];
   selectedLevels: DesignerLevel[];
-  selectedAccount: DesignerAccount[];
   showReset: boolean;
   onSpecializationToggle: (value: DesignerSpecialization) => void;
   onLevelToggle: (value: DesignerLevel) => void;
-  onAccountToggle: (value: DesignerAccount) => void;
   onApply?: () => void;
   onReset: () => void;
   idPrefix?: string;
@@ -42,11 +38,9 @@ type DesignersFiltersProps = {
 function DesignersFilters({
   selectedSpecializations,
   selectedLevels,
-  selectedAccount,
   showReset,
   onSpecializationToggle,
   onLevelToggle,
-  onAccountToggle,
   onApply,
   onReset,
   idPrefix = "designers-filters",
@@ -105,7 +99,7 @@ function DesignersFilters({
 
       <Accordion
         type="multiple"
-        defaultValue={["specialization", "level", "account"]}
+        defaultValue={["specialization", "level"]}
         className="flex flex-col"
       >
         <AccordionItem value="specialization" className="border-border/60">
@@ -205,62 +199,6 @@ function DesignersFilters({
                       </span>
                       <span className="text-muted-foreground text-xs leading-5">
                         {t(`level.labels.${level}.description`)}
-                      </span>
-                    </span>
-                  </Label>
-                );
-              })}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="account" className="border-border/60">
-          <AccordionTrigger className="py-3 hover:no-underline">
-            <div className="flex flex-1 items-start justify-between gap-3">
-              <div className="flex flex-col gap-1">
-                <span className="text-sm font-semibold tracking-[0.12em] uppercase">
-                  {t("account.title")}
-                </span>
-                <span className="text-muted-foreground text-xs leading-5">
-                  {t("account.description")}
-                </span>
-              </div>
-              {selectedAccount.length > 0 && (
-                <Badge
-                  variant="secondary"
-                  className="flex size-6 items-center justify-center rounded-full text-xs"
-                >
-                  {selectedAccount.length}
-                </Badge>
-              )}
-            </div>
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-col gap-2.5">
-              {designerAccountValues.map((acc) => {
-                const inputId = `${idPrefix}-account-${acc}`;
-                const isChecked = selectedAccount.includes(acc);
-                return (
-                  <Label
-                    key={acc}
-                    htmlFor={inputId}
-                    className={cn(
-                      "border-border/70 bg-surface-elevated/55 hover:border-primary/35 hover:bg-primary/8 flex cursor-pointer items-start gap-3 rounded-2xl border px-3 py-3 transition-colors",
-                      isChecked && "border-primary/45 bg-primary/10",
-                    )}
-                  >
-                    <Checkbox
-                      id={inputId}
-                      checked={isChecked}
-                      onCheckedChange={() => onAccountToggle(acc)}
-                      className="mt-0.5"
-                    />
-                    <span className="flex flex-col gap-0.5">
-                      <span className="text-sm font-medium">
-                        {t(`account.labels.${acc}.label`)}
-                      </span>
-                      <span className="text-muted-foreground text-xs leading-5">
-                        {t(`account.labels.${acc}.description`)}
                       </span>
                     </span>
                   </Label>

@@ -7,7 +7,7 @@ const DESIGNERS = [
     bio: "Interior designer specializing in Scandinavian and minimalist spaces. Based in Kyiv.",
     plan_key: "pro",
     can_upload: true,
-    is_verified: true,
+
     specializations: ["furniture", "decor"],
   },
   {
@@ -16,7 +16,7 @@ const DESIGNERS = [
     bio: "Archviz artist and 3D generalist. Focused on photorealistic residential renders.",
     plan_key: "pro",
     can_upload: true,
-    is_verified: false,
+
     specializations: ["lighting", "exterior"],
   },
   {
@@ -25,7 +25,7 @@ const DESIGNERS = [
     bio: "Product designer and 3D modeler. Creates detailed kitchen and bathroom fixtures.",
     plan_key: "max",
     can_upload: true,
-    is_verified: true,
+
     specializations: ["kitchen", "bathroom", "furniture"],
   },
   {
@@ -34,7 +34,7 @@ const DESIGNERS = [
     bio: "Freelance 3D artist. Specializes in decorative objects and scene props.",
     plan_key: "pro",
     can_upload: true,
-    is_verified: false,
+
     specializations: ["decor", "plants"],
   },
   {
@@ -43,7 +43,7 @@ const DESIGNERS = [
     bio: "Studio designer at Arkhitect UA. Focuses on commercial and hospitality spaces.",
     plan_key: "max",
     can_upload: true,
-    is_verified: true,
+
     specializations: ["furniture", "exterior"],
   },
   {
@@ -52,7 +52,7 @@ const DESIGNERS = [
     bio: "Materials and textures specialist. Builds PBR-ready surface libraries.",
     plan_key: "pro",
     can_upload: true,
-    is_verified: false,
+
     specializations: ["materials"],
   },
   {
@@ -61,7 +61,7 @@ const DESIGNERS = [
     bio: "Lighting designer turned 3D artist. Expert in realistic indoor lighting setups.",
     plan_key: "free",
     can_upload: false,
-    is_verified: false,
+
     specializations: ["lighting", "technology"],
   },
   {
@@ -70,7 +70,7 @@ const DESIGNERS = [
     bio: "Archviz generalist working with residential and landscape projects.",
     plan_key: "pro",
     can_upload: true,
-    is_verified: true,
+
     specializations: ["exterior", "plants"],
   },
   {
@@ -79,7 +79,7 @@ const DESIGNERS = [
     bio: "3D artist focused on plants and organic decor. Creates botanical collections for interior scenes.",
     plan_key: "free",
     can_upload: false,
-    is_verified: false,
+
     specializations: ["plants", "decor"],
   },
   {
@@ -88,7 +88,7 @@ const DESIGNERS = [
     bio: "Industrial designer and 3D modeler. Specializes in smart home technology and electronics.",
     plan_key: "pro",
     can_upload: true,
-    is_verified: false,
+
     specializations: ["technology", "furniture"],
   },
   {
@@ -97,7 +97,7 @@ const DESIGNERS = [
     bio: "Interior architect with focus on luxury bathroom and spa design.",
     plan_key: "max",
     can_upload: true,
-    is_verified: true,
+
     specializations: ["bathroom", "materials", "decor"],
   },
   {
@@ -106,7 +106,7 @@ const DESIGNERS = [
     bio: "Exterior visualization specialist. Works on residential facades and urban landscape projects.",
     plan_key: "pro",
     can_upload: true,
-    is_verified: true,
+
     specializations: ["exterior", "lighting"],
   },
   {
@@ -115,7 +115,7 @@ const DESIGNERS = [
     bio: "Kitchen and dining space designer. Creates detailed cabinetry and appliance models.",
     plan_key: "pro",
     can_upload: true,
-    is_verified: false,
+
     specializations: ["kitchen", "furniture"],
   },
   {
@@ -124,7 +124,7 @@ const DESIGNERS = [
     bio: "Generalist 3D artist. Builds complete room sets with curated material libraries.",
     plan_key: "max",
     can_upload: true,
-    is_verified: true,
+
     specializations: ["materials", "lighting", "furniture"],
   },
   {
@@ -133,7 +133,7 @@ const DESIGNERS = [
     bio: "Freelance visualizer specializing in Nordic and wabi-sabi interior styles.",
     plan_key: "free",
     can_upload: false,
-    is_verified: false,
+
     specializations: ["decor", "plants"],
   },
 ];
@@ -157,34 +157,19 @@ function createAdminClient(url, serviceRoleKey) {
   });
 }
 
-async function ensureDesigner(admin, designer) {
-  const {
-    data: { users },
-    error: listError,
-  } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
+async function seedDesigner(admin, designer) {
+  const { data, error } = await admin.auth.admin.createUser({
+    email: designer.email,
+    password: "ThreedlyDesigner123!",
+    email_confirm: true,
+    user_metadata: { username: designer.username },
+  });
 
-  if (listError) throw listError;
-
-  const existing = users.find((u) => u.email === designer.email);
-
-  let userId;
-
-  if (!existing) {
-    const { data, error } = await admin.auth.admin.createUser({
-      email: designer.email,
-      password: "ThreedlyDesigner123!",
-      email_confirm: true,
-      user_metadata: { username: designer.username },
-    });
-
-    if (error || !data.user) {
-      throw error ?? new Error(`Failed to create user ${designer.email}`);
-    }
-
-    userId = data.user.id;
-  } else {
-    userId = existing.id;
+  if (error || !data.user) {
+    throw error ?? new Error(`Failed to create user ${designer.email}`);
   }
+
+  const userId = data.user.id;
 
   const { error: upsertError } = await admin.from("profiles").upsert(
     {
@@ -193,7 +178,6 @@ async function ensureDesigner(admin, designer) {
       bio: designer.bio,
       plan_key: designer.plan_key,
       can_upload: designer.can_upload,
-      is_verified: designer.is_verified,
       specializations: designer.specializations,
       downloads_used_this_month: 0,
       downloads_limit_monthly:
@@ -216,7 +200,7 @@ async function main() {
   const admin = createAdminClient(url, serviceRoleKey);
 
   for (const designer of DESIGNERS) {
-    await ensureDesigner(admin, designer);
+    await seedDesigner(admin, designer);
     console.log(`Seeded designer @${designer.username}`);
   }
 

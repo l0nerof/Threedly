@@ -1,5 +1,4 @@
 import type {
-  DesignerAccount,
   DesignerLevel,
   DesignerSortValue,
   DesignerSpecialization,
@@ -11,7 +10,6 @@ type DesignersQueryKeyParams = {
   search?: string;
   specializations?: DesignerSpecialization[];
   levels?: DesignerLevel[];
-  account?: DesignerAccount[];
 };
 
 type DesignersCountQueryKeyParams = Omit<DesignersQueryKeyParams, "page">;

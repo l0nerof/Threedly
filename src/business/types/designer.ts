@@ -25,17 +25,12 @@ export const designerSortValues: readonly DesignerSortValue[] = [
   "models",
 ];
 
-export const designerAccountValues = ["verified", "pro"] as const;
-
-export type DesignerAccount = (typeof designerAccountValues)[number];
-
 export type Designer = {
   id: string;
   username: string;
   bio: string | null;
   avatar_path: string | null;
   plan_key: DesignerLevel;
-  is_verified: boolean;
   specializations: DesignerSpecialization[];
   model_count: number;
   created_at: string;

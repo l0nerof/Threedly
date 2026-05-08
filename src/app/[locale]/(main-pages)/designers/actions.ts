@@ -3,7 +3,6 @@
 import { DESIGNERS_PAGE_SIZE } from "@/src/business/constants/designersConfig";
 import type {
   Designer,
-  DesignerAccount,
   DesignerLevel,
   DesignerSortValue,
   DesignerSpecialization,
@@ -16,7 +15,6 @@ type FilterParams = {
   search?: string;
   specializations?: DesignerSpecialization[];
   levels?: DesignerLevel[];
-  account?: DesignerAccount[];
 };
 
 type FetchDesignersParams = FilterParams & {
@@ -26,12 +24,12 @@ type FetchDesignersParams = FilterParams & {
 
 function buildQuery(
   supabase: Awaited<ReturnType<typeof createClient>>,
-  { search, specializations, levels, account }: FilterParams,
+  { search, specializations, levels }: FilterParams,
 ) {
   let query = supabase
     .from("profiles")
     .select(
-      "id, username, bio, avatar_path, plan_key, is_verified, specializations, created_at",
+      "id, username, bio, avatar_path, plan_key, specializations, created_at",
       { count: "exact" },
     )
     .eq("can_upload", true);
@@ -49,16 +47,6 @@ function buildQuery(
 
   if (specializations && specializations.length > 0) {
     query = query.overlaps("specializations", specializations);
-  }
-
-  if (account && account.length > 0) {
-    if (account.includes("verified") && account.includes("pro")) {
-      query = query.or("is_verified.eq.true,plan_key.in.(pro,max)");
-    } else if (account.includes("verified")) {
-      query = query.eq("is_verified", true);
-    } else if (account.includes("pro")) {
-      query = query.in("plan_key", ["pro", "max"]);
-    }
   }
 
   return query;
@@ -84,7 +72,6 @@ function mapRow(row: {
   bio: string | null;
   avatar_path: string | null;
   plan_key: string;
-  is_verified: boolean;
   specializations: string[] | null;
   created_at: string;
 }): Designer {
@@ -94,7 +81,6 @@ function mapRow(row: {
     bio: row.bio,
     avatar_path: resolveAvatarPublicUrl(row.avatar_path),
     plan_key: row.plan_key as Designer["plan_key"],
-    is_verified: row.is_verified,
     specializations: (row.specializations ?? []) as Designer["specializations"],
     model_count: 0,
     created_at: row.created_at,
@@ -107,7 +93,6 @@ export async function fetchDesigners({
   search,
   specializations,
   levels,
-  account,
 }: FetchDesignersParams): Promise<DesignersResult> {
   const supabase = await createClient();
 
@@ -118,7 +103,6 @@ export async function fetchDesigners({
     search,
     specializations,
     levels,
-    account,
   });
   query = applySort(query, sort);
   query = query.range(from, to);
@@ -139,7 +123,6 @@ export async function fetchDesignersCount({
   search,
   specializations,
   levels,
-  account,
 }: FilterParams): Promise<number> {
   const supabase = await createClient();
 
@@ -161,16 +144,6 @@ export async function fetchDesignersCount({
 
   if (specializations && specializations.length > 0) {
     query = query.overlaps("specializations", specializations);
-  }
-
-  if (account && account.length > 0) {
-    if (account.includes("verified") && account.includes("pro")) {
-      query = query.or("is_verified.eq.true,plan_key.in.(pro,max)");
-    } else if (account.includes("verified")) {
-      query = query.eq("is_verified", true);
-    } else if (account.includes("pro")) {
-      query = query.in("plan_key", ["pro", "max"]);
-    }
   }
 
   const { count, error } = await query;

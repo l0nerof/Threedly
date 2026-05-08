@@ -44,19 +44,6 @@ function DesignerCard({ designer }: DesignerCardProps) {
                   <span className="truncate text-sm font-semibold">
                     @{designer.username}
                   </span>
-                  {designer.is_verified && (
-                    <span className="flex size-3.5 shrink-0 items-center justify-center rounded-full bg-orange-500">
-                      <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-                        <path
-                          d="M1.5 4L3.2 5.8L6.5 2.5"
-                          stroke="white"
-                          strokeWidth="1.3"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                  )}
                 </div>
                 <span
                   className={cn(
@@ -106,14 +93,6 @@ function DesignerCard({ designer }: DesignerCardProps) {
           )}
         </div>
 
-        {/* Preview placeholder */}
-        <div className="flex gap-0.5 px-4">
-          <div className="bg-muted aspect-square flex-1 rounded-xl" />
-          <div className="bg-muted aspect-square flex-1 rounded-xl" />
-          <div className="bg-muted aspect-square flex-1 rounded-xl" />
-        </div>
-
-        {/* Footer */}
         <div className="border-border/40 flex border-t p-4">
           <Button
             type="button"

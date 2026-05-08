@@ -1,7 +1,6 @@
 import { fetchDesigners } from "@/src/app/[locale]/(main-pages)/designers/actions";
 import { designersQueryKeys } from "@/src/business/queries/designers";
 import type {
-  DesignerAccount,
   DesignerLevel,
   DesignerSortValue,
   DesignerSpecialization,
@@ -14,7 +13,6 @@ type UseDesignersParams = {
   search?: string;
   specializations?: DesignerSpecialization[];
   levels?: DesignerLevel[];
-  account?: DesignerAccount[];
 };
 
 export function useDesigners({
@@ -23,7 +21,6 @@ export function useDesigners({
   search,
   specializations,
   levels,
-  account,
 }: UseDesignersParams) {
   return useQuery({
     queryKey: designersQueryKeys.list({
@@ -32,10 +29,9 @@ export function useDesigners({
       search,
       specializations,
       levels,
-      account,
     }),
     queryFn: () =>
-      fetchDesigners({ page, sort, search, specializations, levels, account }),
+      fetchDesigners({ page, sort, search, specializations, levels }),
     placeholderData: (prev) => prev,
   });
 }
