@@ -43,3 +43,32 @@ export const pricingPlanMeta: Record<
     iconWrapClassName: "bg-surface-elevated text-foreground border-border/60",
   },
 };
+
+export const pricingPlanMotionMeta: Record<
+  PlanKey,
+  {
+    hoverY: number;
+    hoverRotate: number;
+    hoverScale: number;
+    floatDelay: number;
+  }
+> = {
+  free: {
+    hoverY: -10,
+    hoverRotate: -0.7,
+    hoverScale: 1.015,
+    floatDelay: 0,
+  },
+  pro: {
+    hoverY: -16,
+    hoverRotate: 0,
+    hoverScale: 1.02,
+    floatDelay: 0.45,
+  },
+  business: {
+    hoverY: -10,
+    hoverRotate: 0.7,
+    hoverScale: 1.015,
+    floatDelay: 0.9,
+  },
+};
