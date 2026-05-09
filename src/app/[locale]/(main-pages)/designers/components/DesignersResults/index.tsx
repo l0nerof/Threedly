@@ -116,7 +116,6 @@ function DesignersResults({
           </Tabs>
         </div>
 
-        {/* Dropdown таби — тільки на мобайлі */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
