@@ -1,5 +1,4 @@
-import FormatBadge from "@/src/business/components/FormatBadge";
-import PlanBadge from "@/src/business/components/PlanBadge";
+import ModelCardShell from "@/src/business/components/ModelCardShell";
 import { PLAN_BADGE_COLORS } from "@/src/business/constants/catalogConfig";
 import type { CatalogModel } from "@/src/business/types/catalog";
 import { Button } from "@/src/shared/components/Button";
@@ -40,40 +39,47 @@ async function ModelHero({ model, locale }: ModelHeroProps) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <div className="bg-surface-elevated flex flex-col gap-3.5 rounded-2xl p-6">
-          <div className="flex items-center gap-1.5">
-            <PlanBadge plan={model.minimum_plan} />
-            {model.file_format && <FormatBadge format={model.file_format} />}
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              {title}
-            </h1>
-            <p className="text-muted-foreground text-sm">
+        <ModelCardShell
+          title={title}
+          plan={model.minimum_plan}
+          planLabel={model.minimum_plan}
+          formatLabel={model.file_format}
+          titleHeadingLevel={1}
+          titleClassName="text-2xl sm:text-3xl"
+          className="rounded-2xl p-6 sm:p-6"
+          subtitle={
+            <>
               {t("byPrefix")}{" "}
               <span className="text-foreground font-medium">{MOCK_AUTHOR}</span>
-            </p>
-          </div>
-
-          <div className="text-muted-foreground flex items-center justify-between text-sm">
-            <span>{t("downloads", { count: model.download_count })}</span>
-            {updatedAt && <span>{t("updated", { date: updatedAt })}</span>}
-          </div>
-
-          <div className="border-border/60 border-t" />
-
-          <div className="grid grid-cols-2 gap-2">
-            <Button variant="outline" size="sm" className="rounded-xl" disabled>
-              <ScanEye className="size-4" aria-hidden />
-              {t("previewButton")}
-            </Button>
-            <Button size="sm" className="rounded-xl" disabled>
-              <Download className="size-4" aria-hidden />
-              {t("downloadButton")}
-            </Button>
-          </div>
-        </div>
+            </>
+          }
+          meta={
+            <div className="flex items-center justify-between gap-3">
+              <span>{t("downloads", { count: model.download_count })}</span>
+              {updatedAt ? (
+                <span>{t("updated", { date: updatedAt })}</span>
+              ) : null}
+            </div>
+          }
+          showActionsDivider
+          actions={
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl"
+                disabled
+              >
+                <ScanEye className="size-4" aria-hidden />
+                {t("previewButton")}
+              </Button>
+              <Button size="sm" className="rounded-xl" disabled>
+                <Download className="size-4" aria-hidden />
+                {t("downloadButton")}
+              </Button>
+            </>
+          }
+        />
 
         <div className="bg-surface-elevated flex flex-col gap-3 rounded-2xl p-6">
           <h2 className="text-base font-semibold">
