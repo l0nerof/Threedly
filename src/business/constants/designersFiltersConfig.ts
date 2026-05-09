@@ -1,20 +1,7 @@
 import type {
   DesignerLevel,
   DesignerSortValue,
-  DesignerSpecialization,
 } from "@/src/business/types/designer";
-
-export const SPECIALIZATION_LABELS: Record<DesignerSpecialization, string> = {
-  furniture: "Furniture",
-  decor: "Decor",
-  materials: "Materials",
-  lighting: "Lighting",
-  kitchen: "Kitchen",
-  bathroom: "Bathroom",
-  exterior: "Exterior",
-  plants: "Plants",
-  technology: "Technology",
-};
 
 export const LEVEL_LABELS: Record<
   DesignerLevel,

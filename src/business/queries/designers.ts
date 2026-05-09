@@ -1,14 +1,10 @@
-import type {
-  DesignerLevel,
-  DesignerSortValue,
-  DesignerSpecialization,
-} from "../types/designer";
+import type { DesignerLevel, DesignerSortValue } from "../types/designer";
 
 type DesignersQueryKeyParams = {
   page: number;
   sort?: DesignerSortValue;
   search?: string;
-  specializations?: DesignerSpecialization[];
+  specializations?: string[];
   levels?: DesignerLevel[];
 };
 

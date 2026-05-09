@@ -11,7 +11,6 @@ import { useDesigners } from "@/src/business/hooks/useDesigners";
 import type {
   DesignerLevel,
   DesignerSortValue,
-  DesignerSpecialization,
 } from "@/src/business/types/designer";
 import { Button } from "@/src/shared/components/Button";
 import {
@@ -34,7 +33,7 @@ type DesignersResultsProps = {
   page: number;
   sort: DesignerSortValue;
   search?: string;
-  specializations?: DesignerSpecialization[];
+  specializations?: string[];
   levels?: DesignerLevel[];
   onPageChange: (page: number) => void;
   onSortChange: (sort: DesignerSortValue) => void;
@@ -97,30 +96,60 @@ function DesignersResults({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <Tabs
-          value={activeTab}
-          onValueChange={(v) => setActiveTab(v as DesignerTab)}
-        >
-          <TabsList className="border-border/60 bg-surface/90 h-auto! rounded-full border p-1 backdrop-blur-sm">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="hidden sm:block">
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => setActiveTab(v as DesignerTab)}
+          >
+            <TabsList className="border-border/60 bg-surface/90 h-auto! rounded-full border p-1 backdrop-blur-sm">
+              {DESIGNER_TABS.map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className="data-[state=active]:from-primary/20 data-[state=active]:via-primary/14 data-[state=active]:to-primary/8 data-[state=active]:border-primary/25 rounded-full border border-transparent px-3.5 py-1.5 text-sm font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:shadow-[0_0_0_1px_hsl(var(--primary)/0.18),0_8px_20px_hsl(var(--primary)/0.14)]"
+                >
+                  {t(`tabs.${tab.value}`)}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        </div>
+
+        {/* Dropdown таби — тільки на мобайлі */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="group border-border/60 hover:border-primary/35 hover:bg-primary/8 h-9 w-full rounded-full px-3.5 text-sm font-medium sm:hidden"
+            >
+              <span className="font-semibold">{t(`tabs.${activeTab}`)}</span>
+              <ChevronDown
+                className="group-hover:text-primary size-3.5 transition-colors"
+                aria-hidden
+              />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" className="min-w-48">
             {DESIGNER_TABS.map((tab) => (
-              <TabsTrigger
+              <DropdownMenuItem
                 key={tab.value}
-                value={tab.value}
-                className="data-[state=active]:from-primary/20 data-[state=active]:via-primary/14 data-[state=active]:to-primary/8 data-[state=active]:border-primary/25 rounded-full border border-transparent px-3.5 py-1.5 text-sm font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:shadow-[0_0_0_1px_hsl(var(--primary)/0.18),0_8px_20px_hsl(var(--primary)/0.14)]"
+                onClick={() => setActiveTab(tab.value)}
+                className={cn(activeTab === tab.value && "font-semibold")}
               >
                 {t(`tabs.${tab.value}`)}
-              </TabsTrigger>
+              </DropdownMenuItem>
             ))}
-          </TabsList>
-        </Tabs>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
               size="sm"
-              className="group border-border/60 hover:border-primary/35 hover:bg-primary/8 h-9 rounded-full px-3.5 text-sm font-medium"
+              className="group border-border/60 hover:border-primary/35 hover:bg-primary/8 h-9 w-full rounded-full px-3.5 text-sm font-medium sm:w-auto"
             >
               <ArrowUpDown
                 className="group-hover:text-primary size-3.5 transition-colors"

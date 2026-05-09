@@ -3,10 +3,8 @@
 import {
   type DesignerLevel,
   type DesignerSortValue,
-  type DesignerSpecialization,
   designerLevelValues,
   designerSortValues,
-  designerSpecializationValues,
 } from "@/src/business/types/designer";
 import { haveSameValues } from "@/src/business/utils/catalogFilters";
 import {
@@ -25,9 +23,9 @@ export type ActiveChip = {
 export type DesignersFiltersState = {
   page: number;
   selectedSort: DesignerSortValue;
-  selectedSpecializations: DesignerSpecialization[];
+  selectedSpecializations: string[];
   selectedLevels: DesignerLevel[];
-  draftSpecializations: DesignerSpecialization[];
+  draftSpecializations: string[];
   draftLevels: DesignerLevel[];
   searchValue: string;
   activeSearch: string | undefined;
@@ -36,7 +34,7 @@ export type DesignersFiltersState = {
   hasDraft: boolean;
   activeChips: ActiveChip[];
   setSearchValue: (v: string) => void;
-  handleSpecializationToggle: (v: DesignerSpecialization) => void;
+  handleSpecializationToggle: (v: string) => void;
   handleLevelToggle: (v: DesignerLevel) => void;
   applyAllDrafts: () => void;
   handleReset: () => void;
@@ -54,21 +52,22 @@ export function useDesignersFilters(): DesignersFiltersState {
 
   const specializationsParam = searchParams.get("specializations") ?? "";
   const levelsParam = searchParams.get("levels") ?? "";
-  const selectedSpecializations = parseListParam(
-    specializationsParam,
-    designerSpecializationValues,
-  );
+  const selectedSpecializations = specializationsParam
+    ? specializationsParam.split(",").filter(Boolean)
+    : [];
   const selectedLevels = parseListParam(levelsParam, designerLevelValues);
 
-  const [draftSpecializations, setDraftSpecializations] = useState<
-    DesignerSpecialization[]
-  >(selectedSpecializations);
+  const [draftSpecializations, setDraftSpecializations] = useState<string[]>(
+    selectedSpecializations,
+  );
   const [draftLevels, setDraftLevels] =
     useState<DesignerLevel[]>(selectedLevels);
 
   useEffect(() => {
     setDraftSpecializations(
-      parseListParam(specializationsParam, designerSpecializationValues),
+      specializationsParam
+        ? specializationsParam.split(",").filter(Boolean)
+        : [],
     );
   }, [specializationsParam]);
 
@@ -85,7 +84,7 @@ export function useDesignersFilters(): DesignersFiltersState {
     resetAll,
   } = useUrlFilters();
 
-  const handleSpecializationToggle = (value: DesignerSpecialization) => {
+  const handleSpecializationToggle = (value: string) => {
     setDraftSpecializations((prev) =>
       prev.includes(value) ? prev.filter((s) => s !== value) : [...prev, value],
     );

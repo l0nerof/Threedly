@@ -18,7 +18,7 @@ function DesignerCard({ designer }: DesignerCardProps) {
   const initials = designer.username.slice(0, 2).toUpperCase();
 
   return (
-    <Link href={`/designers/${designer.username}`} className="block">
+    <Link href={`/designers/${designer.username}`} className="block min-w-0">
       <motion.article
         className="border-border/60 bg-surface-elevated/80 flex flex-col overflow-hidden rounded-[1.4rem] border"
         whileHover={{ y: -6 }}
@@ -27,7 +27,7 @@ function DesignerCard({ designer }: DesignerCardProps) {
         {/* Header */}
         <div className="flex flex-col gap-3 p-4">
           <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-3">
+            <div className="flex min-w-0 items-center gap-3">
               <div className="bg-muted text-muted-foreground relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl">
                 {designer.avatar_path ? (
                   <div
@@ -39,8 +39,8 @@ function DesignerCard({ designer }: DesignerCardProps) {
                 )}
               </div>
 
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-1.5">
+              <div className="flex min-w-0 flex-col gap-1">
+                <div className="flex min-w-0 items-center gap-1.5">
                   <span className="truncate text-sm font-semibold">
                     @{designer.username}
                   </span>

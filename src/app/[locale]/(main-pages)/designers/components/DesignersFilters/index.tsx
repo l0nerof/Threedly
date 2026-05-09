@@ -1,10 +1,9 @@
 "use client";
 
+import type { CategoryGroupOption } from "@/src/app/[locale]/(main-pages)/designers/actions";
 import {
   type DesignerLevel,
-  type DesignerSpecialization,
   designerLevelValues,
-  designerSpecializationValues,
 } from "@/src/business/types/designer";
 import {
   Accordion,
@@ -22,10 +21,11 @@ import { RefreshCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 type DesignersFiltersProps = {
-  selectedSpecializations: DesignerSpecialization[];
+  categoryGroups: CategoryGroupOption[];
+  selectedSpecializations: string[];
   selectedLevels: DesignerLevel[];
   showReset: boolean;
-  onSpecializationToggle: (value: DesignerSpecialization) => void;
+  onSpecializationToggle: (value: string) => void;
   onLevelToggle: (value: DesignerLevel) => void;
   onApply?: () => void;
   onReset: () => void;
@@ -36,6 +36,7 @@ type DesignersFiltersProps = {
 };
 
 function DesignersFilters({
+  categoryGroups,
   selectedSpecializations,
   selectedLevels,
   showReset,
@@ -125,12 +126,12 @@ function DesignersFilters({
           </AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col gap-2.5">
-              {designerSpecializationValues.map((spec) => {
-                const inputId = `${idPrefix}-spec-${spec}`;
-                const isChecked = selectedSpecializations.includes(spec);
+              {categoryGroups.map((group) => {
+                const inputId = `${idPrefix}-spec-${group.slug}`;
+                const isChecked = selectedSpecializations.includes(group.slug);
                 return (
                   <Label
-                    key={spec}
+                    key={group.slug}
                     htmlFor={inputId}
                     className={cn(
                       "border-border/70 bg-surface-elevated/55 hover:border-primary/35 hover:bg-primary/8 flex cursor-pointer items-center gap-3 rounded-2xl border px-3 py-2.5 transition-colors",
@@ -140,11 +141,9 @@ function DesignersFilters({
                     <Checkbox
                       id={inputId}
                       checked={isChecked}
-                      onCheckedChange={() => onSpecializationToggle(spec)}
+                      onCheckedChange={() => onSpecializationToggle(group.slug)}
                     />
-                    <span className="text-sm font-medium capitalize">
-                      {t(`specialization.labels.${spec}`)}
-                    </span>
+                    <span className="text-sm font-medium">{group.name_en}</span>
                   </Label>
                 );
               })}

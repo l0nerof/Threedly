@@ -1,19 +1,4 @@
-export const designerSpecializationValues = [
-  "furniture",
-  "decor",
-  "materials",
-  "lighting",
-  "kitchen",
-  "bathroom",
-  "exterior",
-  "plants",
-  "technology",
-] as const;
-
 export const designerLevelValues = ["free", "pro", "max"] as const;
-
-export type DesignerSpecialization =
-  (typeof designerSpecializationValues)[number];
 
 export type DesignerLevel = (typeof designerLevelValues)[number];
 
@@ -31,7 +16,7 @@ export type Designer = {
   bio: string | null;
   avatar_path: string | null;
   plan_key: DesignerLevel;
-  specializations: DesignerSpecialization[];
+  specializations: string[];
   model_count: number;
   created_at: string;
 };

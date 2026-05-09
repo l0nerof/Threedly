@@ -1,14 +1,11 @@
 import { fetchDesignersCount } from "@/src/app/[locale]/(main-pages)/designers/actions";
 import { designersQueryKeys } from "@/src/business/queries/designers";
-import type {
-  DesignerLevel,
-  DesignerSpecialization,
-} from "@/src/business/types/designer";
+import type { DesignerLevel } from "@/src/business/types/designer";
 import { useQuery } from "@tanstack/react-query";
 
 type UseDesignersCountParams = {
   search?: string;
-  specializations?: DesignerSpecialization[];
+  specializations?: string[];
   levels?: DesignerLevel[];
   enabled: boolean;
 };

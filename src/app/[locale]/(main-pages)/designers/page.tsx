@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { fetchDesignerCategoryGroups } from "./actions";
 import DesignersShell from "./components/DesignersShell";
 
 type Props = {
@@ -34,9 +35,11 @@ export default async function DesignersPage({ params }: Props) {
 
   setRequestLocale(locale);
 
+  const categoryGroups = await fetchDesignerCategoryGroups();
+
   return (
     <Suspense>
-      <DesignersShell />
+      <DesignersShell categoryGroups={categoryGroups} />
     </Suspense>
   );
 }

@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
+const PLAN_DOWNLOAD_LIMITS = { max: 100, pro: 25, free: 5 };
+
 const DESIGNERS = [
   {
     email: "olena.kovalenko@threedly.local",
@@ -7,8 +9,6 @@ const DESIGNERS = [
     bio: "Interior designer specializing in Scandinavian and minimalist spaces. Based in Kyiv.",
     plan_key: "pro",
     can_upload: true,
-
-    specializations: ["furniture", "decor"],
   },
   {
     email: "dmytro.lysenko@threedly.local",
@@ -16,8 +16,6 @@ const DESIGNERS = [
     bio: "Archviz artist and 3D generalist. Focused on photorealistic residential renders.",
     plan_key: "pro",
     can_upload: true,
-
-    specializations: ["lighting", "exterior"],
   },
   {
     email: "sofia.marchenko@threedly.local",
@@ -25,8 +23,6 @@ const DESIGNERS = [
     bio: "Product designer and 3D modeler. Creates detailed kitchen and bathroom fixtures.",
     plan_key: "max",
     can_upload: true,
-
-    specializations: ["kitchen", "bathroom", "furniture"],
   },
   {
     email: "ivan.petrenko@threedly.local",
@@ -34,8 +30,6 @@ const DESIGNERS = [
     bio: "Freelance 3D artist. Specializes in decorative objects and scene props.",
     plan_key: "pro",
     can_upload: true,
-
-    specializations: ["decor", "plants"],
   },
   {
     email: "natalia.bondarenko@threedly.local",
@@ -43,8 +37,6 @@ const DESIGNERS = [
     bio: "Studio designer at Arkhitect UA. Focuses on commercial and hospitality spaces.",
     plan_key: "max",
     can_upload: true,
-
-    specializations: ["furniture", "exterior"],
   },
   {
     email: "oleksiy.shevchenko@threedly.local",
@@ -52,8 +44,6 @@ const DESIGNERS = [
     bio: "Materials and textures specialist. Builds PBR-ready surface libraries.",
     plan_key: "pro",
     can_upload: true,
-
-    specializations: ["materials"],
   },
   {
     email: "iryna.savchenko@threedly.local",
@@ -61,8 +51,6 @@ const DESIGNERS = [
     bio: "Lighting designer turned 3D artist. Expert in realistic indoor lighting setups.",
     plan_key: "free",
     can_upload: false,
-
-    specializations: ["lighting", "technology"],
   },
   {
     email: "andrii.kravchenko@threedly.local",
@@ -70,8 +58,6 @@ const DESIGNERS = [
     bio: "Archviz generalist working with residential and landscape projects.",
     plan_key: "pro",
     can_upload: true,
-
-    specializations: ["exterior", "plants"],
   },
   {
     email: "tetiana.karpenko@threedly.local",
@@ -79,8 +65,6 @@ const DESIGNERS = [
     bio: "3D artist focused on plants and organic decor. Creates botanical collections for interior scenes.",
     plan_key: "free",
     can_upload: false,
-
-    specializations: ["plants", "decor"],
   },
   {
     email: "mykhailo.rudenko@threedly.local",
@@ -88,8 +72,6 @@ const DESIGNERS = [
     bio: "Industrial designer and 3D modeler. Specializes in smart home technology and electronics.",
     plan_key: "pro",
     can_upload: true,
-
-    specializations: ["technology", "furniture"],
   },
   {
     email: "daryna.tkachenko@threedly.local",
@@ -97,8 +79,6 @@ const DESIGNERS = [
     bio: "Interior architect with focus on luxury bathroom and spa design.",
     plan_key: "max",
     can_upload: true,
-
-    specializations: ["bathroom", "materials", "decor"],
   },
   {
     email: "pavlo.melnyk@threedly.local",
@@ -106,8 +86,6 @@ const DESIGNERS = [
     bio: "Exterior visualization specialist. Works on residential facades and urban landscape projects.",
     plan_key: "pro",
     can_upload: true,
-
-    specializations: ["exterior", "lighting"],
   },
   {
     email: "oksana.kovalchuk@threedly.local",
@@ -115,8 +93,6 @@ const DESIGNERS = [
     bio: "Kitchen and dining space designer. Creates detailed cabinetry and appliance models.",
     plan_key: "pro",
     can_upload: true,
-
-    specializations: ["kitchen", "furniture"],
   },
   {
     email: "volodymyr.hrytsenko@threedly.local",
@@ -124,8 +100,6 @@ const DESIGNERS = [
     bio: "Generalist 3D artist. Builds complete room sets with curated material libraries.",
     plan_key: "max",
     can_upload: true,
-
-    specializations: ["materials", "lighting", "furniture"],
   },
   {
     email: "yulia.moroz@threedly.local",
@@ -133,8 +107,6 @@ const DESIGNERS = [
     bio: "Freelance visualizer specializing in Nordic and wabi-sabi interior styles.",
     plan_key: "free",
     can_upload: false,
-
-    specializations: ["decor", "plants"],
   },
 ];
 
@@ -157,19 +129,33 @@ function createAdminClient(url, serviceRoleKey) {
   });
 }
 
-async function seedDesigner(admin, designer) {
-  const { data, error } = await admin.auth.admin.createUser({
-    email: designer.email,
-    password: "ThreedlyDesigner123!",
-    email_confirm: true,
-    user_metadata: { username: designer.username },
-  });
+async function seedDesigner(admin, designer, existingUsers) {
+  const existing = existingUsers.find((u) => u.email === designer.email);
 
-  if (error || !data.user) {
-    throw error ?? new Error(`Failed to create user ${designer.email}`);
+  let userId;
+
+  if (existing) {
+    const { data, error } = await admin.auth.admin.updateUserById(existing.id, {
+      password: "ThreedlyDesigner123!",
+      email_confirm: true,
+      user_metadata: { ...existing.user_metadata, username: designer.username },
+    });
+    if (error || !data.user) {
+      throw error ?? new Error(`Failed to update user ${designer.email}`);
+    }
+    userId = data.user.id;
+  } else {
+    const { data, error } = await admin.auth.admin.createUser({
+      email: designer.email,
+      password: "ThreedlyDesigner123!",
+      email_confirm: true,
+      user_metadata: { username: designer.username },
+    });
+    if (error || !data.user) {
+      throw error ?? new Error(`Failed to create user ${designer.email}`);
+    }
+    userId = data.user.id;
   }
-
-  const userId = data.user.id;
 
   const { error: upsertError } = await admin.from("profiles").upsert(
     {
@@ -178,14 +164,8 @@ async function seedDesigner(admin, designer) {
       bio: designer.bio,
       plan_key: designer.plan_key,
       can_upload: designer.can_upload,
-      specializations: designer.specializations,
       downloads_used_this_month: 0,
-      downloads_limit_monthly:
-        designer.plan_key === "max"
-          ? 100
-          : designer.plan_key === "pro"
-            ? 25
-            : 5,
+      downloads_limit_monthly: PLAN_DOWNLOAD_LIMITS[designer.plan_key],
     },
     { onConflict: "id" },
   );
@@ -199,8 +179,13 @@ async function main() {
   const { url, serviceRoleKey } = await loadSupabaseEnv();
   const admin = createAdminClient(url, serviceRoleKey);
 
+  const { data: listData, error: listError } = await admin.auth.admin.listUsers(
+    { page: 1, perPage: 1000 },
+  );
+  if (listError) throw listError;
+
   for (const designer of DESIGNERS) {
-    await seedDesigner(admin, designer);
+    await seedDesigner(admin, designer, listData.users);
     console.log(`Seeded designer @${designer.username}`);
   }
 

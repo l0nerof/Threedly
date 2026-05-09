@@ -1,5 +1,6 @@
 "use client";
 
+import type { CategoryGroupOption } from "@/src/app/[locale]/(main-pages)/designers/actions";
 import { useDesignersCount } from "@/src/business/hooks/useDesignersCount";
 import { useDesignersFilters } from "@/src/business/hooks/useDesignersFilters";
 import { Button } from "@/src/shared/components/Button";
@@ -16,7 +17,11 @@ import DesignersFilters from "../DesignersFilters";
 import DesignersResults from "../DesignersResults";
 import DesignersSearchBar from "../DesignersSearchBar";
 
-function DesignersShell() {
+type DesignersShellProps = {
+  categoryGroups: CategoryGroupOption[];
+};
+
+function DesignersShell({ categoryGroups }: DesignersShellProps) {
   const t = useTranslations("Designers.shell");
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
@@ -72,6 +77,7 @@ function DesignersShell() {
         <div className="grid gap-6 lg:grid-cols-[minmax(260px,300px)_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[minmax(290px,320px)_minmax(0,1fr)]">
           <aside className="hidden self-start lg:sticky lg:top-28 lg:block">
             <DesignersFilters
+              categoryGroups={categoryGroups}
               selectedSpecializations={draftSpecializations}
               selectedLevels={draftLevels}
               showReset={hasActiveFilters}
@@ -86,7 +92,7 @@ function DesignersShell() {
             />
           </aside>
 
-          <div className="self-start">
+          <div className="min-w-0 self-start">
             <DesignersResults
               page={page}
               sort={selectedSort}
@@ -116,6 +122,7 @@ function DesignersShell() {
 
           <div className="flex-1 overflow-y-auto p-4">
             <DesignersFilters
+              categoryGroups={categoryGroups}
               selectedSpecializations={draftSpecializations}
               selectedLevels={draftLevels}
               showReset={hasActiveFilters}

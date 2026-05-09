@@ -5,7 +5,6 @@ import type {
   Designer,
   DesignerLevel,
   DesignerSortValue,
-  DesignerSpecialization,
   DesignersResult,
 } from "@/src/business/types/designer";
 import { createClient } from "@/src/business/utils/supabase/server";
@@ -13,7 +12,7 @@ import { resolveAvatarPublicUrl } from "@/src/business/utils/supabase/storage";
 
 type FilterParams = {
   search?: string;
-  specializations?: DesignerSpecialization[];
+  specializations?: string[];
   levels?: DesignerLevel[];
 };
 
@@ -81,7 +80,7 @@ function mapRow(row: {
     bio: row.bio,
     avatar_path: resolveAvatarPublicUrl(row.avatar_path),
     plan_key: row.plan_key as Designer["plan_key"],
-    specializations: (row.specializations ?? []) as Designer["specializations"],
+    specializations: row.specializations ?? [],
     model_count: 0,
     created_at: row.created_at,
   };
@@ -153,4 +152,25 @@ export async function fetchDesignersCount({
   }
 
   return count ?? 0;
+}
+
+export type CategoryGroupOption = {
+  slug: string;
+  name_ua: string;
+  name_en: string;
+};
+
+export async function fetchDesignerCategoryGroups(): Promise<
+  CategoryGroupOption[]
+> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("category_groups")
+    .select("slug, name_ua, name_en")
+    .order("sort_order");
+
+  if (error) throw new Error(error.message);
+
+  return data ?? [];
 }
