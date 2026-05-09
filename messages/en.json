@@ -546,6 +546,40 @@
       "form": {
         "title": "New 3D model",
         "description": "The MVP publishes the model to the catalog as soon as the files upload successfully.",
+        "studioBadge": "Upload Studio",
+        "sections": {
+          "files": "Model files",
+          "metadata": "Catalog description",
+          "settings": "Catalog and access"
+        },
+        "fileZones": {
+          "coverTitle": "Catalog cover",
+          "coverDescription": "Add a JPG, PNG, or WEBP up to 5 MB.",
+          "modelTitle": "Primary model file",
+          "modelDescription": "GLB, GLTF, FBX, OBJ, MAX, BLEND, or ZIP up to 50 MB.",
+          "previewTitle": "Optional 3D preview",
+          "previewDescription": "GLB or GLTF for the future viewer.",
+          "empty": "Click to choose a file",
+          "selected": "File selected"
+        },
+        "preview": {
+          "title": "Card preview",
+          "emptyTitle": "Model title",
+          "emptyCategory": "Category",
+          "coverReady": "Cover ready",
+          "coverMissing": "Waiting for cover"
+        },
+        "readiness": {
+          "title": "Readiness",
+          "modelFile": "Model file",
+          "coverImage": "Cover image",
+          "titleUa": "Ukrainian title",
+          "titleEn": "English title",
+          "category": "Category",
+          "minimumPlan": "Access plan",
+          "complete": "Ready",
+          "missing": "Needed"
+        },
         "titleUa": "Ukrainian title",
         "titleEn": "English title",
         "descriptionUa": "Ukrainian description",

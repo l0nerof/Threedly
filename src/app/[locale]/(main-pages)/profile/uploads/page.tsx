@@ -12,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/src/shared/components/Card";
-import { Separator } from "@/src/shared/components/Separator";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { uploadModelAction } from "./actions";
@@ -108,18 +107,35 @@ export default async function ProfileUploadsPage({
   });
 
   return (
-    <section className="flex flex-col gap-5">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold tracking-tight">
-            {t("uploads.title")}
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            {t("uploads.subtitle")}
-          </p>
+    <section className="flex flex-col gap-6">
+      <div className="border-border/60 bg-surface/80 relative isolate overflow-hidden rounded-3xl border p-5 shadow-sm sm:p-7">
+        <div
+          aria-hidden
+          className="from-primary/18 via-accent/18 absolute inset-0 bg-linear-to-br to-transparent"
+        />
+        <div
+          aria-hidden
+          className="bg-primary/10 absolute -top-20 right-10 size-56 rounded-full blur-3xl"
+        />
+        <div className="relative flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-3">
+            <Badge
+              variant="outline"
+              className="bg-background/55 w-fit rounded-full px-3 py-1 backdrop-blur"
+            >
+              {t("uploads.form.studioBadge")}
+            </Badge>
+            <div className="flex flex-col gap-2">
+              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                {t("uploads.title")}
+              </h1>
+              <p className="text-muted-foreground text-sm leading-6 sm:text-base">
+                {t("uploads.subtitle")}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-      <Separator />
 
       {hasLoadError && (
         <p role="alert" className="text-destructive text-sm">
@@ -127,14 +143,14 @@ export default async function ProfileUploadsPage({
         </p>
       )}
 
-      <Card className="border-border/60 gap-4 rounded-2xl p-6 shadow-none">
+      <Card className="border-border/60 bg-surface/90 gap-0 overflow-hidden rounded-3xl p-0 shadow-sm">
         <ModelUploadForm
           categoryGroups={categoryOptions}
           onUploadAction={uploadModelWithLocale}
         />
       </Card>
 
-      <Card className="border-border/60 gap-4 rounded-2xl p-6 shadow-none">
+      <Card className="border-border/60 bg-surface/80 gap-4 rounded-3xl p-6 shadow-sm">
         <CardHeader className="p-0">
           <CardTitle>
             <h2>{t("uploads.list.title")}</h2>
