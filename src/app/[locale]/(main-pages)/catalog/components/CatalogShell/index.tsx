@@ -1,8 +1,6 @@
 "use client";
 
 import {
-  CATALOG_SEARCH_DEBOUNCE_MS,
-  CATALOG_SEARCH_MIN_CHARS,
   catalogFormatValues,
   catalogPlanKeys,
   catalogSortValues,
@@ -29,10 +27,14 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/src/shared/components/Sheet";
-import { useDebounce } from "@/src/shared/hooks/use-debounce";
+import {
+  parseListParam,
+  splitParam,
+  useUrlFilters,
+} from "@/src/shared/hooks/use-url-filters";
 import { Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CatalogFilters from "../CatalogFilters";
 import CatalogResults from "../CatalogResults";
@@ -42,25 +44,8 @@ type CatalogShellProps = {
   categoryGroups: CategoryGroupOption[];
 };
 
-function splitParam(value: string | null): string[] {
-  if (!value) return [];
-  return value.split(",").filter(Boolean);
-}
-
-function parseListParam<T extends string>(
-  value: string | null,
-  allowed: readonly T[],
-): T[] {
-  if (!value) return [];
-  return value
-    .split(",")
-    .filter((v): v is T => (allowed as readonly string[]).includes(v));
-}
-
 function CatalogShell({ categoryGroups }: CatalogShellProps) {
   const t = useTranslations("Catalog");
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const categories: CatalogFilterOption[] =
     flattenCategoryGroups(categoryGroups);
@@ -111,60 +96,18 @@ function CatalogShell({ categoryGroups }: CatalogShellProps) {
     setDraftFormats(parseListParam(formatsParam, catalogFormatValues));
   }, [formatsParam]);
 
-  // ── Local search state with debounce before URL sync ───────────────────────
-  const urlSearch = searchParams.get("q") ?? "";
-  const [searchValue, setSearchValue] = useState(urlSearch);
-  const debouncedSearch = useDebounce(searchValue, CATALOG_SEARCH_DEBOUNCE_MS);
-
-  useEffect(() => {
-    setSearchValue(urlSearch);
-  }, [urlSearch]);
-
-  useEffect(() => {
-    const effectiveSearch =
-      debouncedSearch.trim().length >= CATALOG_SEARCH_MIN_CHARS
-        ? debouncedSearch.trim()
-        : "";
-    const current = searchParams.get("q") ?? "";
-    if (effectiveSearch === current) return;
-
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("page");
-    if (effectiveSearch) {
-      params.set("q", effectiveSearch);
-    } else {
-      params.delete("q");
-    }
-    router.push(`?${params.toString()}`, { scroll: false });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
+  // ── Shared URL filter logic ────────────────────────────────────────────────
+  const {
+    searchValue,
+    setSearchValue,
+    activeSearch,
+    applyFilter,
+    setPage,
+    resetAll,
+  } = useUrlFilters();
 
   // ── Mobile panel ───────────────────────────────────────────────────────────
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
-
-  // ── URL helpers ────────────────────────────────────────────────────────────
-  const applyFilter = (updates: Record<string, string | null>) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("page");
-    for (const [key, value] of Object.entries(updates)) {
-      if (value === null || value === "") {
-        params.delete(key);
-      } else {
-        params.set(key, value);
-      }
-    }
-    router.push(`?${params.toString()}`, { scroll: false });
-  };
-
-  const setPage = (nextPage: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (nextPage === 1) {
-      params.delete("page");
-    } else {
-      params.set("page", String(nextPage));
-    }
-    router.push(`?${params.toString()}`, { scroll: false });
-  };
 
   // ── Draft toggle handlers (checkbox clicks — update draft only) ────────────
   const handleGroupToggle = (value: string) => {
@@ -197,31 +140,15 @@ function CatalogShell({ categoryGroups }: CatalogShellProps) {
 
   // ── Apply all drafts to URL ────────────────────────────────────────────────
   const applyAllDrafts = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("page");
-
-    if (draftCategories.length > 0) {
-      params.set("category", draftCategories.join(","));
-      params.delete("group");
-    } else if (draftGroups.length > 0) {
-      params.set("group", draftGroups.join(","));
-      params.delete("category");
-    } else {
-      params.delete("category");
-      params.delete("group");
-    }
-    if (draftPlans.length > 0) {
-      params.set("plans", draftPlans.join(","));
-    } else {
-      params.delete("plans");
-    }
-    if (draftFormats.length > 0) {
-      params.set("formats", draftFormats.join(","));
-    } else {
-      params.delete("formats");
-    }
-
-    router.push(`?${params.toString()}`, { scroll: false });
+    applyFilter({
+      category: draftCategories.length > 0 ? draftCategories.join(",") : null,
+      group:
+        draftCategories.length === 0 && draftGroups.length > 0
+          ? draftGroups.join(",")
+          : null,
+      plans: draftPlans.length > 0 ? draftPlans.join(",") : null,
+      formats: draftFormats.length > 0 ? draftFormats.join(",") : null,
+    });
   };
 
   const handleMobileApply = () => {
@@ -231,15 +158,16 @@ function CatalogShell({ categoryGroups }: CatalogShellProps) {
 
   // ── Reset ──────────────────────────────────────────────────────────────────
   const handleReset = () => {
-    setSearchValue("");
     setDraftGroups([]);
     setDraftCategories([]);
     setDraftPlans([]);
     setDraftFormats([]);
-    router.push(pathname, { scroll: false });
+    resetAll();
   };
 
   // ── Active/draft filter detection ──────────────────────────────────────────
+  const urlSearch = searchParams.get("q") ?? "";
+
   // Committed filters (for chips and reset visibility)
   const hasCommittedFilters =
     urlSearch.length > 0 ||
@@ -307,12 +235,6 @@ function CatalogShell({ categoryGroups }: CatalogShellProps) {
       },
     })),
   ].filter((chip): chip is NonNullable<typeof chip> => chip !== null);
-
-  // ── Search passed to backend only when ≥ min chars ─────────────────────────
-  const activeSearch =
-    urlSearch.trim().length >= CATALOG_SEARCH_MIN_CHARS
-      ? urlSearch.trim()
-      : undefined;
 
   // ── Draft diff — true when any draft differs from committed URL state ────────
   const hasDraft =

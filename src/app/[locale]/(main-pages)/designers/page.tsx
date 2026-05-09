@@ -1,10 +1,30 @@
 import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { fetchDesignerCategoryGroups } from "./actions";
+import DesignersShell from "./components/DesignersShell";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+
+  if (!isLocaleCode(locale)) {
+    return {};
+  }
+
+  return {
+    title: locale === "ua" ? "Дизайнери — Threedly" : "Designers — Threedly",
+    description:
+      locale === "ua"
+        ? "Познайомтесь із авторами 3D-моделей на Threedly."
+        : "Meet the creators behind every model on Threedly.",
+  };
+}
 
 export default async function DesignersPage({ params }: Props) {
   const { locale } = await params;
@@ -15,13 +35,11 @@ export default async function DesignersPage({ params }: Props) {
 
   setRequestLocale(locale);
 
-  // const t = await getTranslations("Pricing");
+  const categoryGroups = await fetchDesignerCategoryGroups();
 
   return (
-    <section className="bg-background text-foreground w-full">
-      <div className="container flex flex-col gap-12 py-40">
-        <h1>Designers</h1>
-      </div>
-    </section>
+    <Suspense>
+      <DesignersShell categoryGroups={categoryGroups} />
+    </Suspense>
   );
 }

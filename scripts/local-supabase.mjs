@@ -28,6 +28,11 @@ const postSeedScriptPath = path.join(
   "scripts",
   "post-seed-demo-user.mjs",
 );
+const postSeedDesignersScriptPath = path.join(
+  repoRoot,
+  "scripts",
+  "post-seed-designers.mjs",
+);
 const seedFiles = [
   path.join(repoRoot, "supabase", "seeds", "01_categories.sql"),
   path.join(repoRoot, "supabase", "seeds", "02_models.sql"),
@@ -41,16 +46,27 @@ function hasLocalSupabaseStatus(status) {
 }
 
 function runCommand(command, args, options = {}) {
-  const { capture = false, env = process.env } = options;
+  const { capture = false, env = process.env, stdin } = options;
 
   return new Promise((resolve, reject) => {
+    const stdioMode = capture
+      ? ["pipe", "pipe", "pipe"]
+      : stdin !== undefined
+        ? ["pipe", "inherit", "inherit"]
+        : "inherit";
+
     const child = spawn(command, args, {
       cwd: repoRoot,
       env,
       shell:
         process.platform === "win32" && command.toLowerCase().endsWith(".cmd"),
-      stdio: capture ? ["ignore", "pipe", "pipe"] : "inherit",
+      stdio: stdioMode,
     });
+
+    if (stdin !== undefined && child.stdin) {
+      child.stdin.write(stdin);
+      child.stdin.end();
+    }
 
     let stdout = "";
     let stderr = "";
@@ -214,25 +230,35 @@ async function ensureLocalDemoUser(status) {
 }
 
 async function runPostSeed(status) {
-  await runCommand(process.execPath, [postSeedScriptPath], {
-    env: {
-      ...process.env,
-      NEXT_PUBLIC_SUPABASE_URL: status.apiUrl,
-      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: status.publishableKey,
-      SUPABASE_SERVICE_ROLE_KEY: status.serviceRoleKey,
-    },
-  });
+  const env = {
+    ...process.env,
+    NEXT_PUBLIC_SUPABASE_URL: status.apiUrl,
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: status.publishableKey,
+    SUPABASE_SERVICE_ROLE_KEY: status.serviceRoleKey,
+  };
+
+  await runCommand(process.execPath, [postSeedScriptPath], { env });
+  await runCommand(process.execPath, [postSeedDesignersScriptPath], { env });
 }
 
 async function runSqlSeedFiles() {
+  const fs = await import("node:fs/promises");
   for (const seedFile of seedFiles) {
-    await runCommand(supabaseBin, [
-      "db",
-      "query",
-      "--local",
-      "--file",
-      path.relative(repoRoot, seedFile),
-    ]);
+    const sql = await fs.readFile(seedFile, "utf8");
+    await runCommand(
+      "docker",
+      [
+        "exec",
+        "--interactive",
+        "supabase_db_threedly",
+        "psql",
+        "--username",
+        "postgres",
+        "--dbname",
+        "postgres",
+      ],
+      { stdin: sql },
+    );
   }
 }
 

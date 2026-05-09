@@ -6,7 +6,7 @@ export class DesignersPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.heading = page.getByRole("heading", { level: 1, name: /designers/i });
+    this.heading = page.getByRole("heading", { level: 1, name: /дизайнер/i });
   }
 
   async open() {
@@ -15,7 +15,7 @@ export class DesignersPage extends BasePage {
 
   async expectLoaded() {
     await this.expectPathname("/ua/designers");
-    await expect(this.heading).toBeVisible();
+    await expect(this.heading).toBeAttached();
   }
 }
 

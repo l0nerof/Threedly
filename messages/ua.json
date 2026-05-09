@@ -373,6 +373,92 @@
     }
   },
 
+  "Designers": {
+    "shell": {
+      "pageTitle": "Дизайнери",
+      "searchPlaceholder": "Пошук дизайнерів за іменем...",
+      "searchLabel": "Пошук дизайнерів",
+      "filtersButton": "Фільтри",
+      "noActiveFilters": "Немає активних фільтрів",
+      "activeFiltersLabel": "Активні фільтри",
+      "removeFilter": "{label} — прибрати фільтр",
+      "mobileSheet": {
+        "title": "Фільтри",
+        "description": "Фільтрувати дизайнерів.",
+        "applyLoading": "Завантаження...",
+        "applyButton": "Показати {count} дизайнерів"
+      }
+    },
+    "filters": {
+      "title": "Фільтри",
+      "description": "Фільтрувати дизайнерів.",
+      "reset": "Скинути",
+      "applyLoading": "Завантаження...",
+      "applyButton": "Показати {count} дизайнерів",
+      "specialization": {
+        "title": "Спеціалізація",
+        "description": "Оберіть одну або кілька областей.",
+        "labels": {
+          "furniture": "Меблі",
+          "decor": "Декор",
+          "materials": "Матеріали",
+          "lighting": "Освітлення",
+          "kitchen": "Кухня",
+          "bathroom": "Ванна",
+          "exterior": "Екстер'єр",
+          "plants": "Рослини",
+          "technology": "Технології"
+        }
+      },
+      "level": {
+        "title": "Рівень",
+        "description": "Фільтр за статусом у спільноті.",
+        "labels": {
+          "free": { "label": "Free", "description": "Безкоштовний план" },
+          "pro": {
+            "label": "Pro",
+            "description": "Pro план — може завантажувати моделі"
+          },
+          "max": { "label": "Max", "description": "Max план — найвища квота" }
+        }
+      },
+      "account": {
+        "title": "Акаунт",
+        "description": "Показати лише верифікованих або pro-авторів.",
+        "labels": {
+          "verified": {
+            "label": "Верифікований",
+            "description": "Особистість підтверджена."
+          },
+          "pro": { "label": "Pro-члени", "description": "Pro-видавці." }
+        }
+      }
+    },
+    "results": {
+      "title": "Дизайнери",
+      "description": "Знайомтесь із авторами кожної моделі на Threedly. Переглядайте їхні портфоліо та завантажуйте роботи.",
+      "creators": "{count} авторів",
+      "error": "Щось пішло не так. Спробуйте ще раз.",
+      "empty": "Дизайнерів за вашими фільтрами не знайдено.",
+      "sortLabel": "Сортування",
+      "tabs": {
+        "all": "Усі",
+        "featured": "Вибрані",
+        "rising": "На підйомі",
+        "new": "Нові",
+        "following": "Підписки"
+      },
+      "sort": {
+        "popular": "Найпопулярніші",
+        "newest": "Найновіші",
+        "models": "Найбільше моделей"
+      },
+      "pageOf": "Показано {from}–{to} із {total} дизайнерів",
+      "previousPage": "Попередня сторінка",
+      "nextPage": "Наступна сторінка"
+    }
+  },
+
   "Footer": {
     "copyright": "© {year} Threedly. Всі права захищені.",
     "terms": "Умови",
