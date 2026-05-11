@@ -33,7 +33,6 @@ type DesignersResultsProps = {
   page: number;
   sort: DesignerSortValue;
   search?: string;
-  specializations?: string[];
   levels?: DesignerLevel[];
   onPageChange: (page: number) => void;
   onSortChange: (sort: DesignerSortValue) => void;
@@ -43,7 +42,6 @@ function DesignersResults({
   page,
   sort,
   search,
-  specializations,
   levels,
   onPageChange,
   onSortChange,
@@ -55,7 +53,6 @@ function DesignersResults({
     page,
     sort,
     search,
-    specializations,
     levels,
   });
 

@@ -22,10 +22,8 @@ import { useTranslations } from "next-intl";
 
 type DesignersFiltersProps = {
   categoryGroups: CategoryGroupOption[];
-  selectedSpecializations: string[];
   selectedLevels: DesignerLevel[];
   showReset: boolean;
-  onSpecializationToggle: (value: string) => void;
   onLevelToggle: (value: DesignerLevel) => void;
   onApply?: () => void;
   onReset: () => void;
@@ -37,10 +35,8 @@ type DesignersFiltersProps = {
 
 function DesignersFilters({
   categoryGroups,
-  selectedSpecializations,
   selectedLevels,
   showReset,
-  onSpecializationToggle,
   onLevelToggle,
   onApply,
   onReset,
@@ -105,44 +101,26 @@ function DesignersFilters({
       >
         <AccordionItem value="specialization" className="border-border/60">
           <AccordionTrigger className="py-3 hover:no-underline">
-            <div className="flex flex-1 items-start justify-between gap-3">
-              <div className="flex flex-col gap-1">
-                <span className="text-sm font-semibold tracking-[0.12em] uppercase">
-                  {t("specialization.title")}
-                </span>
-                <span className="text-muted-foreground text-xs leading-5">
-                  {t("specialization.description")}
-                </span>
-              </div>
-              {selectedSpecializations.length > 0 && (
-                <Badge
-                  variant="secondary"
-                  className="flex size-6 items-center justify-center rounded-full text-xs"
-                >
-                  {selectedSpecializations.length}
-                </Badge>
-              )}
+            <div className="flex flex-col gap-1">
+              <span className="text-sm font-semibold tracking-[0.12em] uppercase">
+                {t("specialization.title")}
+              </span>
+              <span className="text-muted-foreground text-xs leading-5">
+                {t("specialization.description")}
+              </span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col gap-2.5">
               {categoryGroups.map((group) => {
                 const inputId = `${idPrefix}-spec-${group.slug}`;
-                const isChecked = selectedSpecializations.includes(group.slug);
                 return (
                   <Label
                     key={group.slug}
                     htmlFor={inputId}
-                    className={cn(
-                      "border-border/70 bg-surface-elevated/55 hover:border-primary/35 hover:bg-primary/8 flex cursor-pointer items-center gap-3 rounded-2xl border px-3 py-2.5 transition-colors",
-                      isChecked && "border-primary/45 bg-primary/10",
-                    )}
+                    className="border-border/70 bg-surface-elevated/55 flex cursor-not-allowed items-center gap-3 rounded-2xl border px-3 py-2.5 opacity-50"
                   >
-                    <Checkbox
-                      id={inputId}
-                      checked={isChecked}
-                      onCheckedChange={() => onSpecializationToggle(group.slug)}
-                    />
+                    <Checkbox id={inputId} disabled />
                     <span className="text-sm font-medium">{group.name_en}</span>
                   </Label>
                 );

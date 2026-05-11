@@ -28,9 +28,7 @@ function DesignersShell({ categoryGroups }: DesignersShellProps) {
   const {
     page,
     selectedSort,
-    selectedSpecializations,
     selectedLevels,
-    draftSpecializations,
     draftLevels,
     searchValue,
     activeSearch,
@@ -38,7 +36,6 @@ function DesignersShell({ categoryGroups }: DesignersShellProps) {
     hasDraft,
     activeChips,
     setSearchValue,
-    handleSpecializationToggle,
     handleLevelToggle,
     applyAllDrafts,
     handleReset,
@@ -49,8 +46,6 @@ function DesignersShell({ categoryGroups }: DesignersShellProps) {
   const { data: filteredCount, isFetching: isCountFetching } =
     useDesignersCount({
       search: activeSearch,
-      specializations:
-        draftSpecializations.length > 0 ? draftSpecializations : undefined,
       levels: draftLevels.length > 0 ? draftLevels : undefined,
       enabled: hasDraft || isMobileFiltersOpen,
     });
@@ -78,10 +73,8 @@ function DesignersShell({ categoryGroups }: DesignersShellProps) {
           <aside className="hidden self-start lg:sticky lg:top-28 lg:block">
             <DesignersFilters
               categoryGroups={categoryGroups}
-              selectedSpecializations={draftSpecializations}
               selectedLevels={draftLevels}
               showReset={hasActiveFilters}
-              onSpecializationToggle={handleSpecializationToggle}
               onLevelToggle={handleLevelToggle}
               onApply={applyAllDrafts}
               onReset={handleReset}
@@ -97,11 +90,6 @@ function DesignersShell({ categoryGroups }: DesignersShellProps) {
               page={page}
               sort={selectedSort}
               search={activeSearch}
-              specializations={
-                selectedSpecializations.length > 0
-                  ? selectedSpecializations
-                  : undefined
-              }
               levels={selectedLevels.length > 0 ? selectedLevels : undefined}
               onPageChange={setPage}
               onSortChange={(s) => applyFilter({ sort: s })}
@@ -123,10 +111,8 @@ function DesignersShell({ categoryGroups }: DesignersShellProps) {
           <div className="flex-1 overflow-y-auto p-4">
             <DesignersFilters
               categoryGroups={categoryGroups}
-              selectedSpecializations={draftSpecializations}
               selectedLevels={draftLevels}
               showReset={hasActiveFilters}
-              onSpecializationToggle={handleSpecializationToggle}
               onLevelToggle={handleLevelToggle}
               onReset={handleReset}
               idPrefix="designers-mobile-sheet"
