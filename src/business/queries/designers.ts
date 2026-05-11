@@ -4,7 +4,6 @@ type DesignersQueryKeyParams = {
   page: number;
   sort?: DesignerSortValue;
   search?: string;
-  specializations?: string[];
   levels?: DesignerLevel[];
 };
 

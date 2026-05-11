@@ -225,11 +225,7 @@ async function requireRunningSupabase(commandName) {
   return status;
 }
 
-async function ensureLocalDemoUser(status) {
-  await runPostSeed(status);
-}
-
-async function runPostSeed(status) {
+async function runPostSeed(status, { skipIfExists = false } = {}) {
   const env = {
     ...process.env,
     NEXT_PUBLIC_SUPABASE_URL: status.apiUrl,
@@ -238,7 +234,11 @@ async function runPostSeed(status) {
   };
 
   await runCommand(process.execPath, [postSeedScriptPath], { env });
-  await runCommand(process.execPath, [postSeedDesignersScriptPath], { env });
+
+  const designerArgs = skipIfExists
+    ? [postSeedDesignersScriptPath, "--skip-if-exists"]
+    : [postSeedDesignersScriptPath];
+  await runCommand(process.execPath, designerArgs, { env });
 }
 
 async function runSqlSeedFiles() {
@@ -300,13 +300,14 @@ async function main() {
   switch (command) {
     case "start": {
       const status = await ensureSupabaseStarted();
-      await ensureLocalDemoUser(status);
+      await runPostSeed(status, { skipIfExists: true });
       printLocalAccessSummary(status);
       return;
     }
     case "reset": {
       await removeLocalSupabaseForReset();
       await runCommand(supabaseBin, ["start", "--yes"]);
+      await runCommand(supabaseBin, ["db", "reset"]);
       const status = await requireRunningSupabase("db:reset");
       await runPostSeed(status);
       return;
@@ -328,7 +329,7 @@ async function main() {
       }
 
       const status = await ensureSupabaseStarted();
-      await ensureLocalDemoUser(status);
+      await runPostSeed(status, { skipIfExists: true });
       printLocalAccessSummary(status);
       await runNextDev({
         useLocalSupabase: true,

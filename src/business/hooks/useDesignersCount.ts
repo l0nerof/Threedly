@@ -5,24 +5,21 @@ import { useQuery } from "@tanstack/react-query";
 
 type UseDesignersCountParams = {
   search?: string;
-  specializations?: string[];
   levels?: DesignerLevel[];
   enabled: boolean;
 };
 
 export function useDesignersCount({
   search,
-  specializations,
   levels,
   enabled,
 }: UseDesignersCountParams) {
   return useQuery({
     queryKey: designersQueryKeys.count({
       search,
-      specializations,
       levels,
     }),
-    queryFn: () => fetchDesignersCount({ search, specializations, levels }),
+    queryFn: () => fetchDesignersCount({ search, levels }),
     enabled,
     placeholderData: (prev) => prev,
   });

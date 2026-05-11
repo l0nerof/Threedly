@@ -176,6 +176,7 @@ async function seedDesigner(admin, designer, existingUsers) {
 }
 
 async function main() {
+  const skipIfExists = process.argv.includes("--skip-if-exists");
   const { url, serviceRoleKey } = await loadSupabaseEnv();
   const admin = createAdminClient(url, serviceRoleKey);
 
@@ -183,6 +184,14 @@ async function main() {
     { page: 1, perPage: 1000 },
   );
   if (listError) throw listError;
+
+  if (skipIfExists) {
+    const firstEmail = DESIGNERS[0].email;
+    const alreadyExists = listData.users.some((u) => u.email === firstEmail);
+    if (alreadyExists) {
+      return;
+    }
+  }
 
   for (const designer of DESIGNERS) {
     await seedDesigner(admin, designer, listData.users);

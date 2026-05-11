@@ -10,7 +10,6 @@ type UseDesignersParams = {
   page: number;
   sort?: DesignerSortValue;
   search?: string;
-  specializations?: string[];
   levels?: DesignerLevel[];
 };
 
@@ -18,7 +17,6 @@ export function useDesigners({
   page,
   sort = "popular",
   search,
-  specializations,
   levels,
 }: UseDesignersParams) {
   return useQuery({
@@ -26,11 +24,9 @@ export function useDesigners({
       page,
       sort,
       search,
-      specializations,
       levels,
     }),
-    queryFn: () =>
-      fetchDesigners({ page, sort, search, specializations, levels }),
+    queryFn: () => fetchDesigners({ page, sort, search, levels }),
     placeholderData: (prev) => prev,
   });
 }

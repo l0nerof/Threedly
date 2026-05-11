@@ -73,24 +73,6 @@ function DesignerCard({ designer }: DesignerCardProps) {
               {designer.bio}
             </p>
           )}
-
-          {designer.specializations.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {designer.specializations.slice(0, 3).map((spec) => (
-                <span
-                  key={spec}
-                  className="border-border/60 bg-surface text-muted-foreground rounded-full border px-2.5 py-0.5 text-[11px] font-medium capitalize"
-                >
-                  {spec}
-                </span>
-              ))}
-              {designer.specializations.length > 3 && (
-                <span className="border-border/60 bg-surface text-muted-foreground rounded-full border px-2.5 py-0.5 text-[11px] font-medium">
-                  +{designer.specializations.length - 3}
-                </span>
-              )}
-            </div>
-          )}
         </div>
 
         <div className="border-border/40 flex border-t p-4">

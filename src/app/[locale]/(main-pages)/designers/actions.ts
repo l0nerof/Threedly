@@ -12,7 +12,6 @@ import { resolveAvatarPublicUrl } from "@/src/business/utils/supabase/storage";
 
 type FilterParams = {
   search?: string;
-  specializations?: string[];
   levels?: DesignerLevel[];
 };
 
@@ -23,14 +22,13 @@ type FetchDesignersParams = FilterParams & {
 
 function buildQuery(
   supabase: Awaited<ReturnType<typeof createClient>>,
-  { search, specializations, levels }: FilterParams,
+  { search, levels }: FilterParams,
 ) {
   let query = supabase
     .from("profiles")
-    .select(
-      "id, username, bio, avatar_path, plan_key, specializations, created_at",
-      { count: "exact" },
-    )
+    .select("id, username, bio, avatar_path, plan_key, created_at", {
+      count: "exact",
+    })
     .eq("can_upload", true);
 
   if (search) {
@@ -42,10 +40,6 @@ function buildQuery(
 
   if (levels && levels.length > 0) {
     query = query.in("plan_key", levels);
-  }
-
-  if (specializations && specializations.length > 0) {
-    query = query.overlaps("specializations", specializations);
   }
 
   return query;
@@ -71,7 +65,6 @@ function mapRow(row: {
   bio: string | null;
   avatar_path: string | null;
   plan_key: string;
-  specializations: string[] | null;
   created_at: string;
 }): Designer {
   return {
@@ -80,7 +73,6 @@ function mapRow(row: {
     bio: row.bio,
     avatar_path: resolveAvatarPublicUrl(row.avatar_path),
     plan_key: row.plan_key as Designer["plan_key"],
-    specializations: row.specializations ?? [],
     model_count: 0,
     created_at: row.created_at,
   };
@@ -90,7 +82,6 @@ export async function fetchDesigners({
   page,
   sort = "popular",
   search,
-  specializations,
   levels,
 }: FetchDesignersParams): Promise<DesignersResult> {
   const supabase = await createClient();
@@ -100,7 +91,6 @@ export async function fetchDesigners({
 
   let query = buildQuery(supabase, {
     search,
-    specializations,
     levels,
   });
   query = applySort(query, sort);
@@ -120,7 +110,6 @@ export async function fetchDesigners({
 
 export async function fetchDesignersCount({
   search,
-  specializations,
   levels,
 }: FilterParams): Promise<number> {
   const supabase = await createClient();
@@ -139,10 +128,6 @@ export async function fetchDesignersCount({
 
   if (levels && levels.length > 0) {
     query = query.in("plan_key", levels);
-  }
-
-  if (specializations && specializations.length > 0) {
-    query = query.overlaps("specializations", specializations);
   }
 
   const { count, error } = await query;

@@ -16,7 +16,6 @@ export type Designer = {
   bio: string | null;
   avatar_path: string | null;
   plan_key: DesignerLevel;
-  specializations: string[];
   model_count: number;
   created_at: string;
 };
