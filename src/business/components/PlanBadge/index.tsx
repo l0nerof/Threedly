@@ -1,9 +1,10 @@
 import { PLAN_BADGE_COLORS } from "@/src/business/constants/catalogConfig";
+import type { MarketplacePlanKey } from "@/src/business/constants/plans";
 import { Badge } from "@/src/shared/components/Badge/index";
 import { cn } from "@/src/shared/utils/cn";
 
 type PlanBadgeProps = {
-  plan: string;
+  plan: MarketplacePlanKey;
   label?: string;
   className?: string;
 };
@@ -14,7 +15,7 @@ function PlanBadge({ plan, label, className }: PlanBadgeProps) {
       variant="outline"
       className={cn(
         "tracking-wide uppercase",
-        PLAN_BADGE_COLORS[plan] ?? "text-muted-foreground bg-muted",
+        PLAN_BADGE_COLORS[plan],
         className,
       )}
     >

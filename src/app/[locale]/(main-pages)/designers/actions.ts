@@ -64,7 +64,7 @@ function mapRow(row: {
   username: string;
   bio: string | null;
   avatar_path: string | null;
-  plan_key: string;
+  plan_key: DesignerLevel;
   created_at: string;
 }): Designer {
   return {
@@ -72,7 +72,7 @@ function mapRow(row: {
     username: row.username,
     bio: row.bio,
     avatar_path: resolveAvatarPublicUrl(row.avatar_path),
-    plan_key: row.plan_key as Designer["plan_key"],
+    plan_key: row.plan_key,
     model_count: 0,
     created_at: row.created_at,
   };

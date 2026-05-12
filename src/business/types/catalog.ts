@@ -1,10 +1,10 @@
 import {
   catalogFormatValues,
-  catalogPlanKeys,
   catalogSortValues,
 } from "../constants/catalogConfig";
+import type { Tables } from "./database.generated";
 
-export type CatalogPlanKey = (typeof catalogPlanKeys)[number];
+export type CatalogPlanKey = Tables<"models">["minimum_plan"];
 
 export type CatalogFormatValue = (typeof catalogFormatValues)[number];
 
@@ -18,20 +18,21 @@ export type CatalogFilterOption<TValue extends string = string> = {
 
 export type CatalogFilterSection = "category" | "plan" | "format";
 
-export type CatalogModel = {
-  id: string;
-  slug: string;
-  title_ua: string;
-  title_en: string;
-  description_ua: string | null;
-  description_en: string | null;
-  cover_image_path: string;
-  minimum_plan: CatalogPlanKey;
-  file_format: string | null;
-  download_count: number;
-  is_featured: boolean;
-  published_at: string | null;
-};
+export type CatalogModel = Pick<
+  Tables<"models">,
+  | "cover_image_path"
+  | "description_en"
+  | "description_ua"
+  | "download_count"
+  | "file_format"
+  | "id"
+  | "is_featured"
+  | "minimum_plan"
+  | "published_at"
+  | "slug"
+  | "title_en"
+  | "title_ua"
+>;
 
 export type CatalogModelsResult = {
   models: CatalogModel[];

@@ -1,10 +1,7 @@
-export const catalogPlanKeys = ["free", "pro", "max"] as const;
-
-export const PLAN_BADGE_COLORS: Record<string, string> = {
-  free: "text-plan-free-text bg-plan-free-bg border-plan-free-text/20",
-  pro: "text-plan-pro-text bg-plan-pro-bg border-plan-pro-text/20",
-  max: "text-plan-max-text bg-plan-max-bg border-plan-max-text/20",
-};
+export {
+  PLAN_BADGE_COLORS,
+  marketplacePlanKeys as catalogPlanKeys,
+} from "@/src/business/constants/plans";
 
 export const FORMAT_BADGE_COLORS: Record<string, string> = {
   GLB: "text-format-glb-text bg-format-glb-bg",

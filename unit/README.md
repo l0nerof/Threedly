@@ -43,12 +43,18 @@ This file documents the Vitest coverage in this repository and should stay in sy
 - [x] Upload server action rejects unsupported cover and preview files before storage writes
 - [x] Upload server action removes stored source, preview, and cover files when metadata save fails
 
+## Marketplace Plan Constants
+
+- [x] Plan keys stay aligned with the product tiers: `free`, `pro`, `max`
+- [x] Plan badge color maps cover every known plan key
+
 ## Coverage Map
 
 | Area                 | Source                                                          | Spec                          | Status        |
 | -------------------- | --------------------------------------------------------------- | ----------------------------- | ------------- |
 | Shared hook          | `src/shared/hooks/use-mobile.ts`                                | `use-mobile.spec.ts`          | `[x] Covered` |
 | Catalog UI shell     | `src/app/[locale]/(main-pages)/catalog/components/CatalogShell` | `catalog-shell.spec.tsx`      | `[x] Covered` |
+| Plan constants       | `src/business/constants/plans.ts`                               | `plan-constants.spec.ts`      | `[x] Covered` |
 | Model upload helpers | `src/business/utils/modelUpload.ts`                             | `model-upload-utils.spec.ts`  | `[x] Covered` |
 | Model upload schema  | `src/business/schemas/modelUpload.ts`                           | `model-upload-schema.spec.ts` | `[x] Covered` |
 | Model upload action  | `src/app/[locale]/(main-pages)/profile/uploads/actions.ts`      | `model-upload-action.spec.ts` | `[x] Covered` |

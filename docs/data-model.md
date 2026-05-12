@@ -41,18 +41,18 @@ This document reflects the current agreed MVP direction, not a final long-term m
 
 Stores public-facing user information and current account access state for MVP.
 
-| Field                       | Type           | Notes                                                        |
-| --------------------------- | -------------- | ------------------------------------------------------------ |
-| `id`                        | `uuid`         | Primary key. References `auth.users.id`.                     |
-| `username`                  | `text`         | Unique public username. Lowercase format is recommended.     |
-| `avatar_path`               | `text \| null` | Path to avatar file in storage.                              |
-| `bio`                       | `text \| null` | Short user biography or description.                         |
-| `plan_key`                  | `text`         | Current plan key. Expected MVP values: `free`, `pro`, `max`. |
-| `downloads_used_this_month` | `integer`      | Number of downloads already used in the current month.       |
-| `downloads_limit_monthly`   | `integer`      | Monthly download limit for the current plan.                 |
-| `can_upload`                | `boolean`      | Whether the user can upload marketplace models.              |
-| `created_at`                | `timestamptz`  | Profile creation timestamp.                                  |
-| `updated_at`                | `timestamptz`  | Last profile update timestamp.                               |
+| Field                       | Type           | Notes                                                    |
+| --------------------------- | -------------- | -------------------------------------------------------- |
+| `id`                        | `uuid`         | Primary key. References `auth.users.id`.                 |
+| `username`                  | `text`         | Unique public username. Lowercase format is recommended. |
+| `avatar_path`               | `text \| null` | Path to avatar file in storage.                          |
+| `bio`                       | `text \| null` | Short user biography or description.                     |
+| `plan_key`                  | `plan_key`     | Current plan key enum: `free`, `pro`, `max`.             |
+| `downloads_used_this_month` | `integer`      | Number of downloads already used in the current month.   |
+| `downloads_limit_monthly`   | `integer`      | Monthly download limit for the current plan.             |
+| `can_upload`                | `boolean`      | Whether the user can upload marketplace models.          |
+| `created_at`                | `timestamptz`  | Profile creation timestamp.                              |
+| `updated_at`                | `timestamptz`  | Last profile update timestamp.                           |
 
 ### Notes
 
@@ -94,8 +94,8 @@ Stores the main content record for each 3D model visible in the marketplace.
 | `description_en`     | `text \| null`        | English description.                                                  |
 | `cover_image_path`   | `text`                | Main image used in the catalog card and hero area.                    |
 | `preview_model_path` | `text \| null`        | Optional lightweight 3D preview asset for the model detail page.      |
-| `status`             | `text`                | Expected MVP values: `draft`, `published`, `archived`.                |
-| `minimum_plan`       | `text`                | Minimum plan required to download the model: `free`, `pro`, or `max`. |
+| `status`             | `model_status`        | Publication status enum: `draft`, `published`, `archived`.            |
+| `minimum_plan`       | `plan_key`            | Minimum plan required to download the model: `free`, `pro`, or `max`. |
 | `file_format`        | `text \| null`        | Primary display format for UI summaries, for example `glb` or `fbx`.  |
 | `file_size_bytes`    | `bigint \| null`      | Size of the primary downloadable file for quick UI display.           |
 | `polygon_count`      | `integer \| null`     | Optional technical metadata for the asset page.                       |
@@ -118,18 +118,18 @@ Stores the main content record for each 3D model visible in the marketplace.
 
 Stores downloadable files for a model.
 
-| Field              | Type          | Notes                                              |
-| ------------------ | ------------- | -------------------------------------------------- |
-| `id`               | `uuid`        | Primary key.                                       |
-| `model_id`         | `uuid`        | References `models.id`.                            |
-| `storage_provider` | `text`        | Expected MVP values: `supabase` or `r2`.           |
-| `bucket`           | `text`        | Storage bucket or container name.                  |
-| `object_path`      | `text`        | Path to the file inside the storage provider.      |
-| `file_name`        | `text`        | Original or display file name.                     |
-| `format`           | `text`        | File format such as `glb`, `fbx`, `obj`, or `max`. |
-| `file_size_bytes`  | `bigint`      | File size in bytes.                                |
-| `is_primary`       | `boolean`     | Marks the main downloadable file for the model.    |
-| `created_at`       | `timestamptz` | Creation timestamp.                                |
+| Field              | Type               | Notes                                              |
+| ------------------ | ------------------ | -------------------------------------------------- |
+| `id`               | `uuid`             | Primary key.                                       |
+| `model_id`         | `uuid`             | References `models.id`.                            |
+| `storage_provider` | `storage_provider` | Storage provider enum: `supabase` or `r2`.         |
+| `bucket`           | `text`             | Storage bucket or container name.                  |
+| `object_path`      | `text`             | Path to the file inside the storage provider.      |
+| `file_name`        | `text`             | Original or display file name.                     |
+| `format`           | `text`             | File format such as `glb`, `fbx`, `obj`, or `max`. |
+| `file_size_bytes`  | `bigint`           | File size in bytes.                                |
+| `is_primary`       | `boolean`          | Marks the main downloadable file for the model.    |
+| `created_at`       | `timestamptz`      | Creation timestamp.                                |
 
 ### Notes
 

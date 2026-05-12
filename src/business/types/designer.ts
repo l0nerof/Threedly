@@ -1,6 +1,9 @@
-export const designerLevelValues = ["free", "pro", "max"] as const;
+import { marketplacePlanKeys } from "@/src/business/constants/plans";
+import type { Tables } from "@/src/business/types/database.generated";
 
-export type DesignerLevel = (typeof designerLevelValues)[number];
+export const designerLevelValues = marketplacePlanKeys;
+
+export type DesignerLevel = Tables<"profiles">["plan_key"];
 
 export type DesignerSortValue = "popular" | "newest" | "models";
 
@@ -10,14 +13,12 @@ export const designerSortValues: readonly DesignerSortValue[] = [
   "models",
 ];
 
-export type Designer = {
-  id: string;
-  username: string;
-  bio: string | null;
-  avatar_path: string | null;
-  plan_key: DesignerLevel;
+export type Designer = Pick<
+  Tables<"profiles">,
+  "bio" | "created_at" | "id" | "plan_key" | "username"
+> & {
+  avatar_path: Tables<"profiles">["avatar_path"];
   model_count: number;
-  created_at: string;
 };
 
 export type DesignersResult = {

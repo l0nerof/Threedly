@@ -1,8 +1,9 @@
-export type Category = {
-  slug: string;
-  name_ua: string;
-  name_en: string;
-};
+import type { Tables } from "@/src/business/types/database.generated";
+
+export type Category = Pick<
+  Tables<"categories">,
+  "name_en" | "name_ua" | "slug"
+>;
 
 export type CategoryOption = {
   id: string;
@@ -18,20 +19,14 @@ export type CategoryGroupOption = {
   categories: CategoryOption[];
 };
 
-export type CategoryRow = {
-  id: string;
-  slug: string;
-  name_ua: string;
-  name_en: string;
-  sort_order: number | null;
-  is_featured: boolean | null;
-};
+export type CategoryRow = Pick<
+  Tables<"categories">,
+  "id" | "is_featured" | "name_en" | "name_ua" | "slug" | "sort_order"
+>;
 
-export type CategoryGroupRow = {
-  id: string;
-  slug: string;
-  name_ua: string;
-  name_en: string;
-  sort_order: number | null;
+export type CategoryGroupRow = Pick<
+  Tables<"category_groups">,
+  "id" | "name_en" | "name_ua" | "slug" | "sort_order"
+> & {
   categories: CategoryRow[] | null;
 };
