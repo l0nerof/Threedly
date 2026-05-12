@@ -1,3 +1,4 @@
+import FeaturedModels from "@/src/business/components/FeaturedModels";
 import FinalCta from "@/src/business/components/FinalCta";
 import ForWho from "@/src/business/components/ForWho";
 import Hero from "@/src/business/components/Hero";
@@ -23,6 +24,7 @@ export default async function Home({ params }: Props) {
     <>
       <Hero />
       <ForWho />
+      <FeaturedModels />
       <HowItWorks />
       <FinalCta />
     </>
