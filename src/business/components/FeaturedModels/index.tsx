@@ -1,4 +1,5 @@
 import FeaturedCarousel from "@/src/business/components/FeaturedCarousel";
+import { FEATURED_MODELS_MIN_COUNT } from "@/src/business/constants/catalogConfig";
 import { fetchFeaturedModels } from "@/src/business/queries/featuredModels";
 import { Link } from "@/src/i18n/routing";
 import { Button } from "@/src/shared/components/Button";
@@ -10,7 +11,7 @@ async function FeaturedModels() {
     getTranslations("FeaturedModels"),
   ]);
 
-  if (models.length === 0) {
+  if (models.length <= FEATURED_MODELS_MIN_COUNT) {
     return null;
   }
 

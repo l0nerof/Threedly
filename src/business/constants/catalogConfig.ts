@@ -20,3 +20,5 @@ export const CATALOG_PAGE_SIZE = 9;
 
 export const CATALOG_SEARCH_MIN_CHARS = 2;
 export const CATALOG_SEARCH_DEBOUNCE_MS = 350;
+
+export const FEATURED_MODELS_MIN_COUNT = 5;
