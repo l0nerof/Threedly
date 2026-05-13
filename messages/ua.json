@@ -280,6 +280,22 @@
     }
   },
 
+  "FeaturedModels": {
+    "eyebrow": "Добірка",
+    "title": "Вибрані моделі",
+    "viewAll": "Переглянути каталог",
+    "previousSlide": "Попередній слайд",
+    "nextSlide": "Наступний слайд",
+    "modelCard": {
+      "downloads": "{count} завантажень",
+      "planBadge": {
+        "free": "Free",
+        "pro": "Pro",
+        "max": "Max"
+      }
+    }
+  },
+
   "HowItWorks": {
     "eyebrow": "Простий старт",
     "title": "Від реєстрації до першої роботи з бібліотекою",
