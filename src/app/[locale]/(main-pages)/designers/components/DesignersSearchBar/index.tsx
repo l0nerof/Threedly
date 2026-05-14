@@ -1,22 +1,28 @@
 "use client";
 
 import type { ActiveChip } from "@/src/business/hooks/useDesignersFilters";
+import type { DesignerSortValue } from "@/src/business/types/designer";
 import { Button } from "@/src/shared/components/Button";
 import { Input } from "@/src/shared/components/Input";
 import { Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import DesignersSortDropdown from "../DesignersSortDropdown";
 
 type DesignersSearchBarProps = {
   searchValue: string;
   activeChips: ActiveChip[];
+  selectedSort: DesignerSortValue;
   onSearchChange: (v: string) => void;
+  onSortChange: (v: DesignerSortValue) => void;
   onOpenMobileFilters: () => void;
 };
 
 function DesignersSearchBar({
   searchValue,
   activeChips,
+  selectedSort,
   onSearchChange,
+  onSortChange,
   onOpenMobileFilters,
 }: DesignersSearchBarProps) {
   const t = useTranslations("Designers.shell");
@@ -42,14 +48,11 @@ function DesignersSearchBar({
             />
           </label>
 
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onOpenMobileFilters}
-            className="border-border/60 h-12 rounded-full px-4 lg:hidden"
-          >
-            {t("filtersButton")}
-          </Button>
+          <DesignersSortDropdown
+            selectedSort={selectedSort}
+            onSortChange={onSortChange}
+            onMobileFiltersOpen={onOpenMobileFilters}
+          />
         </div>
 
         <div

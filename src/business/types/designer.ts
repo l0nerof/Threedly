@@ -25,3 +25,8 @@ export type DesignersResult = {
   designers: Designer[];
   totalCount: number;
 };
+
+export type DesignerCategoryGroupOption = {
+  value: string;
+  label: string;
+};

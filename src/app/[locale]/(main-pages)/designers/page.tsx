@@ -35,7 +35,7 @@ export default async function DesignersPage({ params }: Props) {
 
   setRequestLocale(locale);
 
-  const categoryGroups = await fetchDesignerCategoryGroups();
+  const categoryGroups = await fetchDesignerCategoryGroups(locale);
 
   return (
     <Suspense>

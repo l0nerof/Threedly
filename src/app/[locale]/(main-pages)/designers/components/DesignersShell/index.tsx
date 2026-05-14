@@ -1,8 +1,9 @@
 "use client";
 
-import type { CategoryGroupOption } from "@/src/app/[locale]/(main-pages)/designers/actions";
 import { useDesignersCount } from "@/src/business/hooks/useDesignersCount";
 import { useDesignersFilters } from "@/src/business/hooks/useDesignersFilters";
+import { designerSortValues } from "@/src/business/types/designer";
+import type { DesignerCategoryGroupOption } from "@/src/business/types/designer";
 import { Button } from "@/src/shared/components/Button";
 import {
   Sheet,
@@ -18,7 +19,7 @@ import DesignersResults from "../DesignersResults";
 import DesignersSearchBar from "../DesignersSearchBar";
 
 type DesignersShellProps = {
-  categoryGroups: CategoryGroupOption[];
+  categoryGroups: DesignerCategoryGroupOption[];
 };
 
 function DesignersShell({ categoryGroups }: DesignersShellProps) {
@@ -28,7 +29,9 @@ function DesignersShell({ categoryGroups }: DesignersShellProps) {
   const {
     page,
     selectedSort,
+    selectedGroups,
     selectedLevels,
+    draftGroups,
     draftLevels,
     searchValue,
     activeSearch,
@@ -36,16 +39,18 @@ function DesignersShell({ categoryGroups }: DesignersShellProps) {
     hasDraft,
     activeChips,
     setSearchValue,
+    handleGroupToggle,
     handleLevelToggle,
     applyAllDrafts,
     handleReset,
     setPage,
     applyFilter,
-  } = useDesignersFilters();
+  } = useDesignersFilters(categoryGroups);
 
   const { data: filteredCount, isFetching: isCountFetching } =
     useDesignersCount({
       search: activeSearch,
+      groups: draftGroups.length > 0 ? draftGroups : undefined,
       levels: draftLevels.length > 0 ? draftLevels : undefined,
       enabled: hasDraft || isMobileFiltersOpen,
     });
@@ -65,7 +70,13 @@ function DesignersShell({ categoryGroups }: DesignersShellProps) {
         <DesignersSearchBar
           searchValue={searchValue}
           activeChips={activeChips}
+          selectedSort={selectedSort}
           onSearchChange={setSearchValue}
+          onSortChange={(sort) =>
+            applyFilter({
+              sort: sort !== designerSortValues[0] ? sort : null,
+            })
+          }
           onOpenMobileFilters={() => setIsMobileFiltersOpen(true)}
         />
 
@@ -73,8 +84,10 @@ function DesignersShell({ categoryGroups }: DesignersShellProps) {
           <aside className="hidden self-start lg:sticky lg:top-28 lg:block">
             <DesignersFilters
               categoryGroups={categoryGroups}
+              selectedGroups={draftGroups}
               selectedLevels={draftLevels}
               showReset={hasActiveFilters}
+              onGroupToggle={handleGroupToggle}
               onLevelToggle={handleLevelToggle}
               onApply={applyAllDrafts}
               onReset={handleReset}
@@ -90,9 +103,9 @@ function DesignersShell({ categoryGroups }: DesignersShellProps) {
               page={page}
               sort={selectedSort}
               search={activeSearch}
+              groups={selectedGroups.length > 0 ? selectedGroups : undefined}
               levels={selectedLevels.length > 0 ? selectedLevels : undefined}
               onPageChange={setPage}
-              onSortChange={(s) => applyFilter({ sort: s })}
             />
           </div>
         </div>
@@ -111,8 +124,10 @@ function DesignersShell({ categoryGroups }: DesignersShellProps) {
           <div className="flex-1 overflow-y-auto p-4">
             <DesignersFilters
               categoryGroups={categoryGroups}
+              selectedGroups={draftGroups}
               selectedLevels={draftLevels}
               showReset={hasActiveFilters}
+              onGroupToggle={handleGroupToggle}
               onLevelToggle={handleLevelToggle}
               onReset={handleReset}
               idPrefix="designers-mobile-sheet"

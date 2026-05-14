@@ -1,14 +1,19 @@
 "use client";
 
 import {
+  type DesignerCategoryGroupOption,
   type DesignerLevel,
   type DesignerSortValue,
   designerLevelValues,
   designerSortValues,
 } from "@/src/business/types/designer";
-import { haveSameValues } from "@/src/business/utils/catalogFilters";
+import {
+  haveSameValues,
+  resolveOptionLabel,
+} from "@/src/business/utils/catalogFilters";
 import {
   parseListParam,
+  splitParam,
   useUrlFilters,
 } from "@/src/shared/hooks/use-url-filters";
 import { useSearchParams } from "next/navigation";
@@ -23,7 +28,9 @@ export type ActiveChip = {
 export type DesignersFiltersState = {
   page: number;
   selectedSort: DesignerSortValue;
+  selectedGroups: string[];
   selectedLevels: DesignerLevel[];
+  draftGroups: string[];
   draftLevels: DesignerLevel[];
   searchValue: string;
   activeSearch: string | undefined;
@@ -32,6 +39,7 @@ export type DesignersFiltersState = {
   hasDraft: boolean;
   activeChips: ActiveChip[];
   setSearchValue: (v: string) => void;
+  handleGroupToggle: (v: string) => void;
   handleLevelToggle: (v: DesignerLevel) => void;
   applyAllDrafts: () => void;
   handleReset: () => void;
@@ -39,7 +47,9 @@ export type DesignersFiltersState = {
   applyFilter: (params: Record<string, string | null>) => void;
 };
 
-export function useDesignersFilters(): DesignersFiltersState {
+export function useDesignersFilters(
+  categoryGroups: DesignerCategoryGroupOption[],
+): DesignersFiltersState {
   const searchParams = useSearchParams();
 
   const page = Math.max(1, Number(searchParams.get("page") ?? 1));
@@ -47,11 +57,18 @@ export function useDesignersFilters(): DesignersFiltersState {
     parseListParam(searchParams.get("sort"), designerSortValues)[0] ??
     designerSortValues[0];
 
+  const groupsParam = searchParams.get("groups") ?? "";
   const levelsParam = searchParams.get("levels") ?? "";
+  const selectedGroups = splitParam(groupsParam);
   const selectedLevels = parseListParam(levelsParam, designerLevelValues);
 
+  const [draftGroups, setDraftGroups] = useState<string[]>(selectedGroups);
   const [draftLevels, setDraftLevels] =
     useState<DesignerLevel[]>(selectedLevels);
+
+  useEffect(() => {
+    setDraftGroups(splitParam(groupsParam));
+  }, [groupsParam]);
 
   useEffect(() => {
     setDraftLevels(parseListParam(levelsParam, designerLevelValues));
@@ -66,6 +83,14 @@ export function useDesignersFilters(): DesignersFiltersState {
     resetAll,
   } = useUrlFilters();
 
+  const handleGroupToggle = (value: string) => {
+    setDraftGroups((prev) =>
+      prev.includes(value)
+        ? prev.filter((group) => group !== value)
+        : [...prev, value],
+    );
+  };
+
   const handleLevelToggle = (value: DesignerLevel) => {
     setDraftLevels((prev) =>
       prev.includes(value) ? prev.filter((l) => l !== value) : [...prev, value],
@@ -74,22 +99,30 @@ export function useDesignersFilters(): DesignersFiltersState {
 
   const applyAllDrafts = () => {
     applyFilter({
+      groups: draftGroups.length > 0 ? draftGroups.join(",") : null,
       levels: draftLevels.length > 0 ? draftLevels.join(",") : null,
     });
   };
 
   const handleReset = () => {
+    setDraftGroups([]);
     setDraftLevels([]);
     resetAll();
   };
 
   const urlSearch = searchParams.get("q") ?? "";
 
-  const hasCommittedFilters = urlSearch.length > 0 || selectedLevels.length > 0;
+  const hasCommittedFilters =
+    urlSearch.length > 0 ||
+    selectedGroups.length > 0 ||
+    selectedLevels.length > 0;
 
-  const hasActiveFilters = hasCommittedFilters || draftLevels.length > 0;
+  const hasActiveFilters =
+    hasCommittedFilters || draftGroups.length > 0 || draftLevels.length > 0;
 
-  const hasDraft = !haveSameValues(draftLevels, selectedLevels);
+  const hasDraft =
+    !haveSameValues(draftGroups, selectedGroups) ||
+    !haveSameValues(draftLevels, selectedLevels);
 
   const activeChips: ActiveChip[] = [
     urlSearch
@@ -102,6 +135,17 @@ export function useDesignersFilters(): DesignersFiltersState {
           },
         }
       : null,
+    ...selectedGroups.map((group) => ({
+      key: `group-${group}`,
+      label: resolveOptionLabel(categoryGroups, group),
+      onRemove: () => {
+        const next = selectedGroups.filter(
+          (selectedGroup) => selectedGroup !== group,
+        );
+        setDraftGroups(next);
+        applyFilter({ groups: next.join(",") || null });
+      },
+    })),
     ...selectedLevels.map((level) => ({
       key: `level-${level}`,
       label: level,
@@ -116,7 +160,9 @@ export function useDesignersFilters(): DesignersFiltersState {
   return {
     page,
     selectedSort,
+    selectedGroups,
     selectedLevels,
+    draftGroups,
     draftLevels,
     searchValue,
     activeSearch,
@@ -125,6 +171,7 @@ export function useDesignersFilters(): DesignersFiltersState {
     hasDraft,
     activeChips,
     setSearchValue,
+    handleGroupToggle,
     handleLevelToggle,
     applyAllDrafts,
     handleReset,

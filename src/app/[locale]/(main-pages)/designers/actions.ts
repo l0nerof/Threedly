@@ -2,9 +2,11 @@
 
 import { DESIGNERS_PAGE_SIZE } from "@/src/business/constants/designersConfig";
 import { DESIGNER_PROFILE_MODELS_LIMIT } from "@/src/business/constants/designersConfig";
+import { LocaleCode } from "@/src/business/constants/localization";
 import type { CatalogModel } from "@/src/business/types/catalog";
 import type {
   Designer,
+  DesignerCategoryGroupOption,
   DesignerLevel,
   DesignerSortValue,
   DesignersResult,
@@ -15,7 +17,12 @@ import { resolveAvatarPublicUrl } from "@/src/business/utils/supabase/storage";
 
 type FilterParams = {
   search?: string;
+  groups?: string[];
   levels?: DesignerLevel[];
+};
+
+type BuildQueryParams = FilterParams & {
+  designerIds?: string[];
 };
 
 type FetchDesignersParams = FilterParams & {
@@ -28,9 +35,14 @@ type DesignerProfileResult = {
   models: CatalogModel[];
 };
 
+type DesignerModelStats = {
+  downloadCount: number;
+  modelCount: number;
+};
+
 function buildQuery(
   supabase: Awaited<ReturnType<typeof createClient>>,
-  { search, levels }: FilterParams,
+  { search, levels, designerIds }: BuildQueryParams,
 ) {
   let query = supabase
     .from("profiles")
@@ -50,6 +62,10 @@ function buildQuery(
     query = query.in("plan_key", levels);
   }
 
+  if (designerIds && designerIds.length > 0) {
+    query = query.in("id", designerIds);
+  }
+
   return query;
 }
 
@@ -65,6 +81,40 @@ function applySort(
     default:
       return query.order("created_at", { ascending: false });
   }
+}
+
+function compareNewest(left: Designer, right: Designer): number {
+  return (
+    new Date(right.created_at).getTime() - new Date(left.created_at).getTime()
+  );
+}
+
+function sortDesigners(
+  designers: Designer[],
+  sort: DesignerSortValue,
+  modelStats: Map<string, DesignerModelStats>,
+): Designer[] {
+  return [...designers].sort((left, right) => {
+    if (sort === "popular") {
+      const downloadsDiff =
+        (modelStats.get(right.id)?.downloadCount ?? 0) -
+        (modelStats.get(left.id)?.downloadCount ?? 0);
+
+      if (downloadsDiff !== 0) {
+        return downloadsDiff;
+      }
+    }
+
+    if (sort === "models") {
+      const countDiff = right.model_count - left.model_count;
+
+      if (countDiff !== 0) {
+        return countDiff;
+      }
+    }
+
+    return compareNewest(left, right);
+  });
 }
 
 function mapRow(row: {
@@ -93,17 +143,17 @@ function mapModelRow(model: CatalogModel): CatalogModel {
   };
 }
 
-async function fetchPublishedModelCounts(
+async function fetchPublishedModelStats(
   supabase: Awaited<ReturnType<typeof createClient>>,
   designerIds: string[],
-): Promise<Map<string, number>> {
+): Promise<Map<string, DesignerModelStats>> {
   if (designerIds.length === 0) {
     return new Map();
   }
 
   const { data, error } = await supabase
     .from("models")
-    .select("creator_id")
+    .select("creator_id, download_count")
     .in("creator_id", designerIds)
     .eq("status", "published");
 
@@ -111,36 +161,108 @@ async function fetchPublishedModelCounts(
     throw new Error(error.message);
   }
 
-  const counts = new Map<string, number>();
+  const stats = new Map<string, DesignerModelStats>();
 
   for (const model of data ?? []) {
     if (!model.creator_id) {
       continue;
     }
 
-    counts.set(model.creator_id, (counts.get(model.creator_id) ?? 0) + 1);
+    const current = stats.get(model.creator_id) ?? {
+      downloadCount: 0,
+      modelCount: 0,
+    };
+
+    stats.set(model.creator_id, {
+      downloadCount: current.downloadCount + model.download_count,
+      modelCount: current.modelCount + 1,
+    });
   }
 
-  return counts;
+  return stats;
+}
+
+async function resolveDesignerIdsByGroups(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  groups?: string[],
+): Promise<string[] | null> {
+  if (!groups || groups.length === 0) {
+    return null;
+  }
+
+  const { data: groupRows, error: groupError } = await supabase
+    .from("category_groups")
+    .select("id")
+    .in("slug", groups);
+
+  if (groupError) {
+    throw new Error(groupError.message);
+  }
+
+  const groupIds = groupRows?.map((row) => row.id) ?? [];
+
+  if (groupIds.length === 0) {
+    return [];
+  }
+
+  const { data: categoryRows, error: categoryError } = await supabase
+    .from("categories")
+    .select("id")
+    .in("group_id", groupIds);
+
+  if (categoryError) {
+    throw new Error(categoryError.message);
+  }
+
+  const categoryIds = categoryRows?.map((row) => row.id) ?? [];
+
+  if (categoryIds.length === 0) {
+    return [];
+  }
+
+  const { data: modelRows, error: modelsError } = await supabase
+    .from("models")
+    .select("creator_id")
+    .in("category_id", categoryIds)
+    .eq("status", "published");
+
+  if (modelsError) {
+    throw new Error(modelsError.message);
+  }
+
+  return Array.from(
+    new Set(
+      (modelRows ?? [])
+        .map((model) => model.creator_id)
+        .filter((creatorId): creatorId is string => Boolean(creatorId)),
+    ),
+  );
 }
 
 export async function fetchDesigners({
   page,
   sort = "popular",
+  groups,
   search,
   levels,
 }: FetchDesignersParams): Promise<DesignersResult> {
   const supabase = await createClient();
 
+  const designerIds = await resolveDesignerIdsByGroups(supabase, groups);
+
+  if (designerIds && designerIds.length === 0) {
+    return { designers: [], totalCount: 0 };
+  }
+
   const from = (page - 1) * DESIGNERS_PAGE_SIZE;
   const to = from + DESIGNERS_PAGE_SIZE - 1;
 
   let query = buildQuery(supabase, {
+    designerIds: designerIds ?? undefined,
     search,
     levels,
   });
   query = applySort(query, sort);
-  query = query.range(from, to);
 
   const { data, count, error } = await query;
 
@@ -149,25 +271,37 @@ export async function fetchDesigners({
   }
 
   const designers = data?.map(mapRow) ?? [];
-  const modelCounts = await fetchPublishedModelCounts(
+  const modelStats = await fetchPublishedModelStats(
     supabase,
     designers.map((designer) => designer.id),
   );
 
+  const designersWithCounts = designers.map((designer) => ({
+    ...designer,
+    model_count: modelStats.get(designer.id)?.modelCount ?? 0,
+  }));
+
   return {
-    designers: designers.map((designer) => ({
-      ...designer,
-      model_count: modelCounts.get(designer.id) ?? 0,
-    })),
+    designers: sortDesigners(designersWithCounts, sort, modelStats).slice(
+      from,
+      to + 1,
+    ),
     totalCount: count ?? 0,
   };
 }
 
 export async function fetchDesignersCount({
+  groups,
   search,
   levels,
 }: FilterParams): Promise<number> {
   const supabase = await createClient();
+
+  const designerIds = await resolveDesignerIdsByGroups(supabase, groups);
+
+  if (designerIds && designerIds.length === 0) {
+    return 0;
+  }
 
   let query = supabase
     .from("profiles")
@@ -183,6 +317,10 @@ export async function fetchDesignersCount({
 
   if (levels && levels.length > 0) {
     query = query.in("plan_key", levels);
+  }
+
+  if (designerIds && designerIds.length > 0) {
+    query = query.in("id", designerIds);
   }
 
   const { count, error } = await query;
@@ -244,15 +382,9 @@ export async function fetchDesignerProfileByUsername(
   };
 }
 
-export type CategoryGroupOption = {
-  slug: string;
-  name_ua: string;
-  name_en: string;
-};
-
-export async function fetchDesignerCategoryGroups(): Promise<
-  CategoryGroupOption[]
-> {
+export async function fetchDesignerCategoryGroups(
+  locale: LocaleCode,
+): Promise<DesignerCategoryGroupOption[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -262,5 +394,8 @@ export async function fetchDesignerCategoryGroups(): Promise<
 
   if (error) throw new Error(error.message);
 
-  return data ?? [];
+  return (data ?? []).map((group) => ({
+    value: group.slug,
+    label: locale === LocaleCode.Ukrainian ? group.name_ua : group.name_en,
+  }));
 }

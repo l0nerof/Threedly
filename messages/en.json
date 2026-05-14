@@ -416,8 +416,8 @@
       "applyLoading": "Loading...",
       "applyButton": "Show {count} designers",
       "specialization": {
-        "title": "Specialization",
-        "description": "Pick one or more focus areas.",
+        "title": "Portfolio focus",
+        "description": "Filter by model categories creators publish in.",
         "labels": {
           "furniture": "Furniture",
           "decor": "Decor",
@@ -475,6 +475,11 @@
         "popular": "Most popular",
         "newest": "Newest",
         "models": "Most models"
+      },
+      "sortDescriptions": {
+        "popular": "Creators with the most model downloads.",
+        "newest": "Recently joined publishing creators.",
+        "models": "Creators with the largest published portfolios."
       },
       "pageOf": "Showing {from}–{to} of {total} designers",
       "previousPage": "Previous page",
