@@ -280,6 +280,22 @@
     }
   },
 
+  "FeaturedModels": {
+    "eyebrow": "Curated",
+    "title": "Featured models",
+    "viewAll": "Browse catalog",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide",
+    "modelCard": {
+      "downloads": "{count} downloads",
+      "planBadge": {
+        "free": "Free",
+        "pro": "Pro",
+        "max": "Max"
+      }
+    }
+  },
+
   "HowItWorks": {
     "eyebrow": "A simple start",
     "title": "From sign-up to your first library workflow",
