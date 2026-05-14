@@ -31,8 +31,15 @@ This file documents the Vitest coverage in this repository and should stay in sy
 ## Designers Actions (`designers-action.spec.ts`)
 
 - [x] Designers list loading includes published model counts for each returned designer
+- [x] Designers list loading can filter creators by portfolio category groups derived from published models
+- [x] Designers list loading supports real sorting by published model count and model downloads
+- [x] Designers count loading deduplicates creators matched through multiple published models in the same group
 - [x] Public designer profile loading returns profile data and latest published models
 - [x] Missing or upload-disabled designer usernames return `null`
+
+## Designers UI Shell (`designers-shell.spec.tsx`)
+
+- [x] Desktop portfolio focus filters commit selected category groups to the URL
 
 ## Featured Models Copy (`featured-models-copy.spec.ts`)
 
@@ -45,6 +52,10 @@ This file documents the Vitest coverage in this repository and should stay in sy
 ## Main Pages Layout (`main-pages-layout.spec.tsx`)
 
 - [x] Short main pages stretch to the viewport height so the footer stays at the bottom
+
+## Models Pagination (`models-pagination.spec.tsx`)
+
+- [x] Previous and next pagination buttons render localized visible labels
 
 ## Model Upload MVP
 
@@ -68,18 +79,20 @@ This file documents the Vitest coverage in this repository and should stay in sy
 
 ## Coverage Map
 
-| Area                 | Source                                                          | Spec                           | Status        |
-| -------------------- | --------------------------------------------------------------- | ------------------------------ | ------------- |
-| Shared hook          | `src/shared/hooks/use-mobile.ts`                                | `use-mobile.spec.ts`           | `[x] Covered` |
-| Catalog UI shell     | `src/app/[locale]/(main-pages)/catalog/components/CatalogShell` | `catalog-shell.spec.tsx`       | `[x] Covered` |
-| Designers actions    | `src/app/[locale]/(main-pages)/designers/actions.ts`            | `designers-action.spec.ts`     | `[x] Covered` |
-| Featured models copy | `messages/ua.json`                                              | `featured-models-copy.spec.ts` | `[x] Covered` |
-| Designer seed data   | `scripts/post-seed-designers.mjs`                               | `designer-seed.spec.ts`        | `[x] Covered` |
-| Main pages layout    | `src/app/[locale]/(main-pages)/layout.tsx`                      | `main-pages-layout.spec.tsx`   | `[x] Covered` |
-| Plan constants       | `src/business/constants/plans.ts`                               | `plan-constants.spec.ts`       | `[x] Covered` |
-| Model upload helpers | `src/business/utils/modelUpload.ts`                             | `model-upload-utils.spec.ts`   | `[x] Covered` |
-| Model upload schema  | `src/business/schemas/modelUpload.ts`                           | `model-upload-schema.spec.ts`  | `[x] Covered` |
-| Model upload action  | `src/app/[locale]/(main-pages)/profile/uploads/actions.ts`      | `model-upload-action.spec.ts`  | `[x] Covered` |
+| Area                 | Source                                                              | Spec                           | Status        |
+| -------------------- | ------------------------------------------------------------------- | ------------------------------ | ------------- |
+| Shared hook          | `src/shared/hooks/use-mobile.ts`                                    | `use-mobile.spec.ts`           | `[x] Covered` |
+| Catalog UI shell     | `src/app/[locale]/(main-pages)/catalog/components/CatalogShell`     | `catalog-shell.spec.tsx`       | `[x] Covered` |
+| Designers actions    | `src/app/[locale]/(main-pages)/designers/actions.ts`                | `designers-action.spec.ts`     | `[x] Covered` |
+| Designers UI shell   | `src/app/[locale]/(main-pages)/designers/components/DesignersShell` | `designers-shell.spec.tsx`     | `[x] Covered` |
+| Featured models copy | `messages/ua.json`                                                  | `featured-models-copy.spec.ts` | `[x] Covered` |
+| Designer seed data   | `scripts/post-seed-designers.mjs`                                   | `designer-seed.spec.ts`        | `[x] Covered` |
+| Main pages layout    | `src/app/[locale]/(main-pages)/layout.tsx`                          | `main-pages-layout.spec.tsx`   | `[x] Covered` |
+| Models pagination    | `src/business/components/ModelsPagination`                          | `models-pagination.spec.tsx`   | `[x] Covered` |
+| Plan constants       | `src/business/constants/plans.ts`                                   | `plan-constants.spec.ts`       | `[x] Covered` |
+| Model upload helpers | `src/business/utils/modelUpload.ts`                                 | `model-upload-utils.spec.ts`   | `[x] Covered` |
+| Model upload schema  | `src/business/schemas/modelUpload.ts`                               | `model-upload-schema.spec.ts`  | `[x] Covered` |
+| Model upload action  | `src/app/[locale]/(main-pages)/profile/uploads/actions.ts`          | `model-upload-action.spec.ts`  | `[x] Covered` |
 
 ## Known Gaps
 

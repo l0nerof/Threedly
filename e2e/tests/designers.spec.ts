@@ -13,6 +13,16 @@ test.describe("designers list page", () => {
       .poll(() => new URL(designersPage.page.url()).pathname)
       .toBe("/ua/designers");
   });
+
+  test("preselects portfolio focus group from URL", async ({ page }) => {
+    await page.goto("/en/designers?groups=furniture");
+
+    await expect(
+      page
+        .getByLabel("Active filters")
+        .getByRole("button", { name: /Furniture/i }),
+    ).toBeVisible();
+  });
 });
 
 test.describe("designer profile page", () => {

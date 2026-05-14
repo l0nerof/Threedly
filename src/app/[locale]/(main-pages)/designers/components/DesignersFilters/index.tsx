@@ -1,7 +1,7 @@
 "use client";
 
-import type { CategoryGroupOption } from "@/src/app/[locale]/(main-pages)/designers/actions";
 import {
+  type DesignerCategoryGroupOption,
   type DesignerLevel,
   designerLevelValues,
 } from "@/src/business/types/designer";
@@ -21,9 +21,11 @@ import { RefreshCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 type DesignersFiltersProps = {
-  categoryGroups: CategoryGroupOption[];
+  categoryGroups: DesignerCategoryGroupOption[];
+  selectedGroups: string[];
   selectedLevels: DesignerLevel[];
   showReset: boolean;
+  onGroupToggle: (value: string) => void;
   onLevelToggle: (value: DesignerLevel) => void;
   onApply?: () => void;
   onReset: () => void;
@@ -35,8 +37,10 @@ type DesignersFiltersProps = {
 
 function DesignersFilters({
   categoryGroups,
+  selectedGroups,
   selectedLevels,
   showReset,
+  onGroupToggle,
   onLevelToggle,
   onApply,
   onReset,
@@ -109,19 +113,35 @@ function DesignersFilters({
                 {t("specialization.description")}
               </span>
             </div>
+            {selectedGroups.length > 0 && (
+              <Badge
+                variant="secondary"
+                className="flex size-6 items-center justify-center rounded-full text-xs"
+              >
+                {selectedGroups.length}
+              </Badge>
+            )}
           </AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col gap-2.5">
               {categoryGroups.map((group) => {
-                const inputId = `${idPrefix}-spec-${group.slug}`;
+                const inputId = `${idPrefix}-spec-${group.value}`;
+                const isChecked = selectedGroups.includes(group.value);
                 return (
                   <Label
-                    key={group.slug}
+                    key={group.value}
                     htmlFor={inputId}
-                    className="border-border/70 bg-surface-elevated/55 flex cursor-not-allowed items-center gap-3 rounded-2xl border px-3 py-2.5 opacity-50"
+                    className={cn(
+                      "border-border/70 bg-surface-elevated/55 hover:border-primary/35 hover:bg-primary/8 flex cursor-pointer items-center gap-3 rounded-2xl border px-3 py-2.5 transition-colors",
+                      isChecked && "border-primary/45 bg-primary/10",
+                    )}
                   >
-                    <Checkbox id={inputId} disabled />
-                    <span className="text-sm font-medium">{group.name_en}</span>
+                    <Checkbox
+                      id={inputId}
+                      checked={isChecked}
+                      onCheckedChange={() => onGroupToggle(group.value)}
+                    />
+                    <span className="text-sm font-medium">{group.label}</span>
                   </Label>
                 );
               })}

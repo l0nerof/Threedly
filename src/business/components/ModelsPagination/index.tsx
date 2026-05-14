@@ -81,7 +81,9 @@ function ModelsPagination({
                 if (currentPage > 1) handlePageChange(currentPage - 1);
               }}
               href="#"
-            />
+            >
+              {previousPageLabel}
+            </PaginationPrevious>
           </PaginationItem>
 
           {showFirstPage && (
@@ -153,7 +155,9 @@ function ModelsPagination({
                 if (currentPage < totalPages) handlePageChange(currentPage + 1);
               }}
               href="#"
-            />
+            >
+              {nextPageLabel}
+            </PaginationNext>
           </PaginationItem>
         </PaginationContent>
       </Pagination>

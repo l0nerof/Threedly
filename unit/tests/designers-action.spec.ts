@@ -1,6 +1,7 @@
 import {
   fetchDesignerProfileByUsername,
   fetchDesigners,
+  fetchDesignersCount,
 } from "@/src/app/[locale]/(main-pages)/designers/actions";
 import { DESIGNER_PROFILE_MODELS_LIMIT } from "@/src/business/constants/designersConfig";
 import { vi } from "vitest";
@@ -10,9 +11,15 @@ const mocks = vi.hoisted(() => ({
   fromMock: vi.fn(),
   profileSelectMock: vi.fn(),
   profileEqMock: vi.fn(),
+  profileIlikeMock: vi.fn(),
+  profileInMock: vi.fn(),
   profileOrderMock: vi.fn(),
   profileRangeMock: vi.fn(),
   profileMaybeSingleMock: vi.fn(),
+  groupSelectMock: vi.fn(),
+  groupInMock: vi.fn(),
+  categorySelectMock: vi.fn(),
+  categoryInMock: vi.fn(),
   modelSelectMock: vi.fn(),
   modelEqMock: vi.fn(),
   modelInMock: vi.fn(),
@@ -66,19 +73,46 @@ function createProfileQuery(profile: ProfileRow | null) {
 }
 
 function createDesignersListQuery(profiles: ProfileRow[], count: number) {
-  const query = {
-    eq: mocks.profileEqMock,
-    order: mocks.profileOrderMock,
-    range: mocks.profileRangeMock,
-  };
-
-  mocks.profileEqMock.mockReturnValue(query);
-  mocks.profileOrderMock.mockReturnValue(query);
-  mocks.profileRangeMock.mockResolvedValue({
+  const result = {
     data: profiles,
     count,
     error: null,
-  });
+  };
+  const query = {
+    eq: mocks.profileEqMock,
+    ilike: mocks.profileIlikeMock,
+    in: mocks.profileInMock,
+    order: mocks.profileOrderMock,
+    range: mocks.profileRangeMock,
+    then: (...args: Parameters<Promise<typeof result>["then"]>) =>
+      Promise.resolve(result).then(...args),
+  };
+
+  mocks.profileEqMock.mockReturnValue(query);
+  mocks.profileIlikeMock.mockReturnValue(query);
+  mocks.profileInMock.mockReturnValue(query);
+  mocks.profileOrderMock.mockReturnValue(query);
+  mocks.profileRangeMock.mockResolvedValue(result);
+
+  return query;
+}
+
+function createDesignersCountQuery(count: number) {
+  const result = {
+    count,
+    error: null,
+  };
+  const query = {
+    eq: mocks.profileEqMock,
+    ilike: mocks.profileIlikeMock,
+    in: mocks.profileInMock,
+    then: (...args: Parameters<Promise<typeof result>["then"]>) =>
+      Promise.resolve(result).then(...args),
+  };
+
+  mocks.profileEqMock.mockReturnValue(query);
+  mocks.profileIlikeMock.mockReturnValue(query);
+  mocks.profileInMock.mockReturnValue(query);
 
   return query;
 }
@@ -101,7 +135,9 @@ function createModelsQuery(models: ModelRow[], count: number) {
   return query;
 }
 
-function createModelCreatorRowsQuery(rows: { creator_id: string | null }[]) {
+function createModelCreatorRowsQuery(
+  rows: { creator_id: string | null; download_count?: number }[],
+) {
   const query = {
     eq: mocks.modelEqMock,
     in: mocks.modelInMock,
@@ -109,6 +145,34 @@ function createModelCreatorRowsQuery(rows: { creator_id: string | null }[]) {
 
   mocks.modelInMock.mockReturnValue(query);
   mocks.modelEqMock.mockResolvedValue({
+    data: rows,
+    error: null,
+  });
+
+  return query;
+}
+
+function createCategoryGroupIdQuery(rows: { id: string }[]) {
+  const query = {
+    in: mocks.groupInMock,
+  };
+
+  mocks.groupSelectMock.mockReturnValue(query);
+  mocks.groupInMock.mockResolvedValue({
+    data: rows,
+    error: null,
+  });
+
+  return query;
+}
+
+function createCategoryIdQuery(rows: { id: string }[]) {
+  const query = {
+    in: mocks.categoryInMock,
+  };
+
+  mocks.categorySelectMock.mockReturnValue(query);
+  mocks.categoryInMock.mockResolvedValue({
     data: rows,
     error: null,
   });
@@ -165,25 +229,242 @@ describe("designers actions", () => {
 
     const result = await fetchDesigners({ page: 1 });
 
+    expect(result.designers).toHaveLength(2);
+    expect(result.designers).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "profile-1",
+          username: "olena_kovalenko",
+          model_count: 2,
+        }),
+        expect.objectContaining({
+          id: "profile-2",
+          username: "volodymyr_hrytsenko",
+          model_count: 1,
+        }),
+      ]),
+    );
+    expect(result.totalCount).toBe(2);
+    expect(mocks.modelSelectMock).toHaveBeenCalledWith(
+      "creator_id, download_count",
+    );
+    expect(mocks.modelInMock).toHaveBeenCalledWith("creator_id", [
+      "profile-1",
+      "profile-2",
+    ]);
+    expect(mocks.modelEqMock).toHaveBeenCalledWith("status", "published");
+  });
+
+  it("filters designers by derived portfolio category groups", async () => {
+    const profiles: ProfileRow[] = [
+      {
+        id: "profile-1",
+        username: "olena_kovalenko",
+        bio: "Interior designer.",
+        avatar_path: null,
+        plan_key: "pro",
+        created_at: "2026-01-15T10:00:00.000Z",
+      },
+    ];
+
+    createCategoryGroupIdQuery([{ id: "group-furniture" }]);
+    createCategoryIdQuery([{ id: "category-chairs" }]);
+    const profileQuery = createDesignersListQuery(profiles, profiles.length);
+    const groupDesignerQuery = createModelCreatorRowsQuery([
+      { creator_id: "profile-1" },
+      { creator_id: "profile-1" },
+    ]);
+    const modelCountsQuery = createModelCreatorRowsQuery([
+      { creator_id: "profile-1" },
+      { creator_id: "profile-1" },
+    ]);
+
+    mocks.profileSelectMock.mockReturnValue(profileQuery);
+    mocks.modelSelectMock
+      .mockReturnValueOnce(groupDesignerQuery)
+      .mockReturnValueOnce(modelCountsQuery);
+    mocks.fromMock.mockImplementation((table: string) => {
+      if (table === "profiles") {
+        return { select: mocks.profileSelectMock };
+      }
+
+      if (table === "category_groups") {
+        return { select: mocks.groupSelectMock };
+      }
+
+      if (table === "categories") {
+        return { select: mocks.categorySelectMock };
+      }
+
+      if (table === "models") {
+        return { select: mocks.modelSelectMock };
+      }
+
+      throw new Error(`Unexpected table: ${table}`);
+    });
+
+    const result = await fetchDesigners({
+      page: 1,
+      groups: ["furniture"],
+    } as Parameters<typeof fetchDesigners>[0] & { groups: string[] });
+
     expect(result.designers).toEqual([
       expect.objectContaining({
         id: "profile-1",
         username: "olena_kovalenko",
         model_count: 2,
       }),
-      expect.objectContaining({
-        id: "profile-2",
-        username: "volodymyr_hrytsenko",
-        model_count: 1,
-      }),
     ]);
-    expect(result.totalCount).toBe(2);
-    expect(mocks.modelSelectMock).toHaveBeenCalledWith("creator_id");
-    expect(mocks.modelInMock).toHaveBeenCalledWith("creator_id", [
+    expect(mocks.groupInMock).toHaveBeenCalledWith("slug", ["furniture"]);
+    expect(mocks.categoryInMock).toHaveBeenCalledWith("group_id", [
+      "group-furniture",
+    ]);
+    expect(mocks.modelInMock).toHaveBeenCalledWith("category_id", [
+      "category-chairs",
+    ]);
+    expect(mocks.profileInMock).toHaveBeenCalledWith("id", ["profile-1"]);
+  });
+
+  it("sorts designers by their published model count", async () => {
+    const profiles: ProfileRow[] = [
+      {
+        id: "profile-1",
+        username: "one_model",
+        bio: null,
+        avatar_path: null,
+        plan_key: "pro",
+        created_at: "2026-01-15T10:00:00.000Z",
+      },
+      {
+        id: "profile-2",
+        username: "three_models",
+        bio: null,
+        avatar_path: null,
+        plan_key: "pro",
+        created_at: "2026-01-10T10:00:00.000Z",
+      },
+    ];
+
+    const profileQuery = createDesignersListQuery(profiles, profiles.length);
+    const modelCountsQuery = createModelCreatorRowsQuery([
+      { creator_id: "profile-1" },
+      { creator_id: "profile-2" },
+      { creator_id: "profile-2" },
+      { creator_id: "profile-2" },
+    ]);
+
+    mocks.profileSelectMock.mockReturnValue(profileQuery);
+    mocks.modelSelectMock.mockReturnValue(modelCountsQuery);
+    mocks.fromMock.mockImplementation((table: string) => {
+      if (table === "profiles") {
+        return { select: mocks.profileSelectMock };
+      }
+
+      if (table === "models") {
+        return { select: mocks.modelSelectMock };
+      }
+
+      throw new Error(`Unexpected table: ${table}`);
+    });
+
+    const result = await fetchDesigners({ page: 1, sort: "models" });
+
+    expect(result.designers.map((designer) => designer.username)).toEqual([
+      "three_models",
+      "one_model",
+    ]);
+  });
+
+  it("sorts designers by total published model downloads", async () => {
+    const profiles: ProfileRow[] = [
+      {
+        id: "profile-1",
+        username: "newer_quiet",
+        bio: null,
+        avatar_path: null,
+        plan_key: "pro",
+        created_at: "2026-02-15T10:00:00.000Z",
+      },
+      {
+        id: "profile-2",
+        username: "older_popular",
+        bio: null,
+        avatar_path: null,
+        plan_key: "pro",
+        created_at: "2026-01-10T10:00:00.000Z",
+      },
+    ];
+
+    const profileQuery = createDesignersListQuery(profiles, profiles.length);
+    const modelCountsQuery = createModelCreatorRowsQuery([
+      { creator_id: "profile-1", download_count: 3 },
+      { creator_id: "profile-2", download_count: 20 },
+      { creator_id: "profile-2", download_count: 15 },
+    ]);
+
+    mocks.profileSelectMock.mockReturnValue(profileQuery);
+    mocks.modelSelectMock.mockReturnValue(modelCountsQuery);
+    mocks.fromMock.mockImplementation((table: string) => {
+      if (table === "profiles") {
+        return { select: mocks.profileSelectMock };
+      }
+
+      if (table === "models") {
+        return { select: mocks.modelSelectMock };
+      }
+
+      throw new Error(`Unexpected table: ${table}`);
+    });
+
+    const result = await fetchDesigners({ page: 1, sort: "popular" });
+
+    expect(result.designers.map((designer) => designer.username)).toEqual([
+      "older_popular",
+      "newer_quiet",
+    ]);
+  });
+
+  it("counts unique designers matching derived portfolio groups", async () => {
+    createCategoryGroupIdQuery([{ id: "group-furniture" }]);
+    createCategoryIdQuery([{ id: "category-chairs" }]);
+    const groupDesignerQuery = createModelCreatorRowsQuery([
+      { creator_id: "profile-1" },
+      { creator_id: "profile-1" },
+      { creator_id: "profile-2" },
+    ]);
+    const profileCountQuery = createDesignersCountQuery(2);
+
+    mocks.profileSelectMock.mockReturnValue(profileCountQuery);
+    mocks.modelSelectMock.mockReturnValue(groupDesignerQuery);
+    mocks.fromMock.mockImplementation((table: string) => {
+      if (table === "profiles") {
+        return { select: mocks.profileSelectMock };
+      }
+
+      if (table === "category_groups") {
+        return { select: mocks.groupSelectMock };
+      }
+
+      if (table === "categories") {
+        return { select: mocks.categorySelectMock };
+      }
+
+      if (table === "models") {
+        return { select: mocks.modelSelectMock };
+      }
+
+      throw new Error(`Unexpected table: ${table}`);
+    });
+
+    const count = await fetchDesignersCount({
+      groups: ["furniture"],
+    } as Parameters<typeof fetchDesignersCount>[0] & { groups: string[] });
+
+    expect(count).toBe(2);
+    expect(mocks.profileInMock).toHaveBeenCalledWith("id", [
       "profile-1",
       "profile-2",
     ]);
-    expect(mocks.modelEqMock).toHaveBeenCalledWith("status", "published");
   });
 
   it("loads a public designer profile with published models", async () => {

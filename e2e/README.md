@@ -62,6 +62,7 @@ This file documents the Playwright coverage in this repository and should stay i
 
 - [x] Designers list page renders heading
 - [x] Designers list page URL is correct
+- [x] `/en/designers?groups=furniture` preselects the matching portfolio focus chip
 - [x] Designer profile page opens by username
 - [x] Unknown username renders 404
 
