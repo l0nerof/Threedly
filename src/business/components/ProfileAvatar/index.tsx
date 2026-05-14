@@ -1,17 +1,22 @@
 import { UserIcon } from "lucide-react";
+import Image from "next/image";
 import { cn } from "../../../shared/utils/cn";
 import { resolveAvatarPublicUrl } from "../../utils/supabase/storage";
 
 type ProfileAvatarProps = {
+  alt?: string;
   avatarPath?: string | null;
   className?: string;
   iconClassName?: string;
+  sizes?: string;
 };
 
 function ProfileAvatar({
+  alt = "",
   avatarPath,
   className,
   iconClassName,
+  sizes = "80px",
 }: ProfileAvatarProps) {
   const avatarPublicUrl = resolveAvatarPublicUrl(avatarPath);
 
@@ -23,9 +28,12 @@ function ProfileAvatar({
       )}
     >
       {avatarPublicUrl ? (
-        <div
-          className="h-full w-full bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${avatarPublicUrl})` }}
+        <Image
+          src={avatarPublicUrl}
+          alt={alt}
+          fill
+          className="object-cover"
+          sizes={sizes}
         />
       ) : (
         <UserIcon className={cn("size-8", iconClassName)} />

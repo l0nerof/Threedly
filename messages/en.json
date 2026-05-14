@@ -390,6 +390,10 @@
   },
 
   "Designers": {
+    "card": {
+      "openProfile": "Open @{username} profile",
+      "browseModels": "Browse {count} models"
+    },
     "shell": {
       "pageTitle": "Designers",
       "searchPlaceholder": "Search designers by username...",
@@ -475,6 +479,41 @@
       "pageOf": "Showing {from}–{to} of {total} designers",
       "previousPage": "Previous page",
       "nextPage": "Next page"
+    },
+    "profile": {
+      "metadata": {
+        "title": "@{username} — Designer on Threedly",
+        "description": "Public Threedly profile for @{username}, including published 3D models and creator details."
+      },
+      "backToDesigners": "Back to designers",
+      "avatarAlt": "Avatar of @{username}",
+      "notFound": {
+        "title": "@{username} is not publishing models yet",
+        "description": "This public profile is available once a creator has an upload-enabled Threedly profile.",
+        "cta": "Browse designers"
+      },
+      "hero": {
+        "title": "@{username}",
+        "emptyBio": "This creator has not added a profile bio yet.",
+        "modelsCount": "{count} published models",
+        "primaryCta": "View models",
+        "secondaryCta": "Open catalog"
+      },
+      "panel": {
+        "title": "Profile",
+        "withModels": "This profile shows the creator details and the models currently published in the catalog.",
+        "withoutModels": "The profile is ready, but this creator has not published marketplace models yet.",
+        "plan": "Plan",
+        "models": "Models"
+      },
+      "models": {
+        "title": "Published models",
+        "description": "Models this creator has already published in the catalog.",
+        "viewCatalog": "Open catalog",
+        "emptyTitle": "No public models yet",
+        "emptyDescription": "When this creator publishes models, they will appear here.",
+        "emptyCta": "Browse other designers"
+      }
     }
   },
 

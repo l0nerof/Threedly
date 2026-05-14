@@ -2,6 +2,7 @@ import { PLAN_BADGE_COLORS, PLAN_LABELS } from "@/src/business/constants/plans";
 import type { DesignerLevel } from "@/src/business/types/designer";
 
 export const DESIGNERS_PAGE_SIZE = 9;
+export const DESIGNER_PROFILE_MODELS_LIMIT = 6;
 
 export const DESIGNERS_SEARCH_MIN_CHARS = 2;
 export const DESIGNERS_SEARCH_DEBOUNCE_MS = 350;
