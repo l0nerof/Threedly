@@ -22,7 +22,7 @@ function FeaturedCarousel({ models, sectionLabel }: Props) {
       opts={{ align: "center", loop: true }}
       plugins={[
         Autoplay({
-          delay: 5000,
+          delay: 2500,
           stopOnInteraction: false,
           stopOnMouseEnter: true,
         }),

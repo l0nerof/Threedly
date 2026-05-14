@@ -1,6 +1,71 @@
 import { createClient } from "@supabase/supabase-js";
+import { pathToFileURL } from "node:url";
 
 const PLAN_DOWNLOAD_LIMITS = { max: 100, pro: 25, free: 5 };
+
+export const DESIGNER_MODEL_ASSIGNMENTS = {
+  olena_kovalenko: [
+    "11111111-1111-1111-1111-111111111113",
+    "11111111-1111-1111-1111-111111111114",
+    "11111111-1111-1111-1111-111111111115",
+  ],
+  dmytro_lysenko: [
+    "11111111-1111-1111-1111-111111111116",
+    "11111111-1111-1111-1111-111111111117",
+    "11111111-1111-1111-1111-111111111118",
+  ],
+  sofia_marchenko: [
+    "11111111-1111-1111-1111-111111111119",
+    "11111111-1111-1111-1111-111111111120",
+    "11111111-1111-1111-1111-111111111121",
+  ],
+  ivan_petrenko: [
+    "11111111-1111-1111-1111-111111111122",
+    "11111111-1111-1111-1111-111111111123",
+    "11111111-1111-1111-1111-111111111124",
+  ],
+  natalia_bondarenko: [
+    "11111111-1111-1111-1111-111111111125",
+    "11111111-1111-1111-1111-111111111126",
+    "11111111-1111-1111-1111-111111111127",
+  ],
+  oleksiy_shevchenko: [
+    "11111111-1111-1111-1111-111111111128",
+    "11111111-1111-1111-1111-111111111129",
+    "11111111-1111-1111-1111-111111111130",
+  ],
+  andrii_kravchenko: [
+    "11111111-1111-1111-1111-111111111131",
+    "11111111-1111-1111-1111-111111111132",
+    "11111111-1111-1111-1111-111111111133",
+  ],
+  mykhailo_rudenko: [
+    "11111111-1111-1111-1111-111111111134",
+    "11111111-1111-1111-1111-111111111135",
+    "11111111-1111-1111-1111-111111111147",
+  ],
+  daryna_tkachenko: [
+    "11111111-1111-1111-1111-111111111136",
+    "11111111-1111-1111-1111-111111111137",
+    "11111111-1111-1111-1111-111111111138",
+  ],
+  pavlo_melnyk: [
+    "11111111-1111-1111-1111-111111111139",
+    "11111111-1111-1111-1111-111111111140",
+    "11111111-1111-1111-1111-111111111148",
+  ],
+  volodymyr_hrytsenko: [
+    "11111111-1111-1111-1111-111111111141",
+    "11111111-1111-1111-1111-111111111142",
+    "11111111-1111-1111-1111-111111111143",
+  ],
+  oksana_kovalchuk: [
+    "11111111-1111-1111-1111-111111111144",
+    "11111111-1111-1111-1111-111111111145",
+    "11111111-1111-1111-1111-111111111146",
+    "11111111-1111-1111-1111-111111111149",
+  ],
+};
 
 const DESIGNERS = [
   {
@@ -175,6 +240,41 @@ async function seedDesigner(admin, designer, existingUsers) {
   return userId;
 }
 
+function getExistingDesignerIdsByUsername(existingUsers) {
+  const designerIdsByUsername = new Map();
+
+  for (const designer of DESIGNERS) {
+    const existing = existingUsers.find((u) => u.email === designer.email);
+
+    if (existing) {
+      designerIdsByUsername.set(designer.username, existing.id);
+    }
+  }
+
+  return designerIdsByUsername;
+}
+
+async function seedDesignerModelAssignments(admin, designerIdsByUsername) {
+  for (const [username, modelIds] of Object.entries(
+    DESIGNER_MODEL_ASSIGNMENTS,
+  )) {
+    const creatorId = designerIdsByUsername.get(username);
+
+    if (!creatorId) {
+      throw new Error(`Missing seeded designer @${username}.`);
+    }
+
+    const { error } = await admin
+      .from("models")
+      .update({ creator_id: creatorId })
+      .in("id", modelIds);
+
+    if (error) {
+      throw error;
+    }
+  }
+}
+
 async function main() {
   const skipIfExists = process.argv.includes("--skip-if-exists");
   const { url, serviceRoleKey } = await loadSupabaseEnv();
@@ -189,19 +289,33 @@ async function main() {
     const firstEmail = DESIGNERS[0].email;
     const alreadyExists = listData.users.some((u) => u.email === firstEmail);
     if (alreadyExists) {
+      await seedDesignerModelAssignments(
+        admin,
+        getExistingDesignerIdsByUsername(listData.users),
+      );
       return;
     }
   }
 
+  const designerIdsByUsername = new Map();
+
   for (const designer of DESIGNERS) {
-    await seedDesigner(admin, designer, listData.users);
+    const userId = await seedDesigner(admin, designer, listData.users);
+    designerIdsByUsername.set(designer.username, userId);
     console.log(`Seeded designer @${designer.username}`);
   }
+
+  await seedDesignerModelAssignments(admin, designerIdsByUsername);
 
   console.log(`Done — seeded ${DESIGNERS.length} designers.`);
 }
 
-main().catch((error) => {
-  console.error(error.message);
-  process.exit(1);
-});
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
+  main().catch((error) => {
+    console.error(error.message);
+    process.exit(1);
+  });
+}

@@ -96,6 +96,7 @@ npm run dev:remote
 npm run db:start
 npm run db:reset
 npm run db:seed
+npm run db:types
 npm run build
 npm run start
 npm run e2e:install
@@ -114,6 +115,7 @@ Local database workflow:
 - `npm run db:start` starts the local Supabase stack and syncs the local demo user.
 - `npm run db:reset` removes the local Supabase containers and data volumes, starts a fresh stack, reapplies migrations and seeds, then exits.
 - `npm run db:seed` reapplies seed data to an already running local Supabase stack and does not start Docker containers for you.
+- `npm run db:types` regenerates `src/business/types/database.generated.ts` from the running local Supabase schema.
 
 ## Unit Testing
 

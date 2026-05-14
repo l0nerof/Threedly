@@ -163,6 +163,7 @@ function Header() {
                 avatarPath={avatarPath}
                 className="size-5 bg-transparent"
                 iconClassName="size-4"
+                sizes="20px"
               />
             </NavbarButton>
           ) : isAuthenticated === false ? (

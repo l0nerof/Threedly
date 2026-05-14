@@ -1,3 +1,4 @@
+import { PLAN_LABELS } from "@/src/business/constants/plans";
 import type {
   DesignerLevel,
   DesignerSortValue,
@@ -7,9 +8,9 @@ export const LEVEL_LABELS: Record<
   DesignerLevel,
   { label: string; description: string }
 > = {
-  free: { label: "Free", description: "Free plan creators" },
-  pro: { label: "Pro", description: "Pro plan — can upload models" },
-  max: { label: "Max", description: "Max plan — highest quota" },
+  free: { label: PLAN_LABELS.free, description: "Free plan creators" },
+  pro: { label: PLAN_LABELS.pro, description: "Pro plan — can upload models" },
+  max: { label: PLAN_LABELS.max, description: "Max plan — highest quota" },
 };
 
 export const SORT_LABELS: Record<DesignerSortValue, string> = {

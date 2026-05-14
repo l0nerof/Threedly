@@ -22,8 +22,8 @@ async function FeaturedModels() {
         className="absolute top-1/2 left-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse,hsl(var(--primary)/0.12),transparent_70%)] blur-3xl"
       />
 
-      <div className="relative z-10 container mx-auto px-4">
-        <div className="mb-8 flex items-end justify-between gap-4">
+      <div className="relative z-10 container flex flex-col gap-8">
+        <div className="flex items-end justify-between gap-4">
           <div className="flex flex-col gap-2">
             <p className="text-primary text-xs font-medium tracking-[0.18em] uppercase">
               {t("eyebrow")}

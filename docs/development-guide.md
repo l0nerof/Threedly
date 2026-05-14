@@ -23,6 +23,7 @@ npm run dev:remote
 npm run db:start
 npm run db:reset
 npm run db:seed
+npm run db:types
 npm run build
 npm run start
 npm run e2e:install
@@ -52,6 +53,7 @@ Recommended workflow:
 - use `npm run dev:remote` when you want the frontend to talk to the real Supabase project
 - use `npm run db:start`, `npm run db:reset`, and `npm run db:seed` only for the local Supabase stack
 - use `npm run db:start` to boot local Supabase containers before `npm run db:seed`
+- use `npm run db:types` after schema migrations so TypeScript stays aligned with the local database shape
 
 How local mode works:
 
@@ -68,6 +70,7 @@ Local DB command behavior:
 - `npm run db:reset` removes local Supabase containers and data volumes, starts a fresh stack, reapplies migrations and SQL seeds, then runs the demo-user post-seed
 - `npm run db:seed` reapplies SQL seeds and demo-user post-seed against an already running local stack
 - `npm run db:seed` should fail fast if local Supabase is not running instead of starting Docker automatically
+- `npm run db:types` regenerates `src/business/types/database.generated.ts` from the running local Supabase schema
 
 These values are used by:
 
