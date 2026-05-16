@@ -491,6 +491,7 @@
         "description": "Public Threedly profile for @{username}, including published 3D models and creator details."
       },
       "backToDesigners": "Back to designers",
+      "backToPrevious": "Back",
       "avatarAlt": "Avatar of @{username}",
       "notFound": {
         "title": "@{username} is not publishing models yet",

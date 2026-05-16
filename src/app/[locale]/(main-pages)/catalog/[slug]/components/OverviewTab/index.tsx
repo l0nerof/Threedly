@@ -4,12 +4,6 @@ import { ArrowRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 
-const MOCK_DESIGNER = {
-  name: "Anna Kovalenko",
-  username: "anna_kovalenko",
-  avatarUrl: "",
-};
-
 type OverviewTabProps = {
   model: CatalogModel;
   locale: string;
@@ -20,6 +14,13 @@ async function OverviewTab({ model, locale }: OverviewTabProps) {
 
   const description =
     locale === "ua" ? model.description_ua : model.description_en;
+  const creator = model.creator;
+  const creatorInitials = creator?.username.slice(0, 2).toUpperCase();
+  const creatorProfileHref = creator
+    ? `/designers/${creator.username}?from=${encodeURIComponent(
+        `/catalog/${model.slug}`,
+      )}`
+    : null;
 
   return (
     <div className="grid items-start gap-8 p-6 lg:grid-cols-[1fr_1fr]">
@@ -38,31 +39,35 @@ async function OverviewTab({ model, locale }: OverviewTabProps) {
 
       <div className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">{t("designerTitle")}</h2>
-        <div className="flex items-center gap-3">
-          <div className="bg-muted size-10 shrink-0 overflow-hidden rounded-full">
-            {MOCK_DESIGNER.avatarUrl && (
-              <Image
-                src={MOCK_DESIGNER.avatarUrl}
-                alt={MOCK_DESIGNER.name}
-                width={40}
-                height={40}
-                className="object-cover"
-              />
-            )}
+        {creator && creatorProfileHref ? (
+          <div className="flex items-center gap-3">
+            <div className="bg-muted text-muted-foreground relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full">
+              {creator.avatar_path ? (
+                <Image
+                  src={creator.avatar_path}
+                  alt=""
+                  fill
+                  sizes="40px"
+                  className="object-cover"
+                />
+              ) : (
+                <span className="text-xs font-semibold">{creatorInitials}</span>
+              )}
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <span className="truncate text-sm font-medium">
+                @{creator.username}
+              </span>
+              <Link
+                href={creatorProfileHref}
+                className="text-primary inline-flex items-center gap-1 text-xs font-medium transition-opacity hover:opacity-80"
+              >
+                {t("designerViewProfile")}
+                <ArrowRight className="size-3" aria-hidden />
+              </Link>
+            </div>
           </div>
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span className="truncate text-sm font-medium">
-              {MOCK_DESIGNER.name}
-            </span>
-            <Link
-              href={`/designers/${MOCK_DESIGNER.username}`}
-              className="text-primary inline-flex items-center gap-1 text-xs font-medium transition-opacity hover:opacity-80"
-            >
-              {t("designerViewProfile")}
-              <ArrowRight className="size-3" aria-hidden />
-            </Link>
-          </div>
-        </div>
+        ) : null}
       </div>
     </div>
   );

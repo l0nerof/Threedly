@@ -488,6 +488,7 @@
         "description": "Публічний профіль @{username} на Threedly з опублікованими 3D-моделями та деталями автора."
       },
       "backToDesigners": "Назад до дизайнерів",
+      "backToPrevious": "Назад",
       "avatarAlt": "Аватар @{username}",
       "notFound": {
         "title": "@{username} ще не публікує моделі",

@@ -1,6 +1,7 @@
 "use client";
 
 import { ProfileAvatar } from "@/src/business/components/ProfileAvatar";
+import { designersQueryKeys } from "@/src/business/queries/designers";
 import { createClient } from "@/src/business/utils/supabase/client";
 import { Button } from "@/src/shared/components/Button";
 import {
@@ -21,6 +22,7 @@ import { Label } from "@/src/shared/components/Label";
 import { Separator } from "@/src/shared/components/Separator";
 import { Skeleton } from "@/src/shared/components/Skeleton";
 import { Textarea } from "@/src/shared/components/Textarea";
+import { useQueryClient } from "@tanstack/react-query";
 import { PencilIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -53,6 +55,7 @@ function ProfileSettingsForm({
 }: ProfileSettingsFormProps) {
   const t = useTranslations("Profile");
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [email, setEmail] = useState("");
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
   const [username, setUsername] = useState("");
@@ -119,6 +122,13 @@ function ProfileSettingsForm({
     );
   }, [bio, savedBio, savedUsername, username]);
 
+  const refreshPublicDesignerSurfaces = () => {
+    void queryClient.invalidateQueries({
+      queryKey: designersQueryKeys.root,
+    });
+    router.refresh();
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!hasChanges || isSubmitting || isLoadingProfile) {
@@ -139,7 +149,7 @@ function ProfileSettingsForm({
       setSavedUsername(username);
       setSavedBio(bio);
       toast.success(t("settings.profile.saveSuccess"));
-      router.refresh();
+      refreshPublicDesignerSurfaces();
     } finally {
       setIsSubmitting(false);
     }
@@ -172,7 +182,7 @@ function ProfileSettingsForm({
         }),
       );
       toast.success(t("settings.profile.saveSuccess"));
-      router.refresh();
+      refreshPublicDesignerSurfaces();
     } finally {
       setIsUploadingAvatar(false);
       event.target.value = "";
@@ -206,7 +216,7 @@ function ProfileSettingsForm({
         }),
       );
       toast.success(t("settings.profile.saveSuccess"));
-      router.refresh();
+      refreshPublicDesignerSurfaces();
     } finally {
       setIsRemovingAvatar(false);
     }

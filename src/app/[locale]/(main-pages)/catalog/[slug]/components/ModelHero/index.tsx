@@ -6,24 +6,30 @@ import { Download, Info, ScanEye } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 
-const MOCK_AUTHOR = "Studio Arc";
-
 type ModelHeroProps = {
   model: CatalogModel;
   locale: string;
 };
 
+function formatUpdatedAt(
+  dateValue: string | null,
+  locale: string,
+): string | null {
+  if (!dateValue) {
+    return null;
+  }
+
+  return new Intl.DateTimeFormat(locale === "ua" ? "uk-UA" : "en-US", {
+    month: "short",
+    year: "numeric",
+  }).format(new Date(dateValue));
+}
+
 async function ModelHero({ model, locale }: ModelHeroProps) {
   const t = await getTranslations("ModelPage.hero");
 
   const title = locale === "ua" ? model.title_ua : model.title_en;
-
-  const updatedAt = model.published_at
-    ? new Date(model.published_at).toLocaleDateString("en-US", {
-        month: "short",
-        year: "numeric",
-      })
-    : null;
+  const updatedAt = formatUpdatedAt(model.published_at, locale);
 
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_3fr]">
@@ -47,12 +53,6 @@ async function ModelHero({ model, locale }: ModelHeroProps) {
           titleHeadingLevel={1}
           titleClassName="text-2xl sm:text-3xl"
           className="rounded-2xl p-6 sm:p-6"
-          subtitle={
-            <>
-              {t("byPrefix")}{" "}
-              <span className="text-foreground font-medium">{MOCK_AUTHOR}</span>
-            </>
-          }
           meta={
             <div className="flex items-center justify-between gap-3">
               <span>{t("downloads", { count: model.download_count })}</span>

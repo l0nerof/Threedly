@@ -255,6 +255,7 @@ export async function uploadModelAction(
   }
 
   revalidatePath(`/${locale}/profile/uploads`);
+  revalidatePath(`/${locale}/designers`);
 
   return { ok: true, modelId: createdModel.id };
 }
