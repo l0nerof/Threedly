@@ -160,10 +160,6 @@
       "countLoading": "..."
     },
     "filters": {
-      "group": {
-        "title": "Група категорій",
-        "description": "Оберіть цілий розділ каталогу."
-      },
       "category": {
         "title": "Категорія",
         "description": "Можна вибрати кілька категорій.",
@@ -173,9 +169,7 @@
         "pickerDescription": "Швидко знайдіть групу або категорію.",
         "searchPlaceholder": "Пошук категорій",
         "emptySearch": "Категорій за цим запитом немає.",
-        "pickerDone": "Готово",
-        "showMore": "Показати ще {count}",
-        "showLess": "Показати менше"
+        "pickerDone": "Готово"
       },
       "plan": {
         "title": "Мінімальний план",
@@ -255,7 +249,6 @@
 
   "ModelPage": {
     "hero": {
-      "byPrefix": "від",
       "downloads": "{count} завантажень",
       "updated": "Оновлено {date}",
       "specificationsTitle": "Специфікації",
@@ -285,15 +278,7 @@
     "title": "Рекомендовані моделі",
     "viewAll": "Переглянути каталог",
     "previousSlide": "Попередній слайд",
-    "nextSlide": "Наступний слайд",
-    "modelCard": {
-      "downloads": "{count} завантажень",
-      "planBadge": {
-        "free": "Free",
-        "pro": "Pro",
-        "max": "Max"
-      }
-    }
+    "nextSlide": "Наступний слайд"
   },
 
   "HowItWorks": {
@@ -417,18 +402,7 @@
       "applyButton": "Показати {count} дизайнерів",
       "specialization": {
         "title": "Напрями портфоліо",
-        "description": "Фільтруйте за категоріями моделей, у яких публікують автори.",
-        "labels": {
-          "furniture": "Меблі",
-          "decor": "Декор",
-          "materials": "Матеріали",
-          "lighting": "Освітлення",
-          "kitchen": "Кухня",
-          "bathroom": "Ванна",
-          "exterior": "Екстер'єр",
-          "plants": "Рослини",
-          "technology": "Технології"
-        }
+        "description": "Фільтруйте за категоріями моделей, у яких публікують автори."
       },
       "level": {
         "title": "Рівень",
@@ -441,17 +415,6 @@
           },
           "max": { "label": "Max", "description": "Max план — найвища квота" }
         }
-      },
-      "account": {
-        "title": "Акаунт",
-        "description": "Показати лише верифікованих або pro-авторів.",
-        "labels": {
-          "verified": {
-            "label": "Верифікований",
-            "description": "Особистість підтверджена."
-          },
-          "pro": { "label": "Pro-члени", "description": "Pro-видавці." }
-        }
       }
     },
     "results": {
@@ -461,13 +424,6 @@
       "error": "Щось пішло не так. Спробуйте ще раз.",
       "empty": "Дизайнерів за вашими фільтрами не знайдено.",
       "sortLabel": "Сортування",
-      "tabs": {
-        "all": "Усі",
-        "featured": "Вибрані",
-        "rising": "На підйомі",
-        "new": "Нові",
-        "following": "Підписки"
-      },
       "sort": {
         "popular": "Найпопулярніші",
         "newest": "Найновіші",
@@ -527,12 +483,8 @@
   },
 
   "Profile": {
-    "title": "Профіль",
-    "description": "Нижче показані деталі вашого акаунта.",
-    "emailLabel": "Email",
     "emptyEmail": "Email не знайдено.",
     "sidebar": {
-      "title": "Кабінет",
       "viewPublicProfile": "Переглянути публічний профіль",
       "items": {
         "overview": "Огляд",
@@ -595,8 +547,6 @@
       "title": "Мої моделі",
       "subtitle": "Завантажуйте моделі, зображення для каталогу та опційний 3D preview.",
       "loadError": "Не вдалося завантажити дані для сторінки моделей.",
-      "uploadCta": "Завантажити модель",
-      "secondaryCta": "Відкрити налаштування",
       "empty": {
         "title": "У вас поки немає моделей",
         "description": "Додайте першу модель, і вона з'явиться у цьому списку та каталозі."
@@ -613,7 +563,6 @@
         "fileZones": {
           "coverTitle": "Обкладинка каталогу",
           "coverDescription": "Додайте JPG, PNG або WEBP до 5 MB.",
-          "modelTitle": "Основний файл моделі",
           "modelDescription": "GLB, GLTF, FBX, OBJ, MAX, BLEND або ZIP до 50 MB.",
           "previewTitle": "Опційний 3D preview",
           "previewDescription": "GLB або GLTF для майбутнього viewer.",
@@ -651,12 +600,7 @@
           "pro": "Pro",
           "max": "Max"
         },
-        "coverImage": "Превʼю-зображення",
-        "coverImageHint": "JPG, PNG або WEBP до 5 MB. Це зображення показується в каталозі.",
         "file": "Файл моделі",
-        "fileHint": "Підтримуються GLB, GLTF, FBX, OBJ, MAX, BLEND і ZIP до 50 MB.",
-        "previewModelFile": "Легкий 3D preview",
-        "previewModelFileHint": "Опційно: GLB або GLTF до 50 MB для майбутнього перегляду моделі у 3D viewer.",
         "submit": "Завантажити модель",
         "submitting": "Завантаження...",
         "success": "Модель завантажено й опубліковано в каталозі.",
@@ -703,10 +647,8 @@
       "profile": {
         "title": "Профіль",
         "description": "Базові дані профілю.",
-        "avatar": "Аватар",
         "avatarMenuAriaLabel": "Відкрити меню аватара",
         "avatarMenu": {
-          "edit": "Змінити",
           "upload": "Завантажити фото...",
           "remove": "Прибрати фото"
         },
@@ -720,8 +662,6 @@
       },
 
       "account": {
-        "title": "Акаунт",
-        "description": "Ви можете вийти з акаунту у будь-який момент.",
         "signOut": "Вийти з акаунту"
       }
     }
@@ -801,7 +741,6 @@
       "hidePasswordButton": "Приховати пароль",
       "submit": "Зберегти новий пароль",
       "submitting": "Зберігаємо...",
-      "success": "Пароль успішно оновлено. Тепер ви можете увійти з новим паролем.",
       "errors": {
         "passwordMinLength": "Пароль має містити щонайменше 8 символів.",
         "confirmPasswordRequired": "Потрібно підтвердити пароль.",
@@ -816,10 +755,6 @@
       "title": "Створити акаунт",
       "description": "Вже є акаунт?",
       "link": "Увійти",
-      "firstNameLabel": "Імʼя",
-      "firstNamePlaceholder": "Іван",
-      "lastNameLabel": "Прізвище",
-      "lastNamePlaceholder": "Іваненко",
       "usernameLabel": "Username",
       "usernamePlaceholder": "your_username",
       "usernameHint": "Використовуйте 3-20 символів: малі латинські літери, цифри або підкреслення (наприклад: ivan_3d).",
@@ -829,8 +764,6 @@
       "passwordPlaceholder": "Створіть пароль",
       "showPasswordButton": "Показати пароль",
       "hidePasswordButton": "Приховати пароль",
-      "confirmPasswordLabel": "Підтвердьте пароль",
-      "confirmPasswordPlaceholder": "Повторіть пароль",
       "termsPrefix": "Я погоджуюсь з",
       "termsLink": "Умовами та положеннями",
       "errors": {
@@ -852,8 +785,6 @@
       "title": "Підтвердіть email",
       "description": "Ми надіслали 6-значний код на вашу пошту.",
       "backToSignup": "Повернутися до реєстрації",
-      "emailLabel": "Email адреса",
-      "emailPlaceholder": "you@example.com",
       "otpLabel": "Одноразовий код",
       "otpHint": "Введіть 6-значний код з листа.",
       "submit": "Підтвердити код",
