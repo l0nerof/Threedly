@@ -241,6 +241,7 @@
           "max": "Max"
         },
         "favoriteButton": "Add to favorites",
+        "removeFavoriteButton": "Remove from favorites",
         "previewButton": "Preview",
         "downloadButton": "Download"
       }
@@ -377,7 +378,9 @@
   "Designers": {
     "card": {
       "openProfile": "Open @{username} profile",
-      "browseModels": "Browse {count} models"
+      "browseModels": "Browse {count} models",
+      "followButton": "Follow designer",
+      "unfollowButton": "Unfollow designer"
     },
     "shell": {
       "pageTitle": "Designers",
@@ -535,11 +538,33 @@
 
     "library": {
       "title": "My Library",
-      "subtitle": "Your downloaded and saved models.",
+      "subtitle": "Downloads, favorite models, and designer subscriptions live here.",
+      "badge": "Saved workspace",
       "primaryCta": "Browse catalog",
+      "designersCta": "Browse designers",
+      "tabs": {
+        "downloaded": "Downloaded",
+        "favoriteModels": "Favorite models",
+        "subscriptions": "Subscriptions"
+      },
+      "stats": {
+        "downloaded": "Downloaded",
+        "favoriteModels": "Favorite models",
+        "subscriptions": "Subscriptions"
+      },
       "empty": {
-        "title": "Library is empty",
-        "description": "You have not downloaded any models yet."
+        "downloaded": {
+          "title": "No downloaded models yet",
+          "description": "Download a model from the catalog and it will appear here as your personal library history."
+        },
+        "favoriteModels": {
+          "title": "No favorite models yet",
+          "description": "Save useful models from the catalog to keep a shortlist for future projects."
+        },
+        "subscriptions": {
+          "title": "No designer subscriptions yet",
+          "description": "Follow designers you trust and their profiles will stay one click away."
+        }
       }
     },
 

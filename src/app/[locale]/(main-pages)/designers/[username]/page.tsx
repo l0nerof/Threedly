@@ -25,6 +25,10 @@ function resolveDesignerBackHref(from?: string): string {
     return from;
   }
 
+  if (from === "/profile/library") {
+    return from;
+  }
+
   return "/designers";
 }
 

@@ -1,10 +1,11 @@
 "use client";
 
+import FavoriteModelButton from "@/src/business/components/FavoriteModelButton";
 import ModelCardShell from "@/src/business/components/ModelCardShell";
 import type { CatalogModel } from "@/src/business/types/catalog";
 import { Link } from "@/src/i18n/routing";
 import { Button } from "@/src/shared/components/Button";
-import { Download, Heart, ScanEye } from "lucide-react";
+import { Download, ScanEye } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 
@@ -47,18 +48,10 @@ function ModelCard({
               className="object-cover"
               sizes={imageSizes}
             />
-            <Button
-              aria-label={t("modelCard.favoriteButton")}
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-              }}
-              variant="ghost"
-              size="icon-sm"
-              className="absolute top-3 right-3 rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/50 hover:text-white"
-            >
-              <Heart className="size-4" />
-            </Button>
+            <FavoriteModelButton
+              modelId={model.id}
+              className="absolute top-3 right-3"
+            />
           </>
         }
         actions={

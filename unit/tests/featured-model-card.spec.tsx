@@ -1,8 +1,21 @@
 import FeaturedModelCard from "@/src/business/components/FeaturedModelCard";
 import type { CatalogModel } from "@/src/business/types/catalog";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NextIntlClientProvider } from "next-intl";
 import { vi } from "vitest";
 import { describe, expect, it, render, screen } from "../fixtures";
+
+const mocks = vi.hoisted(() => ({
+  getUserMock: vi.fn(),
+}));
+
+vi.mock("@/src/business/utils/supabase/client", () => ({
+  createClient: () => ({
+    auth: {
+      getUser: mocks.getUserMock,
+    },
+  }),
+}));
 
 vi.mock("next/image", () => ({
   default: ({ alt, src }: { alt?: string; src: string }) => (
@@ -17,6 +30,7 @@ const messages = {
         downloadButton: "Download",
         downloads: "{count} downloads",
         favoriteButton: "Add to favorites",
+        removeFavoriteButton: "Remove from favorites",
         planBadge: {
           free: "Free",
           max: "Max",
@@ -53,17 +67,34 @@ const model: CatalogModel = {
   title_ua: "Cantilever Chair",
 };
 
-describe("FeaturedModelCard", () => {
-  it("uses the shared model-card behavior from catalog cards", () => {
-    render(
+function renderCard() {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+    },
+  });
+
+  render(
+    <QueryClientProvider client={queryClient}>
       <NextIntlClientProvider locale="en" messages={messages}>
         <FeaturedModelCard model={model} />
-      </NextIntlClientProvider>,
-    );
+      </NextIntlClientProvider>
+    </QueryClientProvider>,
+  );
+}
+
+describe("FeaturedModelCard", () => {
+  it("uses the shared model-card behavior from catalog cards", () => {
+    mocks.getUserMock.mockResolvedValue({
+      data: { user: null },
+      error: null,
+    });
+
+    renderCard();
 
     expect(
-      screen.getByRole("button", { name: "Add to favorites" }),
-    ).toBeTruthy();
+      screen.queryByRole("button", { name: "Add to favorites" }),
+    ).toBeNull();
     expect(screen.getByRole("button", { name: "Preview" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Download" })).toBeTruthy();
   });
