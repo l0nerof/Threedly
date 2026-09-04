@@ -10,6 +10,7 @@ The goal of this schema is to support:
 - model detail pages;
 - user profiles;
 - favorites;
+- designer follows;
 - download history and monthly limits;
 - creator uploads;
 - local seeding for frontend development.
@@ -24,18 +25,20 @@ This document reflects the current agreed MVP direction, not a final long-term m
 - Show optional 3D preview only on the model detail page.
 - Store downloadable model files separately from the main model record.
 - Use `downloads` as the source for user library and quota tracking.
+- Use `designer_follows` as the source for user designer subscriptions.
 - Keep categories flat for now, without nested hierarchy.
 
 ## Table Overview
 
-| Table         | Purpose                                              |
-| ------------- | ---------------------------------------------------- |
-| `profiles`    | User profile and current account access state        |
-| `categories`  | Flat catalog categories                              |
-| `models`      | Main marketplace model records                       |
-| `model_files` | Downloadable files attached to a model               |
-| `favorites`   | Models saved by users                                |
-| `downloads`   | Download history, library source, and quota tracking |
+| Table              | Purpose                                              |
+| ------------------ | ---------------------------------------------------- |
+| `profiles`         | User profile and current account access state        |
+| `categories`       | Flat catalog categories                              |
+| `models`           | Main marketplace model records                       |
+| `model_files`      | Downloadable files attached to a model               |
+| `favorites`        | Models saved by users                                |
+| `downloads`        | Download history, library source, and quota tracking |
+| `designer_follows` | Designer subscriptions/follows saved by users        |
 
 ## `profiles`
 
@@ -169,6 +172,23 @@ Stores download history for models.
 - The library can be built by grouping downloaded models by user.
 - This table also supports monthly quota calculations and popularity metrics.
 
+## `designer_follows`
+
+Stores designer profiles followed by users.
+
+| Field         | Type          | Notes                                            |
+| ------------- | ------------- | ------------------------------------------------ |
+| `follower_id` | `uuid`        | References `profiles.id`. The current user.      |
+| `designer_id` | `uuid`        | References `profiles.id`. The followed designer. |
+| `created_at`  | `timestamptz` | When the designer was followed.                  |
+
+### Notes
+
+- This is a many-to-many relation between users and designer profiles.
+- A composite primary key on `follower_id` and `designer_id` prevents duplicate follows.
+- A check constraint prevents a user from following their own profile.
+- This table is separate from `favorites` because saving a model and following a designer are different product concepts.
+
 ## Relationships
 
 - `profiles.id` -> `auth.users.id`
@@ -179,6 +199,8 @@ Stores download history for models.
 - `favorites.model_id` -> `models.id`
 - `downloads.user_id` -> `profiles.id`
 - `downloads.model_id` -> `models.id`
+- `designer_follows.follower_id` -> `profiles.id`
+- `designer_follows.designer_id` -> `profiles.id`
 
 ## Translation Strategy
 
@@ -220,6 +242,7 @@ Recommended local seed behavior:
 - create a realistic set of models across categories;
 - attach one or more `model_files` records per model;
 - seed favorites for saved-model UI states;
+- seed designer follows for subscriptions UI states;
 - seed downloads for library and quota-related UI states.
 
 For local frontend work:

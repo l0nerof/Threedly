@@ -77,6 +77,39 @@ export type Database = {
         };
         Relationships: [];
       };
+      designer_follows: {
+        Row: {
+          created_at: string;
+          designer_id: string;
+          follower_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          designer_id: string;
+          follower_id: string;
+        };
+        Update: {
+          created_at?: string;
+          designer_id?: string;
+          follower_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "designer_follows_designer_id_fkey";
+            columns: ["designer_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "designer_follows_follower_id_fkey";
+            columns: ["follower_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       downloads: {
         Row: {
           created_at: string;

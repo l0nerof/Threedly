@@ -1,7 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 import { pathToFileURL } from "node:url";
+import { DEMO_USER_EMAIL } from "./demo-user-credentials.mjs";
 
 const PLAN_DOWNLOAD_LIMITS = { max: 100, pro: 25, free: 5 };
+const DEMO_FOLLOWED_DESIGNERS = [
+  "olena_kovalenko",
+  "dmytro_lysenko",
+  "sofia_marchenko",
+];
 
 export const DESIGNER_MODEL_ASSIGNMENTS = {
   olena_kovalenko: [
@@ -275,6 +281,42 @@ async function seedDesignerModelAssignments(admin, designerIdsByUsername) {
   }
 }
 
+async function seedDemoDesignerFollows(
+  admin,
+  demoUserId,
+  designerIdsByUsername,
+) {
+  const { error: deleteError } = await admin
+    .from("designer_follows")
+    .delete()
+    .eq("follower_id", demoUserId);
+
+  if (deleteError) {
+    throw deleteError;
+  }
+
+  const rows = DEMO_FOLLOWED_DESIGNERS.map((username) => {
+    const designerId = designerIdsByUsername.get(username);
+
+    if (!designerId) {
+      throw new Error(`Missing designer follow target @${username}.`);
+    }
+
+    return {
+      follower_id: demoUserId,
+      designer_id: designerId,
+    };
+  });
+
+  const { error: insertError } = await admin
+    .from("designer_follows")
+    .insert(rows);
+
+  if (insertError) {
+    throw insertError;
+  }
+}
+
 async function main() {
   const skipIfExists = process.argv.includes("--skip-if-exists");
   const { url, serviceRoleKey } = await loadSupabaseEnv();
@@ -289,10 +331,17 @@ async function main() {
     const firstEmail = DESIGNERS[0].email;
     const alreadyExists = listData.users.some((u) => u.email === firstEmail);
     if (alreadyExists) {
-      await seedDesignerModelAssignments(
-        admin,
-        getExistingDesignerIdsByUsername(listData.users),
+      const designerIdsByUsername = getExistingDesignerIdsByUsername(
+        listData.users,
       );
+      const demoUser = listData.users.find((u) => u.email === DEMO_USER_EMAIL);
+
+      if (!demoUser) {
+        throw new Error(`Missing demo user ${DEMO_USER_EMAIL}.`);
+      }
+
+      await seedDesignerModelAssignments(admin, designerIdsByUsername);
+      await seedDemoDesignerFollows(admin, demoUser.id, designerIdsByUsername);
       return;
     }
   }
@@ -306,6 +355,13 @@ async function main() {
   }
 
   await seedDesignerModelAssignments(admin, designerIdsByUsername);
+  const demoUser = listData.users.find((u) => u.email === DEMO_USER_EMAIL);
+
+  if (!demoUser) {
+    throw new Error(`Missing demo user ${DEMO_USER_EMAIL}.`);
+  }
+
+  await seedDemoDesignerFollows(admin, demoUser.id, designerIdsByUsername);
 
   console.log(`Done — seeded ${DESIGNERS.length} designers.`);
 }

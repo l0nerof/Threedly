@@ -13,7 +13,24 @@ import { fetchDesignerProfileByUsername } from "../actions";
 
 type Props = {
   params: Promise<{ locale: string; username: string }>;
+  searchParams: Promise<{ from?: string }>;
 };
+
+function resolveDesignerBackHref(from?: string): string {
+  if (!from || !from.startsWith("/") || from.startsWith("//")) {
+    return "/designers";
+  }
+
+  if (from === "/catalog" || from.startsWith("/catalog/")) {
+    return from;
+  }
+
+  if (from === "/profile/library") {
+    return from;
+  }
+
+  return "/designers";
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, username } = await params;
@@ -30,8 +47,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function DesignerPage({ params }: Props) {
+export default async function DesignerPage({ params, searchParams }: Props) {
   const { locale, username } = await params;
+  const { from } = await searchParams;
 
   if (!isLocaleCode(locale)) {
     notFound();
@@ -41,19 +59,22 @@ export default async function DesignerPage({ params }: Props) {
 
   const t = await getTranslations("Designers.profile");
   const profile = await fetchDesignerProfileByUsername(username);
+  const backHref = resolveDesignerBackHref(from);
+  const backLabel =
+    backHref === "/designers" ? t("backToDesigners") : t("backToPrevious");
 
   if (!profile) {
     return (
       <section className="bg-background text-foreground w-full">
         <div className="container flex min-h-[70vh] flex-col justify-center gap-8 py-32">
           <Button asChild variant="ghost" className="self-start rounded-full">
-            <Link href="/designers">
+            <Link href={backHref}>
               <ArrowLeft className="size-4" aria-hidden />
-              {t("backToDesigners")}
+              {backLabel}
             </Link>
           </Button>
 
-          <div className="bg-surface/90 border-border/60 flex max-w-3xl flex-col gap-5 rounded-[2rem] border p-6 shadow-[0_28px_100px_hsl(var(--foreground)/0.08)] sm:p-8">
+          <div className="bg-surface/90 border-border/60 flex w-full flex-col gap-5 rounded-[2rem] border p-6 shadow-[0_28px_100px_hsl(var(--foreground)/0.08)] sm:p-8">
             <p className="text-muted-foreground text-sm font-medium">
               @{username}
             </p>
@@ -81,9 +102,9 @@ export default async function DesignerPage({ params }: Props) {
     <section className="bg-background text-foreground w-full overflow-hidden">
       <div className="container flex flex-col gap-8 pt-28 pb-14 sm:gap-10 sm:pt-32 sm:pb-20">
         <Button asChild variant="ghost" className="self-start rounded-full">
-          <Link href="/designers">
+          <Link href={backHref}>
             <ArrowLeft className="size-4" aria-hidden />
-            {t("backToDesigners")}
+            {backLabel}
           </Link>
         </Button>
 

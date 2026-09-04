@@ -160,10 +160,6 @@
       "countLoading": "..."
     },
     "filters": {
-      "group": {
-        "title": "Category group",
-        "description": "Select a whole catalog area."
-      },
       "category": {
         "title": "Category",
         "description": "You can select more than one category.",
@@ -173,9 +169,7 @@
         "pickerDescription": "Search groups and categories quickly.",
         "searchPlaceholder": "Search categories",
         "emptySearch": "No matching categories.",
-        "pickerDone": "Done",
-        "showMore": "Show {count} more",
-        "showLess": "Show less"
+        "pickerDone": "Done"
       },
       "plan": {
         "title": "Minimum plan",
@@ -247,6 +241,7 @@
           "max": "Max"
         },
         "favoriteButton": "Add to favorites",
+        "removeFavoriteButton": "Remove from favorites",
         "previewButton": "Preview",
         "downloadButton": "Download"
       }
@@ -255,7 +250,6 @@
 
   "ModelPage": {
     "hero": {
-      "byPrefix": "by",
       "downloads": "{count} downloads",
       "updated": "Updated {date}",
       "specificationsTitle": "Specifications",
@@ -285,15 +279,7 @@
     "title": "Featured models",
     "viewAll": "Browse catalog",
     "previousSlide": "Previous slide",
-    "nextSlide": "Next slide",
-    "modelCard": {
-      "downloads": "{count} downloads",
-      "planBadge": {
-        "free": "Free",
-        "pro": "Pro",
-        "max": "Max"
-      }
-    }
+    "nextSlide": "Next slide"
   },
 
   "HowItWorks": {
@@ -392,7 +378,9 @@
   "Designers": {
     "card": {
       "openProfile": "Open @{username} profile",
-      "browseModels": "Browse {count} models"
+      "browseModels": "Browse {count} models",
+      "followButton": "Follow designer",
+      "unfollowButton": "Unfollow designer"
     },
     "shell": {
       "pageTitle": "Designers",
@@ -417,18 +405,7 @@
       "applyButton": "Show {count} designers",
       "specialization": {
         "title": "Portfolio focus",
-        "description": "Filter by model categories creators publish in.",
-        "labels": {
-          "furniture": "Furniture",
-          "decor": "Decor",
-          "materials": "Materials",
-          "lighting": "Lighting",
-          "kitchen": "Kitchen",
-          "bathroom": "Bathroom",
-          "exterior": "Exterior",
-          "plants": "Plants",
-          "technology": "Technology"
-        }
+        "description": "Filter by model categories creators publish in."
       },
       "level": {
         "title": "Level",
@@ -441,20 +418,6 @@
           },
           "max": { "label": "Max", "description": "Max plan — highest quota" }
         }
-      },
-      "account": {
-        "title": "Account",
-        "description": "Show only verified or pro creators.",
-        "labels": {
-          "verified": {
-            "label": "Verified",
-            "description": "Identity confirmed."
-          },
-          "pro": {
-            "label": "Pro members",
-            "description": "Pro-tier publishers."
-          }
-        }
       }
     },
     "results": {
@@ -464,13 +427,6 @@
       "error": "Something went wrong. Please try again.",
       "empty": "No designers found matching your filters.",
       "sortLabel": "Sort",
-      "tabs": {
-        "all": "All",
-        "featured": "Featured",
-        "rising": "Rising",
-        "new": "New",
-        "following": "Following"
-      },
       "sort": {
         "popular": "Most popular",
         "newest": "Newest",
@@ -491,6 +447,7 @@
         "description": "Public Threedly profile for @{username}, including published 3D models and creator details."
       },
       "backToDesigners": "Back to designers",
+      "backToPrevious": "Back",
       "avatarAlt": "Avatar of @{username}",
       "notFound": {
         "title": "@{username} is not publishing models yet",
@@ -529,12 +486,8 @@
   },
 
   "Profile": {
-    "title": "Profile",
-    "description": "Your account details are shown below.",
-    "emailLabel": "Email",
     "emptyEmail": "No email found.",
     "sidebar": {
-      "title": "Workspace",
       "viewPublicProfile": "View public profile",
       "items": {
         "overview": "Overview",
@@ -585,11 +538,33 @@
 
     "library": {
       "title": "My Library",
-      "subtitle": "Your downloaded and saved models.",
+      "subtitle": "Downloads, favorite models, and designer subscriptions live here.",
+      "badge": "Saved workspace",
       "primaryCta": "Browse catalog",
+      "designersCta": "Browse designers",
+      "tabs": {
+        "downloaded": "Downloaded",
+        "favoriteModels": "Favorite models",
+        "subscriptions": "Subscriptions"
+      },
+      "stats": {
+        "downloaded": "Downloaded",
+        "favoriteModels": "Favorite models",
+        "subscriptions": "Subscriptions"
+      },
       "empty": {
-        "title": "Library is empty",
-        "description": "You have not downloaded any models yet."
+        "downloaded": {
+          "title": "No downloaded models yet",
+          "description": "Download a model from the catalog and it will appear here as your personal library history."
+        },
+        "favoriteModels": {
+          "title": "No favorite models yet",
+          "description": "Save useful models from the catalog to keep a shortlist for future projects."
+        },
+        "subscriptions": {
+          "title": "No designer subscriptions yet",
+          "description": "Follow designers you trust and their profiles will stay one click away."
+        }
       }
     },
 
@@ -597,8 +572,6 @@
       "title": "Uploads",
       "subtitle": "Upload models, catalog preview images, and optional 3D previews.",
       "loadError": "Could not load the model upload page data.",
-      "uploadCta": "Upload model",
-      "secondaryCta": "Open settings",
       "empty": {
         "title": "You do not have models yet",
         "description": "Add your first model and it will appear here and in the catalog."
@@ -615,7 +588,6 @@
         "fileZones": {
           "coverTitle": "Catalog cover",
           "coverDescription": "Add a JPG, PNG, or WEBP up to 5 MB.",
-          "modelTitle": "Primary model file",
           "modelDescription": "GLB, GLTF, FBX, OBJ, MAX, BLEND, or ZIP up to 50 MB.",
           "previewTitle": "Optional 3D preview",
           "previewDescription": "GLB or GLTF for the future viewer.",
@@ -653,12 +625,7 @@
           "pro": "Pro",
           "max": "Max"
         },
-        "coverImage": "Preview image",
-        "coverImageHint": "JPG, PNG, or WEBP up to 5 MB. This image appears in the catalog.",
         "file": "Model file",
-        "fileHint": "Supports GLB, GLTF, FBX, OBJ, MAX, BLEND, and ZIP up to 50 MB.",
-        "previewModelFile": "Lightweight 3D preview",
-        "previewModelFileHint": "Optional: GLB or GLTF up to 50 MB for the future model detail viewer.",
         "submit": "Upload model",
         "submitting": "Uploading...",
         "success": "Model uploaded and published to the catalog.",
@@ -705,10 +672,8 @@
       "profile": {
         "title": "Profile",
         "description": "Basic profile data.",
-        "avatar": "Avatar",
         "avatarMenuAriaLabel": "Open avatar menu",
         "avatarMenu": {
-          "edit": "Edit",
           "upload": "Upload photo",
           "remove": "Remove photo"
         },
@@ -722,8 +687,6 @@
       },
 
       "account": {
-        "title": "Account",
-        "description": "You can end your session at any time.",
         "signOut": "Sign out"
       }
     }
@@ -803,7 +766,6 @@
       "hidePasswordButton": "Hide password",
       "submit": "Save new password",
       "submitting": "Saving...",
-      "success": "Your password has been updated. You can now sign in with the new password.",
       "errors": {
         "passwordMinLength": "Password must be at least 8 characters.",
         "confirmPasswordRequired": "Please confirm your password.",
@@ -818,10 +780,6 @@
       "title": "Create an account",
       "description": "Already have an account?",
       "link": "Log in",
-      "firstNameLabel": "First name",
-      "firstNamePlaceholder": "John",
-      "lastNameLabel": "Last name",
-      "lastNamePlaceholder": "Doe",
       "usernameLabel": "Username",
       "usernamePlaceholder": "your_username",
       "usernameHint": "Use 3-20 lowercase letters, numbers, or underscores (example: john_3d).",
@@ -831,8 +789,6 @@
       "passwordPlaceholder": "Create a password",
       "showPasswordButton": "Show password",
       "hidePasswordButton": "Hide password",
-      "confirmPasswordLabel": "Confirm password",
-      "confirmPasswordPlaceholder": "Repeat your password",
       "termsPrefix": "I agree to the",
       "termsLink": "Terms & Conditions",
       "errors": {
@@ -854,8 +810,6 @@
       "title": "Verify your email",
       "description": "We sent a 6-digit code to your email.",
       "backToSignup": "Back to sign up",
-      "emailLabel": "Email address",
-      "emailPlaceholder": "you@example.com",
       "otpLabel": "One-time code",
       "otpHint": "Enter the 6-digit code from your email message.",
       "submit": "Verify code",
