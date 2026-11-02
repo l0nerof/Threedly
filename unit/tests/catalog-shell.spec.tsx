@@ -15,6 +15,14 @@ import {
 let mockSearchParamsValue = "";
 let mockPushFn = vi.fn();
 
+vi.mock(
+  "@/src/app/[locale]/(main-pages)/catalog/download-actions",
+  async () => {
+    const { downloadActionMock } = await import("../mocks/model-download-ui");
+    return { downloadModelAction: downloadActionMock };
+  },
+);
+
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPushFn }),
   useSearchParams: () => new URLSearchParams(mockSearchParamsValue),
@@ -132,6 +140,71 @@ function closeCategoryPicker(picker: HTMLElement) {
 }
 
 describe("CatalogShell", () => {
+  it("updates URL-backed categories while preserving an unrelated local plan selection", () => {
+    const view = renderCatalogShell("category=chairs&plans=free");
+    fireEvent.click(
+      within(screen.getAllByLabelText("Filters")[0]).getByRole("checkbox", {
+        name: /^Pro/i,
+      }),
+    );
+    mockSearchParamsValue = "category=lighting&plans=free";
+    view.rerender(
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <CatalogShell categoryGroups={categoryGroups} />
+      </NextIntlClientProvider>,
+    );
+    const picker = openDesktopCategoryPicker();
+    expect(
+      within(picker)
+        .getByRole("checkbox", { name: "Lighting" })
+        .getAttribute("data-state"),
+    ).toBe("checked");
+    expect(
+      within(picker)
+        .getByRole("checkbox", { name: "Chairs" })
+        .getAttribute("data-state"),
+    ).toBe("unchecked");
+    closeCategoryPicker(picker);
+    expect(
+      within(screen.getAllByLabelText("Filters")[0])
+        .getByRole("checkbox", { name: /^Pro/i })
+        .getAttribute("data-state"),
+    ).toBe("checked");
+  });
+
+  it("keeps unapplied groups across unrelated URL changes and replaces plans when their URL changes", () => {
+    const view = renderCatalogShell("plans=free");
+    const picker = openDesktopCategoryPicker();
+    fireEvent.click(
+      within(picker).getByRole("checkbox", { name: "Furniture" }),
+    );
+    closeCategoryPicker(picker);
+    mockSearchParamsValue = "plans=max&sort=newest&page=2";
+    view.rerender(
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <CatalogShell categoryGroups={categoryGroups} />
+      </NextIntlClientProvider>,
+    );
+    const filters = screen.getAllByLabelText("Filters")[0];
+    expect(
+      within(filters)
+        .getByRole("checkbox", { name: /^Max/ })
+        .getAttribute("data-state"),
+    ).toBe("checked");
+    expect(
+      within(filters)
+        .getByRole("checkbox", { name: /^Free/i })
+        .getAttribute("data-state"),
+    ).toBe("unchecked");
+    const restoredPicker = openDesktopCategoryPicker();
+    expect(
+      within(restoredPicker)
+        .getByRole("checkbox", { name: "Furniture" })
+        .getAttribute("data-state"),
+    ).toBe("checked");
+    closeCategoryPicker(restoredPicker);
+  });
+
   it("opens the mobile filters sheet", () => {
     renderCatalogShell();
 

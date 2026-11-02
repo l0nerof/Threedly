@@ -1,3 +1,4 @@
+import messages from "@/messages/en.json";
 import FeaturedModelCard from "@/src/business/components/FeaturedModelCard";
 import type { CatalogModel } from "@/src/business/types/catalog";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -17,40 +18,25 @@ vi.mock("@/src/business/utils/supabase/client", () => ({
   }),
 }));
 
+vi.mock(
+  "@/src/app/[locale]/(main-pages)/catalog/download-actions",
+  async () => {
+    const { downloadActionMock } = await import("../mocks/model-download-ui");
+    return { downloadModelAction: downloadActionMock };
+  },
+);
+
+vi.mock("next/navigation", async () => {
+  const { createDownloadNavigationMock } =
+    await import("../mocks/model-download-ui");
+  return createDownloadNavigationMock();
+});
+
 vi.mock("next/image", () => ({
   default: ({ alt, src }: { alt?: string; src: string }) => (
     <span data-alt={alt} data-src={src} />
   ),
 }));
-
-const messages = {
-  Catalog: {
-    resultsArea: {
-      modelCard: {
-        downloadButton: "Download",
-        downloads: "{count} downloads",
-        favoriteButton: "Add to favorites",
-        removeFavoriteButton: "Remove from favorites",
-        planBadge: {
-          free: "Free",
-          max: "Max",
-          pro: "Pro",
-        },
-        previewButton: "Preview",
-      },
-    },
-  },
-  FeaturedModels: {
-    modelCard: {
-      downloads: "{count} downloads",
-      planBadge: {
-        free: "Free",
-        max: "Max",
-        pro: "Pro",
-      },
-    },
-  },
-};
 
 const model: CatalogModel = {
   cover_image_path: "/cover.webp",
@@ -96,6 +82,11 @@ describe("FeaturedModelCard", () => {
       screen.queryByRole("button", { name: "Add to favorites" }),
     ).toBeNull();
     expect(screen.getByRole("button", { name: "Preview" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Download" })).toBeTruthy();
+    const download = screen.getByRole("button", { name: "Download" });
+    expect(download).toHaveProperty("disabled", false);
+    expect(download.closest("a")).toBeNull();
+    expect(
+      screen.getByRole("link", { name: model.title_en }).getAttribute("href"),
+    ).toBe("/en/catalog/cantilever-chair");
   });
 });

@@ -1,15 +1,23 @@
+import { profileLibraryTabs } from "@/src/business/constants/profileConfig";
+import { profileLibraryRequestSchema } from "@/src/business/schemas/profileLibrary";
 import { isLocaleCode } from "@/src/business/utils/isLocaleCode";
+import { Link } from "@/src/i18n/routing";
 import { Badge } from "@/src/shared/components/Badge";
+import { Button } from "@/src/shared/components/Button";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { fetchProfileLibraryData } from "./actions";
 import ProfileLibraryTabs from "./components/ProfileLibraryTabs";
 
 type Props = {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export default async function ProfileLibraryPage({ params }: Props) {
+export default async function ProfileLibraryPage({
+  params,
+  searchParams,
+}: Props) {
   const { locale } = await params;
 
   if (!isLocaleCode(locale)) {
@@ -18,27 +26,39 @@ export default async function ProfileLibraryPage({ params }: Props) {
 
   setRequestLocale(locale);
 
-  const t = await getTranslations("Profile");
-  const libraryData = await fetchProfileLibraryData();
+  const query = await searchParams;
+  const request = profileLibraryRequestSchema.parse(query);
+  const [t, result] = await Promise.all([
+    getTranslations({ locale, namespace: "Profile" }),
+    fetchProfileLibraryData(query),
+  ]);
 
-  if (!libraryData) {
-    notFound();
+  if (!result.ok && result.error === "unauthorized") {
+    redirect(`/${locale}/login`);
   }
 
-  const libraryStats = [
-    {
-      label: t("library.stats.downloaded"),
-      value: libraryData.downloadedModels.length,
-    },
-    {
-      label: t("library.stats.favoriteModels"),
-      value: libraryData.favoriteModels.length,
-    },
-    {
-      label: t("library.stats.subscriptions"),
-      value: libraryData.followedDesigners.length,
-    },
-  ];
+  const library = result.ok ? result.library : null;
+  if (library && request.page !== library.current_page) {
+    const normalized = new URLSearchParams();
+    for (const [key, value] of Object.entries(query)) {
+      if (typeof value === "string") normalized.set(key, value);
+      else if (Array.isArray(value))
+        value.forEach((item) => normalized.append(key, item));
+    }
+    normalized.set("tab", library.active_tab);
+    normalized.set("page", String(library.current_page));
+    redirect(`/${locale}/profile/library?${normalized.toString()}`);
+  }
+  const counts = library
+    ? {
+        downloaded: library.downloaded_count,
+        favoriteModels: library.favorite_count,
+        subscriptions: library.followed_count,
+      }
+    : null;
+  const numberFormat = new Intl.NumberFormat(
+    locale === "ua" ? "uk-UA" : "en-US",
+  );
 
   return (
     <section className="flex flex-col gap-6">
@@ -69,21 +89,56 @@ export default async function ProfileLibraryPage({ params }: Props) {
             </div>
           </div>
 
-          <div className="grid gap-2 sm:grid-cols-3 lg:min-w-96">
-            {libraryStats.map((stat) => (
-              <div
-                key={stat.label}
-                className="border-border/60 bg-background/55 rounded-2xl border px-4 py-3 backdrop-blur"
-              >
-                <p className="text-2xl font-semibold">{stat.value}</p>
-                <p className="text-muted-foreground text-xs">{stat.label}</p>
-              </div>
-            ))}
-          </div>
+          {counts && (
+            <div className="grid gap-2 sm:grid-cols-3 lg:min-w-96">
+              {profileLibraryTabs.map(({ value }) => (
+                <div
+                  key={value}
+                  role="group"
+                  aria-label={t(`library.stats.${value}`)}
+                  className="border-border/60 bg-background/55 rounded-2xl border px-4 py-3 backdrop-blur"
+                >
+                  <p className="text-2xl font-semibold">
+                    {numberFormat.format(counts[value])}
+                  </p>
+                  <p className="text-muted-foreground text-xs">
+                    {t(`library.stats.${value}`)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      <ProfileLibraryTabs {...libraryData} locale={locale} />
+      {library ? (
+        <ProfileLibraryTabs
+          key={library.profile_id}
+          library={library}
+          locale={locale}
+        />
+      ) : (
+        <div
+          role="alert"
+          className="border-border/60 bg-surface/80 flex flex-col items-start gap-4 rounded-3xl border p-6"
+        >
+          <p>
+            {t(
+              !result.ok && result.error === "timeout"
+                ? "library.loadTimeout"
+                : "library.loadError",
+            )}
+          </p>
+          <Button asChild>
+            <Link
+              href={`/profile/library?tab=${request.tab}&page=${request.page}`}
+              prefetch={false}
+            >
+              {t("library.retry")}
+            </Link>
+          </Button>
+        </div>
+      )}
     </section>
   );
 }

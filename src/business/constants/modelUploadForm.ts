@@ -55,6 +55,7 @@ export const modelUploadActionErrorMessageKeys = {
   unsupportedCoverImageType: "errors.unsupportedCoverImageType",
   unsupportedPreviewFileType: "errors.unsupportedPreviewFileType",
   unauthorized: "errors.unauthorized",
+  uploadNotAllowed: "errors.uploadNotAllowed",
   uploadFailed: "errors.uploadFailed",
   metadataSaveFailed: "errors.metadataSaveFailed",
   generic: "errors.generic",

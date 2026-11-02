@@ -2,9 +2,15 @@
 
 import DesignerCard from "@/src/app/[locale]/(main-pages)/designers/components/DesignerCard";
 import ModelCard from "@/src/business/components/ModelCard";
+import ModelsPagination from "@/src/business/components/ModelsPagination";
 import type { LocaleCode } from "@/src/business/constants/localization";
+import { profileLibraryTabs } from "@/src/business/constants/profileConfig";
 import type { CatalogModel } from "@/src/business/types/catalog";
 import type { Designer } from "@/src/business/types/designer";
+import type {
+  ProfileLibraryPage,
+  ProfileLibraryTab,
+} from "@/src/business/types/profileLibrary";
 import { Link } from "@/src/i18n/routing";
 import { Button } from "@/src/shared/components/Button";
 import {
@@ -13,40 +19,14 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/src/shared/components/Tabs";
-import { Download, Heart, UserRoundPlus } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 
 type ProfileLibraryTabsProps = {
-  downloadedModels: CatalogModel[];
-  favoriteModels: CatalogModel[];
-  followedDesigners: Designer[];
+  library: ProfileLibraryPage;
   locale: LocaleCode;
 };
-
-type LibraryTabValue = "downloaded" | "favoriteModels" | "subscriptions";
-
-const libraryTabs = [
-  {
-    icon: Download,
-    translationKey: "downloaded",
-    value: "downloaded",
-  },
-  {
-    icon: Heart,
-    translationKey: "favoriteModels",
-    value: "favoriteModels",
-  },
-  {
-    icon: UserRoundPlus,
-    translationKey: "subscriptions",
-    value: "subscriptions",
-  },
-] satisfies {
-  icon: typeof Download;
-  translationKey: LibraryTabValue;
-  value: LibraryTabValue;
-}[];
 
 type EmptyStateProps = {
   ctaHref: "/catalog" | "/designers";
@@ -124,7 +104,7 @@ function DesignerGrid({
   );
 }
 
-function CountBadge({ count }: { count: number }) {
+function CountBadge({ count }: { count: string }) {
   return (
     <span className="bg-background/70 text-muted-foreground group-data-[state=active]/library-tab:text-foreground rounded-full px-2 py-0.5 text-xs transition-colors">
       {count}
@@ -132,81 +112,116 @@ function CountBadge({ count }: { count: number }) {
   );
 }
 
-function ProfileLibraryTabs({
-  downloadedModels,
-  favoriteModels,
-  followedDesigners,
-  locale,
-}: ProfileLibraryTabsProps) {
+function ProfileLibraryTabs({ library, locale }: ProfileLibraryTabsProps) {
   const t = useTranslations("Profile.library");
-  const [activeTab, setActiveTab] = useState<LibraryTabValue>("downloaded");
-  const tabCounts: Record<LibraryTabValue, number> = {
-    downloaded: downloadedModels.length,
-    favoriteModels: favoriteModels.length,
-    subscriptions: followedDesigners.length,
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
+  const tabCounts = {
+    downloaded: library.downloaded_count,
+    favoriteModels: library.favorite_count,
+    subscriptions: library.followed_count,
   };
+  const numberFormat = new Intl.NumberFormat(
+    locale === "ua" ? "uk-UA" : "en-US",
+  );
+  function navigate(tab: ProfileLibraryTab, page: number) {
+    if (
+      isPending ||
+      (tab === library.active_tab && page === library.current_page)
+    )
+      return;
+    const params = new URLSearchParams(searchParams.toString());
+    if (tab === "downloaded") params.delete("tab");
+    else params.set("tab", tab);
+    if (page === 1) params.delete("page");
+    else params.set("page", String(page));
+    const query = params.toString();
+    startTransition(() =>
+      router.push(`${pathname}${query ? `?${query}` : ""}`, { scroll: false }),
+    );
+  }
 
   return (
     <Tabs
-      value={activeTab}
-      onValueChange={(value) => setActiveTab(value as LibraryTabValue)}
+      value={library.active_tab}
+      onValueChange={(value) => {
+        const tab = profileLibraryTabs.find((item) => item.value === value);
+        if (tab) navigate(tab.value, 1);
+      }}
+      aria-busy={isPending}
       className="w-full gap-5"
     >
-      <TabsList className="border-border/60 bg-surface/90 grid h-auto! w-full max-w-3xl grid-cols-1 gap-1.5 rounded-[1.65rem] border p-1.5 shadow-[0_12px_44px_hsl(var(--foreground)/0.08)] backdrop-blur-sm sm:grid-cols-3 sm:rounded-full">
-        {libraryTabs.map((tab) => {
+      <TabsList
+        aria-label={t("title")}
+        className="border-border/60 bg-surface/90 grid h-auto! w-full max-w-3xl grid-cols-1 gap-1.5 rounded-[1.65rem] border p-1.5 shadow-[0_12px_44px_hsl(var(--foreground)/0.08)] backdrop-blur-sm sm:grid-cols-3 sm:rounded-full"
+      >
+        {profileLibraryTabs.map((tab) => {
           const Icon = tab.icon;
 
           return (
             <TabsTrigger
               key={tab.value}
               value={tab.value}
+              aria-label={`${t(`tabs.${tab.value}`)} ${numberFormat.format(tabCounts[tab.value])}`}
+              disabled={isPending}
               className="group/library-tab data-[state=active]:from-primary/20 data-[state=active]:via-primary/14 data-[state=active]:to-primary/8 data-[state=active]:border-primary/25 h-11 min-w-0 rounded-full border border-transparent px-4 text-sm font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:shadow-[0_0_0_1px_hsl(var(--primary)/0.18),0_14px_34px_hsl(var(--primary)/0.18)]"
             >
               <Icon className="size-4" aria-hidden />
-              <span className="truncate">
-                {t(`tabs.${tab.translationKey}`)}
-              </span>
-              <CountBadge count={tabCounts[tab.value]} />
+              <span className="truncate">{t(`tabs.${tab.value}`)}</span>
+              <CountBadge count={numberFormat.format(tabCounts[tab.value])} />
             </TabsTrigger>
           );
         })}
       </TabsList>
 
-      <TabsContent value="downloaded">
-        <ModelGrid
-          models={downloadedModels}
-          locale={locale}
-          empty={{
-            ctaHref: "/catalog",
-            ctaLabel: t("primaryCta"),
-            description: t("empty.downloaded.description"),
-            title: t("empty.downloaded.title"),
-          }}
-        />
-      </TabsContent>
-      <TabsContent value="favoriteModels">
-        <ModelGrid
-          models={favoriteModels}
-          locale={locale}
-          empty={{
-            ctaHref: "/catalog",
-            ctaLabel: t("primaryCta"),
-            description: t("empty.favoriteModels.description"),
-            title: t("empty.favoriteModels.title"),
-          }}
-        />
-      </TabsContent>
-      <TabsContent value="subscriptions">
-        <DesignerGrid
-          designers={followedDesigners}
-          empty={{
-            ctaHref: "/designers",
-            ctaLabel: t("designersCta"),
-            description: t("empty.subscriptions.description"),
-            title: t("empty.subscriptions.title"),
-          }}
-        />
-      </TabsContent>
+      {isPending && (
+        <p role="status" className="text-muted-foreground text-sm">
+          {t("loading")}
+        </p>
+      )}
+      {profileLibraryTabs.map(({ value }) => (
+        <TabsContent key={value} value={value} className="space-y-5">
+          {value === library.active_tab && (
+            <>
+              {value === "subscriptions" ? (
+                <DesignerGrid
+                  designers={library.designers}
+                  empty={{
+                    ctaHref: "/designers",
+                    ctaLabel: t("designersCta"),
+                    description: t("empty.subscriptions.description"),
+                    title: t("empty.subscriptions.title"),
+                  }}
+                />
+              ) : (
+                <ModelGrid
+                  models={library.models}
+                  locale={locale}
+                  empty={{
+                    ctaHref: "/catalog",
+                    ctaLabel: t("primaryCta"),
+                    description: t(`empty.${value}.description`),
+                    title: t(`empty.${value}.title`),
+                  }}
+                />
+              )}
+              <ModelsPagination
+                currentPage={library.current_page}
+                totalPages={library.total_pages}
+                pageOfLabel={t("pagination.pageOf", {
+                  current: library.current_page,
+                  total: library.total_pages,
+                })}
+                previousPageLabel={t("pagination.previous")}
+                nextPageLabel={t("pagination.next")}
+                onPageChange={(page) => navigate(library.active_tab, page)}
+              />
+            </>
+          )}
+        </TabsContent>
+      ))}
     </Tabs>
   );
 }

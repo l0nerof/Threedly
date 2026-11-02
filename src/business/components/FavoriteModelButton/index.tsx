@@ -3,7 +3,7 @@
 import { useFavoriteModel } from "@/src/business/hooks/useFavorites";
 import { Button } from "@/src/shared/components/Button";
 import { cn } from "@/src/shared/utils/cn";
-import { Heart } from "lucide-react";
+import { CircleAlert, Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { MouseEvent } from "react";
 
@@ -14,25 +14,40 @@ type FavoriteModelButtonProps = {
 
 function FavoriteModelButton({ className, modelId }: FavoriteModelButtonProps) {
   const t = useTranslations("Catalog.resultsArea.modelCard");
-  const { isAuthenticated, isFavorite, isPending, toggle } =
-    useFavoriteModel(modelId);
+  const feedback = useTranslations("Favorites");
+  const {
+    isAuthenticated,
+    isFavorite,
+    isPending,
+    isReadError,
+    readErrorCode,
+    retry,
+    toggle,
+  } = useFavoriteModel(modelId);
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isReadError) {
     return null;
   }
 
-  const label = isFavorite ? t("removeFavoriteButton") : t("favoriteButton");
+  const label = isReadError
+    ? feedback("retryModel")
+    : isFavorite
+      ? t("removeFavoriteButton")
+      : t("favoriteButton");
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    toggle();
+    if (isReadError) void retry();
+    else toggle();
   };
 
   return (
     <Button
       aria-label={label}
-      aria-pressed={isFavorite}
+      aria-pressed={isReadError ? undefined : isFavorite}
+      aria-busy={isPending}
+      title={isReadError ? feedback(`errors.${readErrorCode}`) : undefined}
       disabled={isPending}
       onClick={handleClick}
       variant="ghost"
@@ -43,7 +58,14 @@ function FavoriteModelButton({ className, modelId }: FavoriteModelButtonProps) {
         className,
       )}
     >
-      <Heart className={cn("size-4", isFavorite && "fill-current")} />
+      {isReadError ? (
+        <CircleAlert className="size-4" aria-hidden />
+      ) : (
+        <Heart
+          className={cn("size-4", isFavorite && "fill-current")}
+          aria-hidden
+        />
+      )}
     </Button>
   );
 }

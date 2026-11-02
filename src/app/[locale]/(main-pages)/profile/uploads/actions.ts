@@ -114,6 +114,20 @@ export async function uploadModelAction(
     return { ok: false, error: "unauthorized" };
   }
 
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("can_upload")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (profileError) {
+    return { ok: false, error: "generic" };
+  }
+
+  if (!profile?.can_upload) {
+    return { ok: false, error: "uploadNotAllowed" };
+  }
+
   const modelId = crypto.randomUUID();
   const storagePath = buildModelUploadStoragePath({
     userId: user.id,

@@ -20,6 +20,7 @@ export type Database = {
           slug: string;
           sort_order: number;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           group_id: string;
@@ -59,6 +60,7 @@ export type Database = {
           slug: string;
           sort_order: number;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           id?: string;
@@ -83,6 +85,7 @@ export type Database = {
           designer_id: string;
           follower_id: string;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           designer_id: string;
@@ -114,19 +117,20 @@ export type Database = {
         Row: {
           created_at: string;
           id: string;
-          model_id: string;
+          model_id: string | null;
           user_id: string;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           id?: string;
-          model_id: string;
+          model_id?: string | null;
           user_id: string;
         };
         Update: {
           created_at?: string;
           id?: string;
-          model_id?: string;
+          model_id?: string | null;
           user_id?: string;
         };
         Relationships: [
@@ -152,6 +156,7 @@ export type Database = {
           model_id: string;
           user_id: string;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           model_id: string;
@@ -192,6 +197,7 @@ export type Database = {
           object_path: string;
           storage_provider: Database["public"]["Enums"]["storage_provider"];
         };
+        ComputedFields: never;
         Insert: {
           bucket: string;
           created_at?: string;
@@ -226,12 +232,148 @@ export type Database = {
           },
         ];
       };
+      model_publication_assets: {
+        Row: {
+          byte_size: number;
+          created_at: string;
+          draft_id: string;
+          extension: string;
+          file_name: string;
+          id: string;
+          kind: Database["public"]["Enums"]["publication_asset_kind"];
+          mime_type: string;
+          object_path: string;
+          state: Database["public"]["Enums"]["publication_asset_state"];
+          upload_expires_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          byte_size: number;
+          created_at?: string;
+          draft_id: string;
+          extension: string;
+          file_name: string;
+          id?: string;
+          kind: Database["public"]["Enums"]["publication_asset_kind"];
+          mime_type: string;
+          object_path: string;
+          state?: Database["public"]["Enums"]["publication_asset_state"];
+          upload_expires_at?: string;
+        };
+        Update: {
+          byte_size?: number;
+          created_at?: string;
+          draft_id?: string;
+          extension?: string;
+          file_name?: string;
+          id?: string;
+          kind?: Database["public"]["Enums"]["publication_asset_kind"];
+          mime_type?: string;
+          object_path?: string;
+          state?: Database["public"]["Enums"]["publication_asset_state"];
+          upload_expires_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "model_publication_assets_draft_id_fkey";
+            columns: ["draft_id"];
+            isOneToOne: false;
+            referencedRelation: "model_publication_drafts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      model_publication_drafts: {
+        Row: {
+          category_id: string | null;
+          cover_asset_id: string | null;
+          created_at: string;
+          creator_id: string;
+          description_en: string | null;
+          description_ua: string | null;
+          id: string;
+          lifecycle: Database["public"]["Enums"]["publication_draft_state"];
+          minimum_plan: Database["public"]["Enums"]["plan_key"];
+          publication_model_id: string | null;
+          revision: number;
+          source_asset_id: string | null;
+          title_en: string;
+          title_ua: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          category_id?: string | null;
+          cover_asset_id?: string | null;
+          created_at?: string;
+          creator_id?: string;
+          description_en?: string | null;
+          description_ua?: string | null;
+          id?: string;
+          lifecycle?: Database["public"]["Enums"]["publication_draft_state"];
+          minimum_plan?: Database["public"]["Enums"]["plan_key"];
+          publication_model_id?: string | null;
+          revision?: number;
+          source_asset_id?: string | null;
+          title_en?: string;
+          title_ua?: string;
+          updated_at?: string;
+        };
+        Update: {
+          category_id?: string | null;
+          cover_asset_id?: string | null;
+          created_at?: string;
+          creator_id?: string;
+          description_en?: string | null;
+          description_ua?: string | null;
+          id?: string;
+          lifecycle?: Database["public"]["Enums"]["publication_draft_state"];
+          minimum_plan?: Database["public"]["Enums"]["plan_key"];
+          publication_model_id?: string | null;
+          revision?: number;
+          source_asset_id?: string | null;
+          title_en?: string;
+          title_ua?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "model_publication_drafts_category_id_fkey";
+            columns: ["category_id"];
+            isOneToOne: false;
+            referencedRelation: "categories";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "model_publication_drafts_creator_id_fkey";
+            columns: ["creator_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "publication_cover_asset_fkey";
+            columns: ["cover_asset_id"];
+            isOneToOne: false;
+            referencedRelation: "model_publication_assets";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "publication_source_asset_fkey";
+            columns: ["source_asset_id"];
+            isOneToOne: false;
+            referencedRelation: "model_publication_assets";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       models: {
         Row: {
           category_id: string;
           cover_image_path: string;
           created_at: string;
           creator_id: string | null;
+          deletion_pending: boolean;
           description_en: string | null;
           description_ua: string | null;
           download_count: number;
@@ -249,11 +391,13 @@ export type Database = {
           title_ua: string;
           updated_at: string;
         };
+        ComputedFields: never;
         Insert: {
           category_id: string;
           cover_image_path: string;
           created_at?: string;
           creator_id?: string | null;
+          deletion_pending?: boolean;
           description_en?: string | null;
           description_ua?: string | null;
           download_count?: number;
@@ -276,6 +420,7 @@ export type Database = {
           cover_image_path?: string;
           created_at?: string;
           creator_id?: string | null;
+          deletion_pending?: boolean;
           description_en?: string | null;
           description_ua?: string | null;
           download_count?: number;
@@ -323,6 +468,7 @@ export type Database = {
           updated_at: string;
           username: string;
         };
+        ComputedFields: never;
         Insert: {
           avatar_path?: string | null;
           bio?: string | null;
@@ -354,11 +500,86 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      get_profile_library_page: {
+        Args: { requested_page?: number; requested_tab?: string };
+        Returns: {
+          active_tab: string;
+          current_page: number;
+          designers: Json;
+          downloaded_count: number;
+          favorite_count: number;
+          followed_count: number;
+          models: Json;
+          profile_id: string;
+          total_pages: number;
+        }[];
+      };
+      get_profile_overview: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          downloads_limit_monthly: number;
+          downloads_used_this_month: number;
+          favorite_models: number;
+          plan_key: Database["public"]["Enums"]["plan_key"];
+          profile_id: string;
+          published_uploads: number;
+        }[];
+      };
       is_username_available: { Args: { u: string }; Returns: boolean };
+      manage_owned_model: {
+        Args: {
+          requested_metadata?: Json;
+          requested_model_id: string;
+          requested_operation: string;
+        };
+        Returns: {
+          image_paths: Json;
+          model_id: string;
+          model_paths: Json;
+          result: string;
+        }[];
+      };
+      manage_publication_draft: {
+        Args: {
+          requested_draft_id: string;
+          requested_operation: string;
+          requested_payload?: Json;
+          requested_revision?: number;
+        };
+        Returns: {
+          assets: Json;
+          draft_id: string;
+          lifecycle: Database["public"]["Enums"]["publication_draft_state"];
+          model_id: string;
+          objects: Json;
+          result: string;
+          revision: number;
+        }[];
+      };
+
+      record_model_download: {
+        Args: { requested_file_id: string; requested_model_id: string };
+        Returns: Database["public"]["Enums"]["model_download_status"];
+      };
     };
     Enums: {
+      model_download_status:
+        | "ok"
+        | "unauthorized"
+        | "model_unavailable"
+        | "file_unavailable"
+        | "plan_required"
+        | "quota_exceeded";
       model_status: "draft" | "published" | "archived";
       plan_key: "free" | "pro" | "max";
+      publication_asset_kind: "source" | "cover";
+      publication_asset_state: "reserved" | "active" | "retired" | "deleting";
+      publication_draft_state:
+        | "draft"
+        | "publishing"
+        | "published"
+        | "cancelling"
+        | "deleting";
       storage_provider: "supabase" | "r2";
     };
     CompositeTypes: {
@@ -490,8 +711,25 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      model_download_status: [
+        "ok",
+        "unauthorized",
+        "model_unavailable",
+        "file_unavailable",
+        "plan_required",
+        "quota_exceeded",
+      ],
       model_status: ["draft", "published", "archived"],
       plan_key: ["free", "pro", "max"],
+      publication_asset_kind: ["source", "cover"],
+      publication_asset_state: ["reserved", "active", "retired", "deleting"],
+      publication_draft_state: [
+        "draft",
+        "publishing",
+        "published",
+        "cancelling",
+        "deleting",
+      ],
       storage_provider: ["supabase", "r2"],
     },
   },

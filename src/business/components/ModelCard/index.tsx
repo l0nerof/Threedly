@@ -1,11 +1,11 @@
 "use client";
 
+import DownloadModelButton from "@/src/business/components/DownloadModelButton";
 import FavoriteModelButton from "@/src/business/components/FavoriteModelButton";
 import ModelCardShell from "@/src/business/components/ModelCardShell";
 import type { CatalogModel } from "@/src/business/types/catalog";
-import { Link } from "@/src/i18n/routing";
 import { Button } from "@/src/shared/components/Button";
-import { Download, ScanEye } from "lucide-react";
+import { ScanEye } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 
@@ -30,9 +30,10 @@ function ModelCard({
   const title = titleLocale === "ua" ? model.title_ua : model.title_en;
 
   return (
-    <Link href={`/catalog/${model.slug}`} className={linkClassName}>
+    <div className={linkClassName}>
       <ModelCardShell
         title={title}
+        href={`/catalog/${model.slug}`}
         plan={model.minimum_plan}
         planLabel={t(`modelCard.planBadge.${model.minimum_plan}`)}
         formatLabel={model.file_format}
@@ -50,7 +51,7 @@ function ModelCard({
             />
             <FavoriteModelButton
               modelId={model.id}
-              className="absolute top-3 right-3"
+              className="absolute top-3 right-3 z-20"
             />
           </>
         }
@@ -60,14 +61,11 @@ function ModelCard({
               <ScanEye className="size-4" aria-hidden />
               {t("modelCard.previewButton")}
             </Button>
-            <Button size="sm" className="rounded-xl" disabled>
-              <Download className="size-4" aria-hidden />
-              {t("modelCard.downloadButton")}
-            </Button>
+            <DownloadModelButton modelId={model.id} />
           </>
         }
       />
-    </Link>
+    </div>
   );
 }
 

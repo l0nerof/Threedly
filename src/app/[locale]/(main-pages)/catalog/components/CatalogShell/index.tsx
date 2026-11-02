@@ -35,7 +35,7 @@ import {
 import { Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CatalogFilters from "../CatalogFilters";
 import CatalogResults from "../CatalogResults";
 import CatalogSortDropdown from "../CatalogSortDropdown";
@@ -74,27 +74,36 @@ function CatalogShell({ categoryGroups }: CatalogShellProps) {
   const [draftFormats, setDraftFormats] =
     useState<CatalogFormatValue[]>(selectedFormats);
 
-  // Sync drafts when URL changes externally (back/forward, reset)
-  useEffect(() => {
-    if (categoriesParam) {
-      setDraftGroups([]);
-      return;
-    }
-
-    setDraftGroups(splitParam(groupParam));
-  }, [categoriesParam, groupParam]);
-
-  useEffect(() => {
-    setDraftCategories(splitParam(categoriesParam));
-  }, [categoriesParam]);
-
-  useEffect(() => {
-    setDraftPlans(parseListParam(plansParam, catalogPlanKeys));
-  }, [plansParam]);
-
-  useEffect(() => {
-    setDraftFormats(parseListParam(formatsParam, catalogFormatValues));
-  }, [formatsParam]);
+  const [previousParams, setPreviousParams] = useState({
+    categoriesParam,
+    groupParam,
+    plansParam,
+    formatsParam,
+  });
+  if (
+    previousParams.categoriesParam !== categoriesParam ||
+    previousParams.groupParam !== groupParam ||
+    previousParams.plansParam !== plansParam ||
+    previousParams.formatsParam !== formatsParam
+  ) {
+    setPreviousParams({
+      categoriesParam,
+      groupParam,
+      plansParam,
+      formatsParam,
+    });
+    if (
+      previousParams.categoriesParam !== categoriesParam ||
+      previousParams.groupParam !== groupParam
+    )
+      setDraftGroups(categoriesParam ? [] : splitParam(groupParam));
+    if (previousParams.categoriesParam !== categoriesParam)
+      setDraftCategories(splitParam(categoriesParam));
+    if (previousParams.plansParam !== plansParam)
+      setDraftPlans(parseListParam(plansParam, catalogPlanKeys));
+    if (previousParams.formatsParam !== formatsParam)
+      setDraftFormats(parseListParam(formatsParam, catalogFormatValues));
+  }
 
   // ── Shared URL filter logic ────────────────────────────────────────────────
   const {

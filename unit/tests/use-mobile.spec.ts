@@ -1,4 +1,6 @@
 import { useIsMobile } from "@/src/shared/hooks/use-mobile";
+import { createElement } from "react";
+import { renderToString } from "react-dom/server";
 import {
   act,
   afterEach,
@@ -23,6 +25,32 @@ describe("useIsMobile", () => {
 
   afterEach(() => {
     matchMedia.cleanup();
+  });
+
+  it.each([
+    [375, true],
+    [767, true],
+    [768, false],
+  ] as const)("reads the initial viewport at %d pixels", (width, mobile) => {
+    matchMedia.setViewportWidth(width);
+    const { result } = renderHook(() => useIsMobile());
+    expect(result.current).toBe(mobile);
+  });
+
+  it("uses the desktop server snapshot and then reads the real client viewport", () => {
+    matchMedia.setViewportWidth(375);
+    function ViewportStatus() {
+      return createElement(
+        "output",
+        null,
+        useIsMobile() ? "mobile" : "desktop",
+      );
+    }
+    expect(renderToString(createElement(ViewportStatus))).toBe(
+      "<output>desktop</output>",
+    );
+    const { result } = renderHook(() => useIsMobile());
+    expect(result.current).toBe(true);
   });
 
   it("returns false when the viewport is desktop sized", async () => {

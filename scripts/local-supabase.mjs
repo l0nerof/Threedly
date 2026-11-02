@@ -269,6 +269,7 @@ async function runNextDev(options) {
         ...process.env,
         NEXT_PUBLIC_SUPABASE_URL: status.apiUrl,
         NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: status.publishableKey,
+        SUPABASE_SERVICE_ROLE_KEY: status.serviceRoleKey,
       }
     : process.env;
 

@@ -32,6 +32,7 @@ export type ModelUploadActionError =
   | "unsupportedCoverImageType"
   | "unsupportedPreviewFileType"
   | "unauthorized"
+  | "uploadNotAllowed"
   | "uploadFailed"
   | "metadataSaveFailed"
   | "generic";
@@ -90,6 +91,7 @@ export type ModelUploadFormErrorMessageKey =
   | "errors.validationFailed"
   | "errors.invalidMetadata"
   | "errors.unauthorized"
+  | "errors.uploadNotAllowed"
   | "errors.uploadFailed"
   | "errors.metadataSaveFailed"
   | "errors.generic"

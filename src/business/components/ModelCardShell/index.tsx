@@ -5,12 +5,14 @@ import {
   PLAN_BADGE_COLORS,
 } from "@/src/business/constants/catalogConfig";
 import type { CatalogPlanKey } from "@/src/business/types/catalog";
+import { Link } from "@/src/i18n/routing";
 import { cn } from "@/src/shared/utils/cn";
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
 
 type ModelCardShellProps = {
   title: string;
+  href?: string;
   plan: CatalogPlanKey;
   planLabel: string;
   media?: ReactNode;
@@ -30,6 +32,7 @@ type ModelCardShellProps = {
 
 function ModelCardShell({
   title,
+  href,
   plan,
   planLabel,
   media,
@@ -54,7 +57,7 @@ function ModelCardShell({
     <motion.article
       data-slot="model-card-shell"
       className={cn(
-        "border-border/60 bg-surface-elevated/80 flex flex-col gap-4 rounded-[1.65rem] border p-4 shadow-xs sm:p-5",
+        "border-border/60 bg-surface-elevated/80 relative flex flex-col gap-4 rounded-[1.65rem] border p-4 shadow-xs sm:p-5",
         className,
       )}
       whileHover={interactive ? { y: -6 } : undefined}
@@ -64,6 +67,14 @@ function ModelCardShell({
           : undefined
       }
     >
+      {href ? (
+        <Link
+          href={href}
+          className="focus-visible:ring-ring/50 absolute inset-0 z-10 rounded-[inherit] focus-visible:ring-2 focus-visible:outline-none"
+        >
+          <span className="sr-only">{title}</span>
+        </Link>
+      ) : null}
       {media ? (
         <div
           className={cn(
@@ -133,7 +144,11 @@ function ModelCardShell({
           {showActionsDivider ? (
             <div className="border-border/60 border-t" />
           ) : null}
-          <div className="grid grid-cols-2 gap-2">{actions}</div>
+          <div
+            className={cn("grid grid-cols-2 gap-2", href && "relative z-20")}
+          >
+            {actions}
+          </div>
         </>
       ) : null}
     </motion.article>

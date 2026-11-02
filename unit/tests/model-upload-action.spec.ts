@@ -3,6 +3,9 @@ import { vi } from "vitest";
 import { beforeEach, describe, expect, it } from "../fixtures";
 
 const mocks = vi.hoisted(() => ({
+  getUserMock: vi.fn(),
+  profileEqMock: vi.fn(),
+  profileMaybeSingleMock: vi.fn(),
   storageFromMock: vi.fn(),
   uploadMock: vi.fn(),
   removeMock: vi.fn(),
@@ -21,14 +24,18 @@ vi.mock("@/src/business/utils/isLocaleCode", () => ({
 vi.mock("@/src/business/utils/supabase/server", () => ({
   createClient: vi.fn(async () => ({
     auth: {
-      getUser: vi.fn(async () => ({
-        data: { user: { id: "user-1" } },
-      })),
+      getUser: mocks.getUserMock,
     },
     storage: {
       from: mocks.storageFromMock,
     },
     from: vi.fn((table: string) => {
+      if (table === "profiles") {
+        return {
+          select: () => ({ eq: mocks.profileEqMock }),
+        };
+      }
+
       if (table === "models") {
         return {
           insert: (payload: unknown) => {
@@ -102,6 +109,17 @@ function getInsertedModelFilePayload(): Record<string, unknown> {
 describe("uploadModelAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.getUserMock.mockResolvedValue({
+      data: { user: { id: "user-1" } },
+      error: null,
+    });
+    mocks.profileEqMock.mockReturnValue({
+      maybeSingle: mocks.profileMaybeSingleMock,
+    });
+    mocks.profileMaybeSingleMock.mockResolvedValue({
+      data: { can_upload: true },
+      error: null,
+    });
     mocks.storageFromMock.mockImplementation((bucket: string) => ({
       upload: (path: string, file: File, options: unknown) =>
         mocks.uploadMock(bucket, path, file, options),
@@ -136,6 +154,7 @@ describe("uploadModelAction", () => {
     expect(mocks.storageFromMock).toHaveBeenCalledWith("models");
     expect(mocks.storageFromMock).toHaveBeenCalledWith("model-images");
     expect(mocks.uploadMock).toHaveBeenCalledTimes(2);
+    expect(mocks.profileEqMock).toHaveBeenCalledWith("id", "user-1");
     expect(modelPayload.cover_image_path).toBe(`user-1/${modelId}/cover.webp`);
     expect(modelPayload.preview_model_path).toBeNull();
     expect(modelPayload.status).toBe("published");
@@ -165,6 +184,59 @@ describe("uploadModelAction", () => {
     expect(modelPayload.preview_model_path).toBe(
       `user-1/${modelId}/preview.glb`,
     );
+  });
+
+  it.each([{ can_upload: false }, null])(
+    "rejects an account without upload access before any writes: %j",
+    async (profile) => {
+      mocks.profileMaybeSingleMock.mockResolvedValueOnce({
+        data: profile,
+        error: null,
+      });
+
+      const result = await uploadModelAction(
+        "ua",
+        buildValidFormData(new File(["model"], "chair.glb")),
+      );
+
+      expect(result).toEqual({ ok: false, error: "uploadNotAllowed" });
+      expect(mocks.storageFromMock).not.toHaveBeenCalled();
+      expect(mocks.insertModelMock).not.toHaveBeenCalled();
+      expect(mocks.insertModelFileMock).not.toHaveBeenCalled();
+    },
+  );
+
+  it("rejects guests without checking profile access or writing files", async () => {
+    mocks.getUserMock.mockResolvedValueOnce({
+      data: { user: null },
+      error: null,
+    });
+
+    const result = await uploadModelAction(
+      "ua",
+      buildValidFormData(new File(["model"], "chair.glb")),
+    );
+
+    expect(result).toEqual({ ok: false, error: "unauthorized" });
+    expect(mocks.profileEqMock).not.toHaveBeenCalled();
+    expect(mocks.storageFromMock).not.toHaveBeenCalled();
+  });
+
+  it("fails closed when upload access cannot be loaded", async () => {
+    mocks.profileMaybeSingleMock.mockResolvedValueOnce({
+      data: null,
+      error: { message: "profile query failed" },
+    });
+
+    const result = await uploadModelAction(
+      "ua",
+      buildValidFormData(new File(["model"], "chair.glb")),
+    );
+
+    expect(result).toEqual({ ok: false, error: "generic" });
+    expect(mocks.storageFromMock).not.toHaveBeenCalled();
+    expect(mocks.insertModelMock).not.toHaveBeenCalled();
+    expect(mocks.insertModelFileMock).not.toHaveBeenCalled();
   });
 
   it("rejects unsupported files before storage upload", async () => {

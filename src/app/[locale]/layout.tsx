@@ -9,6 +9,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { Inter, JetBrains_Mono, Source_Serif_4 } from "next/font/google";
 import { notFound } from "next/navigation";
+import { NavigationGuardProvider } from "nextjs-nav-guard";
 import { ReactNode } from "react";
 import "./globals.css";
 
@@ -81,8 +82,10 @@ export default async function RootLayout({ children, params }: Props) {
         >
           <QueryProvider>
             <NextIntlClientProvider messages={messages}>
-              {children}
-              <Toaster />
+              <NavigationGuardProvider>
+                {children}
+                <Toaster />
+              </NavigationGuardProvider>
             </NextIntlClientProvider>
           </QueryProvider>
         </ThemeProvider>

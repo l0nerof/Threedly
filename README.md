@@ -177,9 +177,11 @@ There is no need to keep `.env.remote.local` or `.env.supabase.local` anymore. T
 
 Local Supabase URLs:
 
-- Studio: `http://127.0.0.1:55323`
-- API: `http://127.0.0.1:55321`
-- Postgres: `postgresql://postgres:postgres@127.0.0.1:55322/postgres`
+- Studio: `http://127.0.0.1:54323`
+- API: `http://127.0.0.1:54321`
+- Postgres: `postgresql://postgres:postgres@127.0.0.1:54322/postgres`
+
+Local ports moved from 5532x after Windows reserved that range. Analytics uses 54328 because 54327 is also unavailable. These are development-only addresses; remote credentials in `.env.local` are unchanged.
 
 Environment values are used by the browser, server, and session proxy helpers in `src/business/utils/supabase/*`.
 

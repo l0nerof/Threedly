@@ -16,6 +16,8 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({
     refresh: vi.fn(),
   }),
+  redirect: vi.fn(),
+  permanentRedirect: vi.fn(),
 }));
 
 const messages = {

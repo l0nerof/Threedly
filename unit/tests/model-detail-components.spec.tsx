@@ -1,6 +1,8 @@
+import messages from "@/messages/ua.json";
 import ModelHero from "@/src/app/[locale]/(main-pages)/catalog/[slug]/components/ModelHero";
 import OverviewTab from "@/src/app/[locale]/(main-pages)/catalog/[slug]/components/OverviewTab";
 import type { CatalogModel } from "@/src/business/types/catalog";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NextIntlClientProvider } from "next-intl";
 import { vi } from "vitest";
 import { describe, expect, it, render, screen } from "../fixtures";
@@ -36,6 +38,20 @@ vi.mock("next-intl/server", () => ({
   }),
 }));
 
+vi.mock(
+  "@/src/app/[locale]/(main-pages)/catalog/download-actions",
+  async () => {
+    const { downloadActionMock } = await import("../mocks/model-download-ui");
+    return { downloadModelAction: downloadActionMock };
+  },
+);
+
+vi.mock("next/navigation", async () => {
+  const { createDownloadNavigationMock } =
+    await import("../mocks/model-download-ui");
+  return createDownloadNavigationMock();
+});
+
 vi.mock("next/image", () => ({
   default: ({ alt, src }: { alt?: string; src: string }) => (
     <span data-alt={alt} data-src={src} />
@@ -68,10 +84,27 @@ describe("model detail components", () => {
       year: "numeric",
     }).format(new Date(model.published_at ?? ""));
 
-    render(await ModelHero({ model, locale: "ua" }));
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <NextIntlClientProvider locale="ua" messages={messages}>
+          {await ModelHero({ model, locale: "ua" })}
+        </NextIntlClientProvider>
+      </QueryClientProvider>,
+    );
 
     expect(screen.getByText(`Оновлено ${expectedDate}`)).toBeTruthy();
     expect(screen.queryByText("Оновлено May 2026")).toBeNull();
+    expect(screen.getByRole("button", { name: "Прев'ю" })).toHaveProperty(
+      "disabled",
+      true,
+    );
+    expect(screen.getByText("87 завантажень")).toBeTruthy();
+    expect(
+      screen.getByRole("heading", { level: 1, name: model.title_ua }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: messages.Downloads.button }),
+    ).toHaveProperty("disabled", false);
   });
 
   it("renders the real model creator and initials when the creator has no avatar", async () => {

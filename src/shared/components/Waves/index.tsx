@@ -1,6 +1,6 @@
 "use client";
 
-import React, { CSSProperties, useEffect, useRef } from "react";
+import React, { CSSProperties, useEffect, useRef, useState } from "react";
 
 class Grad {
   x: number;
@@ -175,8 +175,8 @@ const Waves: React.FC<WavesProps> = ({
     left: 0,
     top: 0,
   });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const noiseRef = useRef(new Noise(Math.random()));
+  const [initialNoise] = useState(() => new Noise(Math.random()));
+  const noiseRef = useRef(initialNoise);
   const linesRef = useRef<Point[][]>([]);
   const mouseRef = useRef<Mouse>({
     x: -10,

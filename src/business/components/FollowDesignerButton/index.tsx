@@ -3,7 +3,7 @@
 import { useFollowDesigner } from "@/src/business/hooks/useFavorites";
 import { Button } from "@/src/shared/components/Button";
 import { cn } from "@/src/shared/utils/cn";
-import { Heart } from "lucide-react";
+import { CircleAlert, Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { MouseEvent } from "react";
 
@@ -17,25 +17,40 @@ function FollowDesignerButton({
   designerId,
 }: FollowDesignerButtonProps) {
   const t = useTranslations("Designers.card");
-  const { isAuthenticated, isFollowing, isPending, toggle } =
-    useFollowDesigner(designerId);
+  const feedback = useTranslations("Favorites");
+  const {
+    isAuthenticated,
+    isFollowing,
+    isPending,
+    isReadError,
+    readErrorCode,
+    retry,
+    toggle,
+  } = useFollowDesigner(designerId);
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isReadError) {
     return null;
   }
 
-  const label = isFollowing ? t("unfollowButton") : t("followButton");
+  const label = isReadError
+    ? feedback("retryDesigner")
+    : isFollowing
+      ? t("unfollowButton")
+      : t("followButton");
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    toggle();
+    if (isReadError) void retry();
+    else toggle();
   };
 
   return (
     <Button
       aria-label={label}
-      aria-pressed={isFollowing}
+      aria-pressed={isReadError ? undefined : isFollowing}
+      aria-busy={isPending}
+      title={isReadError ? feedback(`errors.${readErrorCode}`) : undefined}
       disabled={isPending}
       onClick={handleClick}
       variant="ghost"
@@ -46,7 +61,14 @@ function FollowDesignerButton({
         className,
       )}
     >
-      <Heart className={cn("size-4", isFollowing && "fill-current")} />
+      {isReadError ? (
+        <CircleAlert className="size-4" aria-hidden />
+      ) : (
+        <Heart
+          className={cn("size-4", isFollowing && "fill-current")}
+          aria-hidden
+        />
+      )}
     </Button>
   );
 }

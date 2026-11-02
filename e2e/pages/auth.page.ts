@@ -87,6 +87,20 @@ export class SignupPage extends BasePage {
   async submitEmpty() {
     await this.submitButton.click();
   }
+
+  async register(account: {
+    username: string;
+    email: string;
+    password: string;
+  }) {
+    await this.open();
+    await this.usernameInput.fill(account.username);
+    await this.emailInput.fill(account.email);
+    await this.passwordInput.fill(account.password);
+    await this.termsCheckbox.check();
+    await this.submitButton.click();
+    await this.expectPathname("/ua/verify-email");
+  }
 }
 
 export class ForgotPasswordPage extends BasePage {
@@ -117,5 +131,102 @@ export class ForgotPasswordPage extends BasePage {
     await this.expectPathname("/ua/forgot-password");
     await expect(this.heading).toBeVisible();
     await expect(this.submitButton).toBeVisible();
+  }
+
+  async requestReset(email: string) {
+    await this.open();
+    await this.emailInput.fill(email);
+    await this.submitButton.click();
+    await expect(
+      this.page.getByText(
+        "Якщо для цієї адреси існує акаунт, посилання для скидання пароля вже надіслано.",
+        { exact: true },
+      ),
+    ).toBeVisible();
+  }
+}
+
+export class VerifyEmailPage extends BasePage {
+  readonly codeInput: Locator;
+  readonly submitButton: Locator;
+  readonly resendButton: Locator;
+  readonly formAlerts: Locator;
+
+  constructor(page: Page) {
+    super(page);
+    this.codeInput = page.getByLabel("Одноразовий код", { exact: true });
+    this.submitButton = page.getByRole("button", {
+      name: "Підтвердити код",
+      exact: true,
+    });
+    this.resendButton = page.getByRole("button", {
+      name: /^(Надіслати код ще раз|Повторна відправка через|Надсилаємо)/,
+    });
+    this.formAlerts = page.locator("form").getByRole("alert");
+  }
+
+  async open(email?: string) {
+    await this.goto(
+      `/ua/verify-email${email ? `?email=${encodeURIComponent(email)}` : ""}`,
+    );
+    await expect(this.codeInput).toBeVisible();
+  }
+
+  async submitCode(code: string) {
+    await this.codeInput.fill("");
+    await expect(this.submitButton).toBeDisabled();
+    await this.codeInput.fill(code);
+    await expect(this.codeInput).toHaveValue(code);
+    await expect(this.submitButton).toBeEnabled();
+    await this.submitButton.click();
+  }
+
+  async expectRejected() {
+    await expect(this.formAlerts).toContainText(
+      /Код підтвердження недійсний\.|Термін дії коду підтвердження минув\./,
+    );
+    await expect(this.submitButton).toBeEnabled();
+  }
+}
+
+export class ResetPasswordPage extends BasePage {
+  readonly passwordInput: Locator;
+  readonly confirmPasswordInput: Locator;
+  readonly submitButton: Locator;
+  readonly formAlerts: Locator;
+
+  constructor(page: Page) {
+    super(page);
+    this.passwordInput = page.getByLabel("Новий пароль", { exact: true });
+    this.confirmPasswordInput = page.getByLabel("Підтвердьте новий пароль", {
+      exact: true,
+    });
+    this.submitButton = page.getByRole("button", {
+      name: "Зберегти новий пароль",
+      exact: true,
+    });
+    this.formAlerts = page.locator("form").getByRole("alert");
+  }
+
+  async fillAndSubmit(password: string, confirmation = password) {
+    await this.passwordInput.fill(password);
+    await this.confirmPasswordInput.fill(confirmation);
+    await this.submitButton.click();
+  }
+
+  async expectInvalid() {
+    await expect(
+      this.page.getByText(
+        "Посилання для відновлення недійсне або протерміноване.",
+        { exact: true },
+      ),
+    ).toBeVisible();
+    await expect(this.passwordInput).toHaveCount(0);
+    await expect(
+      this.page.getByRole("link", {
+        name: "Запросити нове посилання",
+        exact: true,
+      }),
+    ).toHaveAttribute("href", "/ua/forgot-password");
   }
 }
