@@ -12,6 +12,7 @@ import type {
 } from "@/src/business/types/catalog";
 import { resolveModelCoverImageUrl } from "@/src/business/utils/modelUpload";
 import { createClient } from "@/src/business/utils/supabase/server";
+import { resolveAvatarPublicUrl } from "@/src/business/utils/supabase/storage";
 
 const SORT_COLUMN: Record<
   CatalogSortValue,
@@ -24,6 +25,11 @@ const SORT_COLUMN: Record<
   fresh: [{ column: "published_at", ascending: false }],
   downloads: [{ column: "download_count", ascending: false }],
 };
+
+const MODEL_LIST_SELECT =
+  "id, slug, title_ua, title_en, description_ua, description_en, cover_image_path, minimum_plan, file_format, download_count, is_featured, published_at";
+
+const MODEL_DETAIL_SELECT = `${MODEL_LIST_SELECT}, creator:profiles!models_creator_id_fkey(username, avatar_path)`;
 
 type FilterParams = {
   search?: string;
@@ -54,10 +60,7 @@ export async function fetchCatalogModels({
 
   let query = supabase
     .from("models")
-    .select(
-      "id, slug, title_ua, title_en, description_ua, description_en, cover_image_path, minimum_plan, file_format, download_count, is_featured, published_at",
-      { count: "exact" },
-    )
+    .select(MODEL_LIST_SELECT, { count: "exact" })
     .eq("status", "published")
     .range(from, to);
 
@@ -119,9 +122,7 @@ export async function fetchModelBySlug(
 
   const { data, error } = await supabase
     .from("models")
-    .select(
-      "id, slug, title_ua, title_en, description_ua, description_en, cover_image_path, minimum_plan, file_format, download_count, is_featured, published_at",
-    )
+    .select(MODEL_DETAIL_SELECT)
     .eq("slug", slug)
     .eq("status", "published")
     .single();
@@ -133,6 +134,12 @@ export async function fetchModelBySlug(
   return {
     ...data,
     cover_image_path: resolveModelCoverImageUrl(data.cover_image_path),
+    creator: data.creator
+      ? {
+          ...data.creator,
+          avatar_path: resolveAvatarPublicUrl(data.creator.avatar_path),
+        }
+      : null,
   };
 }
 

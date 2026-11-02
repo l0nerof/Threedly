@@ -33,7 +33,7 @@ export default async function ModelPage({ params }: Props) {
         <ModelHero model={model} locale={locale} />
         <ModelTabs
           overviewContent={<OverviewTab model={model} locale={locale} />}
-          filesContent={<FilesTab />}
+          filesContent={<FilesTab modelId={model.id} locale={locale} />}
         />
         <RelatedModels currentSlug={slug} />
       </div>

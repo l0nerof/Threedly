@@ -1,11 +1,17 @@
 "use client";
 
+import { useFavoritesSession } from "@/src/business/hooks/useFavoritesSession";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode, useState } from "react";
 
 type QueryProviderProps = {
   children: ReactNode;
 };
+
+function FavoritesSessionSync() {
+  useFavoritesSession();
+  return null;
+}
 
 export function QueryProvider({ children }: QueryProviderProps) {
   const [queryClient] = useState(
@@ -20,6 +26,9 @@ export function QueryProvider({ children }: QueryProviderProps) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <FavoritesSessionSync />
+      {children}
+    </QueryClientProvider>
   );
 }

@@ -56,6 +56,80 @@ function renderDesignersShell(paramsString = "") {
 }
 
 describe("DesignersShell", () => {
+  it("updates only the draft fields whose URL parameters changed", () => {
+    const view = renderDesignersShell("groups=furniture&levels=free");
+    fireEvent.click(
+      within(screen.getAllByLabelText("Filters")[0]).getByRole("checkbox", {
+        name: /^Pro/i,
+      }),
+    );
+    mockSearchParamsValue = "levels=free";
+    view.rerender(
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <DesignersShell categoryGroups={categoryGroups} />
+      </NextIntlClientProvider>,
+    );
+    const filters = screen.getAllByLabelText("Filters")[0];
+    expect(
+      within(filters)
+        .getByRole("checkbox", { name: "Furniture" })
+        .getAttribute("data-state"),
+    ).toBe("unchecked");
+    expect(
+      within(filters)
+        .getByRole("checkbox", { name: /^Pro/i })
+        .getAttribute("data-state"),
+    ).toBe("checked");
+    mockSearchParamsValue = "groups=furniture&levels=max";
+    view.rerender(
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <DesignersShell categoryGroups={categoryGroups} />
+      </NextIntlClientProvider>,
+    );
+    expect(
+      within(filters)
+        .getByRole("checkbox", { name: "Furniture" })
+        .getAttribute("data-state"),
+    ).toBe("checked");
+    expect(
+      within(filters)
+        .getByRole("checkbox", { name: /^Max/i })
+        .getAttribute("data-state"),
+    ).toBe("checked");
+    expect(
+      within(filters)
+        .getByRole("checkbox", { name: /^Pro/i })
+        .getAttribute("data-state"),
+    ).toBe("unchecked");
+  });
+
+  it("preserves unapplied groups when sorting or pagination changes", () => {
+    const view = renderDesignersShell();
+    fireEvent.click(
+      within(screen.getAllByLabelText("Filters")[0]).getByRole("checkbox", {
+        name: "Furniture",
+      }),
+    );
+    mockSearchParamsValue = "sort=models&page=2";
+    view.rerender(
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <DesignersShell categoryGroups={categoryGroups} />
+      </NextIntlClientProvider>,
+    );
+    const filters = screen.getAllByLabelText("Filters")[0];
+    expect(
+      within(filters)
+        .getByRole("checkbox", { name: "Furniture" })
+        .getAttribute("data-state"),
+    ).toBe("checked");
+    fireEvent.click(
+      within(filters).getByRole("button", { name: "Show 13 designers" }),
+    );
+    expect(String(mockPushFn.mock.calls.at(-1)?.[0])).toContain(
+      "groups=furniture",
+    );
+  });
+
   it("pushes portfolio group filters to the URL from the desktop sidebar", () => {
     mockPushFn = vi.fn();
     renderDesignersShell();

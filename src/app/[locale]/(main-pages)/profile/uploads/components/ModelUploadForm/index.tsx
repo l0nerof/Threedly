@@ -11,6 +11,7 @@ import {
   studioIntroVariants,
 } from "@/src/business/constants/upload";
 import { catalogQueryKeys } from "@/src/business/queries/catalog";
+import { designersQueryKeys } from "@/src/business/queries/designers";
 import { modelUploadFormSchema } from "@/src/business/schemas/modelUpload";
 import type { CatalogPlanKey } from "@/src/business/types/catalog";
 import type {
@@ -235,6 +236,9 @@ function ModelUploadForm({
       setMinimumPlan(MODEL_UPLOAD_DEFAULT_MINIMUM_PLAN);
       void queryClient.invalidateQueries({
         queryKey: catalogQueryKeys.models(),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: designersQueryKeys.root,
       });
       router.refresh();
     } finally {

@@ -1,10 +1,11 @@
 "use client";
 
+import FollowDesignerButton from "@/src/business/components/FollowDesignerButton";
 import { DESIGNER_PLAN_BADGE } from "@/src/business/constants/designersConfig";
 import type { Designer } from "@/src/business/types/designer";
-import { Link } from "@/src/i18n/routing";
+import { Link, usePathname } from "@/src/i18n/routing";
 import { cn } from "@/src/shared/utils/cn";
-import { Grid2X2, Heart } from "lucide-react";
+import { Grid2X2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -15,13 +16,15 @@ type DesignerCardProps = {
 
 function DesignerCard({ designer }: DesignerCardProps) {
   const t = useTranslations("Designers.card");
+  const pathname = usePathname();
   const plan =
     DESIGNER_PLAN_BADGE[designer.plan_key] ?? DESIGNER_PLAN_BADGE.free;
   const initials = designer.username.slice(0, 2).toUpperCase();
+  const profileHref = `/designers/${designer.username}?from=${encodeURIComponent(pathname)}`;
 
   return (
     <Link
-      href={`/designers/${designer.username}`}
+      href={profileHref}
       className="block min-w-0"
       aria-label={t("openProfile", { username: designer.username })}
     >
@@ -65,9 +68,10 @@ function DesignerCard({ designer }: DesignerCardProps) {
               </div>
             </div>
 
-            <span className="text-muted-foreground bg-surface-muted/70 flex size-8 shrink-0 items-center justify-center rounded-full">
-              <Heart className="size-4" />
-            </span>
+            <FollowDesignerButton
+              designerId={designer.id}
+              className="shrink-0"
+            />
           </div>
 
           {designer.bio && (

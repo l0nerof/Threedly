@@ -17,7 +17,7 @@ import {
   useUrlFilters,
 } from "@/src/shared/hooks/use-url-filters";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export type ActiveChip = {
   key: string;
@@ -66,13 +66,20 @@ export function useDesignersFilters(
   const [draftLevels, setDraftLevels] =
     useState<DesignerLevel[]>(selectedLevels);
 
-  useEffect(() => {
-    setDraftGroups(splitParam(groupsParam));
-  }, [groupsParam]);
-
-  useEffect(() => {
-    setDraftLevels(parseListParam(levelsParam, designerLevelValues));
-  }, [levelsParam]);
+  const [previousParams, setPreviousParams] = useState({
+    groupsParam,
+    levelsParam,
+  });
+  if (
+    previousParams.groupsParam !== groupsParam ||
+    previousParams.levelsParam !== levelsParam
+  ) {
+    setPreviousParams({ groupsParam, levelsParam });
+    if (previousParams.groupsParam !== groupsParam)
+      setDraftGroups(splitParam(groupsParam));
+    if (previousParams.levelsParam !== levelsParam)
+      setDraftLevels(parseListParam(levelsParam, designerLevelValues));
+  }
 
   const {
     searchValue,

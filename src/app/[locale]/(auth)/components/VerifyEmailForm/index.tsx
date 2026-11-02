@@ -37,28 +37,33 @@ function VerifyEmailForm({ initialEmail }: VerifyEmailFormProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
+  const [cooldownEndsAt, setCooldownEndsAt] = useState(
+    () => Date.now() + RESEND_COOLDOWN_SECONDS * 1000,
+  );
   const [cooldownSecondsLeft, setCooldownSecondsLeft] = useState(
     RESEND_COOLDOWN_SECONDS,
   );
 
   useEffect(() => {
-    if (cooldownSecondsLeft <= 0) {
-      return;
-    }
+    const updateRemaining = () => {
+      const secondsLeft = Math.max(
+        0,
+        Math.ceil((cooldownEndsAt - Date.now()) / 1000),
+      );
+      setCooldownSecondsLeft(secondsLeft);
+      if (secondsLeft === 0) window.clearInterval(timerId);
+    };
 
-    const timerId = window.setInterval(() => {
-      setCooldownSecondsLeft((prevValue) => {
-        if (prevValue <= 1) {
-          window.clearInterval(timerId);
-          return 0;
-        }
+    const timerId = window.setInterval(updateRemaining, 1000);
+    window.addEventListener("focus", updateRemaining);
+    document.addEventListener("visibilitychange", updateRemaining);
 
-        return prevValue - 1;
-      });
-    }, 1000);
-
-    return () => window.clearInterval(timerId);
-  }, [cooldownSecondsLeft]);
+    return () => {
+      window.clearInterval(timerId);
+      window.removeEventListener("focus", updateRemaining);
+      document.removeEventListener("visibilitychange", updateRemaining);
+    };
+  }, [cooldownEndsAt]);
 
   const canResend = cooldownSecondsLeft === 0;
   const hasEmail = Boolean(email.trim());
@@ -152,6 +157,7 @@ function VerifyEmailForm({ initialEmail }: VerifyEmailFormProps) {
       return;
     }
 
+    setCooldownEndsAt(Date.now() + RESEND_COOLDOWN_SECONDS * 1000);
     setCooldownSecondsLeft(RESEND_COOLDOWN_SECONDS);
     toast.success(t("resentSuccess"));
   };

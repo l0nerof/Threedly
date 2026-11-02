@@ -47,6 +47,7 @@ The audience is visually demanding. Avoid generic SaaS-looking output.
 ## Working Rules
 
 - Always respond in Ukrainian unless the task explicitly requires another language.
+- Write and maintain all repository documentation in English. Preserve locale-specific strings in code examples and UI selectors.
 - Optimize for the smallest possible diff that solves the task.
 - Avoid cosmetic edits, mass renames, formatting-only passes, or repo-wide cleanup unless explicitly requested.
 - Before substantial changes, first outline a short plan, list the files to be changed, and surface any blocking assumptions or questions.
@@ -135,3 +136,13 @@ For more context, read:
 - `docs/development-guide.md`
 - `unit/README.md`
 - `e2e/README.md`
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

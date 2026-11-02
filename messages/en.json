@@ -23,7 +23,6 @@
     "profile": "Profile",
     "allCategories": "All categories"
   },
-
   "Hero": {
     "badge": "3D model platform",
     "eyebrow": "For designers, visualizers, and studios",
@@ -39,7 +38,6 @@
     "primaryCta": "Browse catalog",
     "secondaryCta": "How it works"
   },
-
   "Pricing": {
     "eyebrow": "Pricing",
     "titleStart": "Choose the",
@@ -76,7 +74,6 @@
           "four": "Community support"
         }
       },
-
       "pro": {
         "name": "Pro",
         "description": "For professionals",
@@ -91,7 +88,6 @@
           "five": "Model customization"
         }
       },
-
       "business": {
         "name": "Business",
         "description": "For teams and studios",
@@ -116,29 +112,24 @@
         "question": "Which plan is right for me?",
         "answer": "Start with Free to explore the library. Upgrade to Pro for commercial use or Business for team workflows."
       },
-
       "two": {
         "question": "What payment options do you accept?",
         "answer": "We accept major credit cards. Annual billing and invoices are available for Business plans."
       },
-
       "three": {
         "question": "Can I cancel or switch plans?",
         "answer": "Yes. You can change plans at any time and the new plan will take effect on your next billing cycle."
       },
-
       "four": {
         "question": "Do you offer refunds?",
         "answer": "We offer a 14-day refund window for paid plans. Contact support if you need help."
       },
-
       "five": {
         "question": "What happens if I hit usage limits?",
         "answer": "You can upgrade instantly or wait until limits reset at the start of the next billing cycle."
       }
     }
   },
-
   "Catalog": {
     "metadata": {
       "title": "Threedly Catalog - 3D models for designers",
@@ -160,10 +151,6 @@
       "countLoading": "..."
     },
     "filters": {
-      "group": {
-        "title": "Category group",
-        "description": "Select a whole catalog area."
-      },
       "category": {
         "title": "Category",
         "description": "You can select more than one category.",
@@ -173,9 +160,7 @@
         "pickerDescription": "Search groups and categories quickly.",
         "searchPlaceholder": "Search categories",
         "emptySearch": "No matching categories.",
-        "pickerDone": "Done",
-        "showMore": "Show {count} more",
-        "showLess": "Show less"
+        "pickerDone": "Done"
       },
       "plan": {
         "title": "Minimum plan",
@@ -247,27 +232,57 @@
           "max": "Max"
         },
         "favoriteButton": "Add to favorites",
+        "removeFavoriteButton": "Remove from favorites",
         "previewButton": "Preview",
         "downloadButton": "Download"
       }
     }
   },
-
+  "Favorites": {
+    "retryModel": "Retry loading favorites",
+    "retryDesigner": "Retry loading followed designers",
+    "errors": {
+      "unauthorized": "Your session has expired. Sign in and try again.",
+      "sessionChanged": "Your account changed. Check the current state and try again.",
+      "invalidRequest": "Unable to identify this item. Refresh the page and try again.",
+      "unavailable": "This model or designer is no longer available.",
+      "timeout": "Unable to confirm the change in time. Check the current state before trying again.",
+      "generic": "Unable to confirm favorites or follows. Please try again."
+    }
+  },
+  "Downloads": {
+    "button": "Download",
+    "downloadFile": "Download {name}",
+    "pending": "Preparing file…",
+    "errors": {
+      "unauthorized": "Sign in to download models.",
+      "modelUnavailable": "This model is no longer available.",
+      "fileUnavailable": "This file is unavailable. Try another file or model.",
+      "planRequired": "Your current plan does not include this model.",
+      "quotaExceeded": "Your monthly download limit has been reached. Models already downloaded this month can still be downloaded again.",
+      "invalidRequest": "Unable to identify the requested file. Refresh the page and try again.",
+      "storageUnavailable": "File storage is temporarily unavailable. Please try again later.",
+      "timeout": "Preparing the file took too long. Try again: the same model will not use another download this month.",
+      "generic": "Unable to prepare the download. Please try again."
+    }
+  },
   "ModelPage": {
     "hero": {
-      "byPrefix": "by",
       "downloads": "{count} downloads",
       "updated": "Updated {date}",
       "specificationsTitle": "Specifications",
-      "planInfo": "This model is available on the {plan} plan. No subscription required to download.",
+      "planInfo": "Downloading requires the {plan} plan or higher and an available monthly download allowance.",
       "previewButton": "Preview",
       "downloadButton": "Download"
     },
     "tabs": {
       "overview": "Overview",
       "filesAndFormats": "Files & Formats",
-      "filesAndFormatsDescription": "Download individual file formats below. All bundles include textures and materials.",
+      "filesAndFormatsDescription": "Available source files provided by the creator. Different formats of the same model share one download allowance this month.",
       "filesAndFormatsDownload": "Download",
+      "filesEmpty": "The creator has not added any downloadable files yet.",
+      "filesError": "Unable to load the files. Please refresh the page and try again.",
+      "filesPrimary": "Primary file",
       "aboutTitle": "About this model",
       "aboutEmpty": "No description available.",
       "designerTitle": "Designer",
@@ -279,23 +294,13 @@
       "viewAll": "View all"
     }
   },
-
   "FeaturedModels": {
     "eyebrow": "Curated",
     "title": "Featured models",
     "viewAll": "Browse catalog",
     "previousSlide": "Previous slide",
-    "nextSlide": "Next slide",
-    "modelCard": {
-      "downloads": "{count} downloads",
-      "planBadge": {
-        "free": "Free",
-        "pro": "Pro",
-        "max": "Max"
-      }
-    }
+    "nextSlide": "Next slide"
   },
-
   "HowItWorks": {
     "eyebrow": "A simple start",
     "title": "From sign-up to your first library workflow",
@@ -307,14 +312,12 @@
         "description": "Sign up with email and move straight into a bilingual interface with access to the core product areas.",
         "caption": "Your account is the entry point to the catalog, personal library, profile, and the next stages of the platform."
       },
-
       "two": {
         "tag": "Step 2",
         "title": "Choose your plan",
         "description": "Start with Free or pick the level that matches your download pace and the needs of your team.",
         "caption": "Your plan sets the way you work with the platform: for exploration, regular production, or studio use."
       },
-
       "three": {
         "tag": "Step 3",
         "title": "Download or publish",
@@ -323,7 +326,6 @@
       }
     }
   },
-
   "ForWho": {
     "eyebrow": "Who it is for",
     "title": "Two different ways of working with 3D models",
@@ -351,7 +353,6 @@
         "three": "Save selected items to the library so they are easier to revisit across new projects."
       }
     },
-
     "creators": {
       "label": "Scenario 02",
       "title": "Creators",
@@ -375,7 +376,6 @@
       }
     }
   },
-
   "FinalCta": {
     "eyebrow": "Start with the foundation",
     "title": "Try Threedly now",
@@ -388,11 +388,12 @@
       "three": "Free, Pro, and Max create the foundation for different working rhythms, from first use to studio workflows."
     }
   },
-
   "Designers": {
     "card": {
       "openProfile": "Open @{username} profile",
-      "browseModels": "Browse {count} models"
+      "browseModels": "Browse {count} models",
+      "followButton": "Follow designer",
+      "unfollowButton": "Unfollow designer"
     },
     "shell": {
       "pageTitle": "Designers",
@@ -417,42 +418,23 @@
       "applyButton": "Show {count} designers",
       "specialization": {
         "title": "Portfolio focus",
-        "description": "Filter by model categories creators publish in.",
-        "labels": {
-          "furniture": "Furniture",
-          "decor": "Decor",
-          "materials": "Materials",
-          "lighting": "Lighting",
-          "kitchen": "Kitchen",
-          "bathroom": "Bathroom",
-          "exterior": "Exterior",
-          "plants": "Plants",
-          "technology": "Technology"
-        }
+        "description": "Filter by model categories creators publish in."
       },
       "level": {
         "title": "Level",
         "description": "Filter by community standing.",
         "labels": {
-          "free": { "label": "Free", "description": "Free plan creators" },
+          "free": {
+            "label": "Free",
+            "description": "Free plan creators"
+          },
           "pro": {
             "label": "Pro",
             "description": "Pro plan — can upload models"
           },
-          "max": { "label": "Max", "description": "Max plan — highest quota" }
-        }
-      },
-      "account": {
-        "title": "Account",
-        "description": "Show only verified or pro creators.",
-        "labels": {
-          "verified": {
-            "label": "Verified",
-            "description": "Identity confirmed."
-          },
-          "pro": {
-            "label": "Pro members",
-            "description": "Pro-tier publishers."
+          "max": {
+            "label": "Max",
+            "description": "Max plan — highest quota"
           }
         }
       }
@@ -464,13 +446,6 @@
       "error": "Something went wrong. Please try again.",
       "empty": "No designers found matching your filters.",
       "sortLabel": "Sort",
-      "tabs": {
-        "all": "All",
-        "featured": "Featured",
-        "rising": "Rising",
-        "new": "New",
-        "following": "Following"
-      },
       "sort": {
         "popular": "Most popular",
         "newest": "Newest",
@@ -491,6 +466,7 @@
         "description": "Public Threedly profile for @{username}, including published 3D models and creator details."
       },
       "backToDesigners": "Back to designers",
+      "backToPrevious": "Back",
       "avatarAlt": "Avatar of @{username}",
       "notFound": {
         "title": "@{username} is not publishing models yet",
@@ -521,20 +497,14 @@
       }
     }
   },
-
   "Footer": {
     "copyright": "© {year} Threedly. All rights reserved.",
     "terms": "Terms",
     "privacy": "Privacy"
   },
-
   "Profile": {
-    "title": "Profile",
-    "description": "Your account details are shown below.",
-    "emailLabel": "Email",
     "emptyEmail": "No email found.",
     "sidebar": {
-      "title": "Workspace",
       "viewPublicProfile": "View public profile",
       "items": {
         "overview": "Overview",
@@ -543,62 +513,241 @@
         "settings": "Settings"
       }
     },
-
     "overview": {
       "title": "Profile Dashboard",
-      "planBadge": "Free plan",
+      "planBadge": "{plan} plan",
       "primaryCta": "Browse catalog",
+      "loadError": "Unable to load your profile statistics. Please try again.",
+      "loadTimeout": "Loading your profile took too long. Please try again.",
+      "retry": "Try again",
       "stats": {
         "downloads": {
-          "label": "Downloads this month",
-          "value": "0"
+          "label": "Downloads this month"
         },
-
         "remaining": {
-          "label": "Remaining downloads",
-          "value": "5"
+          "label": "Remaining downloads"
         },
-
         "uploads": {
-          "label": "Published uploads",
-          "value": "0"
+          "label": "Published uploads"
         },
-
         "favorites": {
-          "label": "Favorites",
-          "value": "0"
+          "label": "Favorites"
         }
       },
-
       "continue": {
-        "title": "Continue where you left off",
-        "description": "You have no downloaded models yet. Start from the catalog.",
-        "cta": "Browse catalog"
+        "title": "Your model library",
+        "description": "Return to downloaded models, saved favorites and followed designers in your library.",
+        "cta": "Open library"
       },
-
-      "activity": {
-        "title": "Activity",
-        "description": "Recent updates in your dashboard.",
-        "placeholder": "No activity yet."
+      "quota": {
+        "title": "Monthly downloads",
+        "description": "Your current allowance is {limit} models per calendar month in UTC.",
+        "rules": "One model uses one download each month. Repeat downloads and other formats of that model do not use extra allowance in the same month. Deleting a model does not restore allowance."
       }
     },
-
     "library": {
       "title": "My Library",
-      "subtitle": "Your downloaded and saved models.",
+      "subtitle": "Downloads, favorite models, and designer subscriptions live here.",
+      "badge": "Saved workspace",
       "primaryCta": "Browse catalog",
+      "designersCta": "Browse designers",
+      "loadError": "Unable to load your library. Please try again.",
+      "loadTimeout": "Loading your library took too long. Please try again.",
+      "retry": "Try again",
+      "loading": "Loading your library…",
+      "pagination": {
+        "pageOf": "Page {current} of {total}",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "tabs": {
+        "downloaded": "Downloaded",
+        "favoriteModels": "Favorite models",
+        "subscriptions": "Subscriptions"
+      },
+      "stats": {
+        "downloaded": "Downloaded",
+        "favoriteModels": "Favorite models",
+        "subscriptions": "Subscriptions"
+      },
       "empty": {
-        "title": "Library is empty",
-        "description": "You have not downloaded any models yet."
+        "downloaded": {
+          "title": "No downloaded models yet",
+          "description": "Download a model from the catalog and it will appear here as your personal library history."
+        },
+        "favoriteModels": {
+          "title": "No favorite models yet",
+          "description": "Save useful models from the catalog to keep a shortlist for future projects."
+        },
+        "subscriptions": {
+          "title": "No designer subscriptions yet",
+          "description": "Follow designers you trust and their profiles will stay one click away."
+        }
       }
     },
-
     "uploads": {
-      "title": "Uploads",
-      "subtitle": "Upload models, catalog preview images, and optional 3D previews.",
+      "editor": {
+        "preview": {
+          "open": "Preview page",
+          "title": "Publication preview",
+          "close": "Back to editing",
+          "description": "A preview of your current edits, not a published page. Opening or closing it does not save or upload anything.",
+          "language": "Content language",
+          "unpublished": "Not published · download statistics and publication date are not available yet.",
+          "downloadUnavailable": "Download after publication",
+          "profileUnavailable": "Profile navigation is disabled in preview.",
+          "emptyTitle": "No title in this language yet",
+          "emptyDescription": "No description in this language yet.",
+          "emptyCover": "No cover selected yet.",
+          "emptySource": "No model file selected yet.",
+          "authorLoading": "Loading your public author profile…",
+          "authorError": "Your author profile could not be loaded. Your model edits are still here.",
+          "retryAuthor": "Retry author profile",
+          "coverLoading": "Loading the private cover…",
+          "coverError": "The cover could not be loaded. The saved image may have changed or its link expired. Return to the editor to review a changed draft.",
+          "retryCover": "Refresh preview cover"
+        },
+        "newTitle": "Create a model",
+        "editTitle": "Publication editor",
+        "back": "My models",
+        "create": "Create model",
+        "open": "Continue editing",
+        "draftsTitle": "Drafts",
+        "draftsDescription": "Private work in progress. Only published models appear in the catalog.",
+        "noDrafts": "No drafts yet. Start a model and save it when you are ready.",
+        "draftCount": "Showing {from}–{to} of {total} drafts",
+        "previousDrafts": "Previous drafts",
+        "nextDrafts": "Next drafts",
+        "untitled": "Untitled model",
+        "manualSave": "Nothing is saved automatically. Save the draft to continue on another device, or publish when it is ready.",
+        "contentLanguage": "Content language",
+        "titlePlaceholder": "Give your model a name",
+        "descriptionPlaceholder": "Tell designers about this model…",
+        "noCategory": "Choose later",
+        "coverTitle": "Your model's cover",
+        "coverHint": "One JPEG, PNG or WEBP image, up to 5 MB.",
+        "chooseCover": "Choose cover",
+        "replaceCover": "Change cover",
+        "undoCover": "Undo cover change",
+        "coverExpired": "The private image could not be loaded. Its temporary link may have expired.",
+        "refreshCover": "Refresh cover",
+        "sourceTitle": "Model file",
+        "sourceHint": "GLB, GLTF, FBX, OBJ, MAX, BLEND or ZIP · up to 50 MB.",
+        "noSource": "Choose your model file",
+        "chooseSource": "Choose file",
+        "replaceSource": "Replace file",
+        "undoSource": "Undo file change",
+        "localFile": "not saved yet",
+        "save": "Save draft",
+        "publish": "Publish",
+        "delete": "Delete draft",
+        "cancelPublish": "Cancel publication",
+        "retryPublish": "Retry publication",
+        "retryCleanup": "Retry file cleanup",
+        "retry": "Try again",
+        "loadSaved": "Load saved version",
+        "reviewRequired": "Recheck the saved version before writing again. Your local changes have not been cleared.",
+        "unsaved": "Unsaved changes",
+        "savedState": "No unsaved changes",
+        "publishRequirements": "To publish, add UA and EN titles (at least two characters), a category, one cover and a model file.",
+        "noUploadAccess": "Creator upload access is unavailable. You can still edit saved text and clean up your existing drafts.",
+        "categoriesUnavailable": "Categories are unavailable. You can save a draft, but publishing is disabled until categories load.",
+        "sessionChecking": "Checking your account…",
+        "sessionUnavailable": "The account has changed or could not be verified. This editor is hidden.",
+        "publishedTitle": "Your model is published",
+        "publishedDescription": "Your model is now available in the catalog. You can edit, archive or delete it from My models.",
+        "stay": "Stay here",
+        "confirmAction": "Continue",
+        "lifecycle": {
+          "draft": "Draft",
+          "publishing": "Publication in progress",
+          "published": "Published",
+          "cancelling": "Cancelling publication",
+          "deleting": "Deleting draft"
+        },
+        "pending": {
+          "save": "Saving draft and selected files…",
+          "publish": "Saving and publishing…",
+          "cancel": "Cancelling publication…",
+          "delete": "Deleting draft…",
+          "cleanup": "Cleaning up files…",
+          "reload": "Reading saved version…"
+        },
+        "notices": {
+          "saved": "Draft saved. You can continue on another device.",
+          "published": "Model published.",
+          "cleaned": "File cleanup confirmed.",
+          "cancelled": "Publication cancelled. Your private source files are retained.",
+          "partial": "Saved text is retained. Some selected files may still need to be saved."
+        },
+        "errors": {
+          "unauthorized": "Sign in again to continue. Your unsaved changes are still here.",
+          "invalid_request": "Check the fields, file type and size limits.",
+          "draft_unavailable": "This draft no longer exists or is not available to this account.",
+          "upload_not_allowed": "Creator access is unavailable. Uploading files and publishing are disabled.",
+          "conflict": "This draft changed elsewhere. Your local edits are retained; load the saved version before another write.",
+          "busy": "This draft is completing another operation. Recheck its saved state.",
+          "not_ready": "The draft is not ready to publish. Check the titles, category and files.",
+          "file_unavailable": "A saved file is unavailable. Recheck the draft before replacing it.",
+          "already_published": "This model is already published. Manage it in My models.",
+          "cleanup_incomplete": "Cleanup is not finished. Retry; a recent upload reservation may take up to 15 minutes to expire.",
+          "storage_unavailable": "File transfer failed. Confirmed saved content is retained; retry the remaining files.",
+          "timeout": "The request timed out. It may have completed on the server; the editor rechecks before another write.",
+          "session_changed": "The account changed. No further operation will start from this editor.",
+          "generic": "The operation could not be confirmed. Your local changes are retained."
+        },
+        "confirm": {
+          "delete": {
+            "title": "Delete this draft?",
+            "description": "Its saved text and private files will be removed. An incomplete cleanup remains available to retry."
+          },
+          "cancel": {
+            "title": "Cancel this publication?",
+            "description": "The candidate publication will be cancelled. Your private original files and saved text will be retained."
+          },
+          "reload": {
+            "title": "Load the saved version?",
+            "description": "This replaces the local text and deselects files that have not been confirmed saved. Changes saved on the server are retained."
+          },
+          "leave": {
+            "title": "Leave without saving?",
+            "description": "Local text changes and selected files that have not been saved will be lost."
+          }
+        },
+        "categorySearchPlaceholder": "Search categories",
+        "categoryTrigger": "Show categories",
+        "clearCategory": "Clear category",
+        "optional": "Optional",
+        "createAnother": "Create another model",
+        "publishedCleanupPending": "Your model is already published. Temporary upload copies still need to be removed.",
+        "readiness": {
+          "title": "Publication readiness",
+          "progress": "{complete} of {total} required items ready",
+          "required": "Required information",
+          "complete": "Ready",
+          "missing": "Needed",
+          "description": "Both titles need 2–90 characters. Descriptions are optional, up to 600 characters each. You can save an incomplete draft at any time.",
+          "invalidMetadata": "Some information needs attention. Check title and description limits and the selected access plan.",
+          "items": {
+            "titleUa": "Ukrainian title",
+            "titleEn": "English title",
+            "category": "Category",
+            "source": "Model file",
+            "cover": "Cover image"
+          }
+        },
+        "draftList": {
+          "deleted": "Draft deleted.",
+          "retryDelete": "Retry deletion",
+          "deleteIncomplete": "Deletion is not finished. Your draft remains listed; retry deletion.",
+          "deleteConflict": "This draft changed elsewhere. Review the latest version and confirm deletion again.",
+          "deleteFailed": "Deletion could not be confirmed. Recheck the draft before trying again.",
+          "recheck": "Recheck draft"
+        }
+      },
+      "title": "My models",
+      "subtitle": "Create models, save private drafts and manage your publications.",
       "loadError": "Could not load the model upload page data.",
-      "uploadCta": "Upload model",
-      "secondaryCta": "Open settings",
       "empty": {
         "title": "You do not have models yet",
         "description": "Add your first model and it will appear here and in the catalog."
@@ -615,7 +764,6 @@
         "fileZones": {
           "coverTitle": "Catalog cover",
           "coverDescription": "Add a JPG, PNG, or WEBP up to 5 MB.",
-          "modelTitle": "Primary model file",
           "modelDescription": "GLB, GLTF, FBX, OBJ, MAX, BLEND, or ZIP up to 50 MB.",
           "previewTitle": "Optional 3D preview",
           "previewDescription": "GLB or GLTF for the future viewer.",
@@ -653,12 +801,7 @@
           "pro": "Pro",
           "max": "Max"
         },
-        "coverImage": "Preview image",
-        "coverImageHint": "JPG, PNG, or WEBP up to 5 MB. This image appears in the catalog.",
         "file": "Model file",
-        "fileHint": "Supports GLB, GLTF, FBX, OBJ, MAX, BLEND, and ZIP up to 50 MB.",
-        "previewModelFile": "Lightweight 3D preview",
-        "previewModelFileHint": "Optional: GLB or GLTF up to 50 MB for the future model detail viewer.",
         "submit": "Upload model",
         "submitting": "Uploading...",
         "success": "Model uploaded and published to the catalog.",
@@ -679,6 +822,7 @@
           "unsupportedCoverImageType": "The preview image must be JPG, PNG, or WEBP.",
           "unsupportedPreviewFileType": "The 3D preview must be GLB or GLTF.",
           "unauthorized": "Sign in to upload a model.",
+          "uploadNotAllowed": "Model uploads are not enabled for your account.",
           "uploadFailed": "Could not upload the file to storage.",
           "metadataSaveFailed": "The file uploaded, but the model metadata was not saved. Try again.",
           "generic": "Could not upload the model. Try again."
@@ -688,9 +832,57 @@
         "title": "Uploaded models",
         "description": "These models are already linked to your profile.",
         "unknownFormat": "Unknown format",
+        "unknownSize": "Unknown size",
         "previousPage": "Previous page",
         "nextPage": "Next page",
         "pageOf": "Showing {from}–{to} of {total} models"
+      },
+      "management": {
+        "edit": "Edit",
+        "archive": "Archive",
+        "publish": "Publish",
+        "delete": "Delete",
+        "save": "Save changes",
+        "cancel": "Cancel",
+        "close": "Close editor",
+        "retry": "Try again",
+        "editTitle": "Edit model",
+        "editDescription": "Update the catalog details. Files and the cover stay unchanged.",
+        "loading": "Loading model…",
+        "pending": "Saving changes…",
+        "deleting": "Deleting files…",
+        "deleteTitle": "Permanently delete this model?",
+        "deleteDescription": "“{title}” and its files will be deleted permanently. This cannot be undone. Previously used download quota is not refunded.",
+        "confirmDelete": "Delete permanently",
+        "continueDelete": "Continue deletion",
+        "deletionPending": "Deletion has started. The model is hidden; finish removing its files to complete deletion.",
+        "deleted": "The model is no longer available.",
+        "invalidField": "Check this field.",
+        "categoriesUnavailable": "Categories are unavailable. Retry loading the page to upload or edit a model.",
+        "publishUnavailable": "Publishing requires creator upload access.",
+        "sessionChecking": "Checking your session…",
+        "sessionUnavailable": "Your session changed or could not be verified. Reload your data before continuing.",
+        "recheck": "Reload model data",
+        "recheckRequired": "The result could not be confirmed. Reload the model before another change.",
+        "success": {
+          "update": "Model details saved.",
+          "archive": "Model archived.",
+          "publish": "Model published.",
+          "delete": "Model and files deleted."
+        },
+        "errors": {
+          "unauthorized": "Sign in again to manage your models.",
+          "invalid_request": "Check the model details and try again.",
+          "model_unavailable": "The model was removed or is no longer available to this account.",
+          "upload_not_allowed": "Your account does not currently have permission to publish models.",
+          "deletion_pending": "Deletion has already started. Continue cleanup instead of editing or publishing.",
+          "cleanup_incomplete": "Some files still need to be removed. The model stays hidden; continue deletion to retry.",
+          "storage_unavailable": "The files could not be identified safely. The model stays hidden; contact support for inspection.",
+          "file_unavailable": "The source file or cover is missing. The model cannot be published.",
+          "generic": "The change could not be confirmed. Reload the model data and try again.",
+          "timeout": "The request took too long. The change may have completed; reload the model data before retrying.",
+          "session_changed": "Your account session changed. Reload the page before continuing."
+        }
       },
       "status": {
         "draft": "Draft",
@@ -698,17 +890,14 @@
         "archived": "Archived"
       }
     },
-
     "settings": {
       "title": "Settings",
       "subtitle": "Update public profile data and manage your account.",
       "profile": {
         "title": "Profile",
         "description": "Basic profile data.",
-        "avatar": "Avatar",
         "avatarMenuAriaLabel": "Open avatar menu",
         "avatarMenu": {
-          "edit": "Edit",
           "upload": "Upload photo",
           "remove": "Remove photo"
         },
@@ -720,15 +909,11 @@
         "saveSuccess": "Changes saved successfully.",
         "saveError": "Failed to save changes."
       },
-
       "account": {
-        "title": "Account",
-        "description": "You can end your session at any time.",
         "signOut": "Sign out"
       }
     }
   },
-
   "Auth": {
     "visual": {
       "eyebrow": "Threedly account",
@@ -771,7 +956,6 @@
       },
       "submit": "Log in"
     },
-
     "forgotPassword": {
       "title": "Reset your password",
       "description": "Enter your email to receive a password reset link.",
@@ -788,7 +972,6 @@
         "generic": "Unable to send the password reset email. Please try again."
       }
     },
-
     "resetPassword": {
       "title": "Set a new password",
       "description": "Choose a new password after opening the email link.",
@@ -803,7 +986,6 @@
       "hidePasswordButton": "Hide password",
       "submit": "Save new password",
       "submitting": "Saving...",
-      "success": "Your password has been updated. You can now sign in with the new password.",
       "errors": {
         "passwordMinLength": "Password must be at least 8 characters.",
         "confirmPasswordRequired": "Please confirm your password.",
@@ -813,15 +995,10 @@
         "generic": "Unable to update the password. Please try again."
       }
     },
-
     "signup": {
       "title": "Create an account",
       "description": "Already have an account?",
       "link": "Log in",
-      "firstNameLabel": "First name",
-      "firstNamePlaceholder": "John",
-      "lastNameLabel": "Last name",
-      "lastNamePlaceholder": "Doe",
       "usernameLabel": "Username",
       "usernamePlaceholder": "your_username",
       "usernameHint": "Use 3-20 lowercase letters, numbers, or underscores (example: john_3d).",
@@ -831,8 +1008,6 @@
       "passwordPlaceholder": "Create a password",
       "showPasswordButton": "Show password",
       "hidePasswordButton": "Hide password",
-      "confirmPasswordLabel": "Confirm password",
-      "confirmPasswordPlaceholder": "Repeat your password",
       "termsPrefix": "I agree to the",
       "termsLink": "Terms & Conditions",
       "errors": {
@@ -849,13 +1024,10 @@
       },
       "submit": "Create account"
     },
-
     "verifyEmail": {
       "title": "Verify your email",
       "description": "We sent a 6-digit code to your email.",
       "backToSignup": "Back to sign up",
-      "emailLabel": "Email address",
-      "emailPlaceholder": "you@example.com",
       "otpLabel": "One-time code",
       "otpHint": "Enter the 6-digit code from your email message.",
       "submit": "Verify code",
@@ -874,7 +1046,6 @@
         "generic": "Unable to verify code. Please try again."
       }
     },
-
     "valueBullets": {
       "catalog": "Instant access to catalog",
       "formats": "Download in common formats",
@@ -882,7 +1053,6 @@
       "beta": "beta"
     }
   },
-
   "Errors": {
     "badge": "404",
     "title": "Page not found",

@@ -7,7 +7,7 @@ import type { CategoryGroupOption } from "@/src/business/types/category";
 import type { NavItemConfig } from "@/src/business/types/navItemsConfig";
 import { mapCategoryGroupRowsToOptions } from "@/src/business/utils/categories";
 import { createClient } from "@/src/business/utils/supabase/client";
-import { Link } from "@/src/i18n/routing";
+import { Link, usePathname } from "@/src/i18n/routing";
 import {
   Accordion,
   AccordionContent,
@@ -42,6 +42,8 @@ function Header() {
   );
   const t = useTranslations("Header");
   const locale = useLocale();
+  const pathname = usePathname();
+  const [menuPathname, setMenuPathname] = useState(pathname);
 
   useEffect(() => {
     const supabase = createClient();
@@ -117,6 +119,11 @@ function Header() {
       );
     };
   }, [locale]);
+
+  if (menuPathname !== pathname) {
+    setMenuPathname(pathname);
+    setIsMobileMenuOpen(false);
+  }
 
   const navItemsWithCategories: NavItemConfig[] = navItems.map((item) => {
     if (item.name === "nav.categories" && categoryGroups.length > 0) {

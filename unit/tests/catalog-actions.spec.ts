@@ -1,4 +1,7 @@
-import { fetchCatalogModelsCount } from "@/src/app/[locale]/(main-pages)/catalog/actions";
+import {
+  fetchCatalogModelsCount,
+  fetchModelBySlug,
+} from "@/src/app/[locale]/(main-pages)/catalog/actions";
 import { vi } from "vitest";
 import { beforeEach, describe, expect, it } from "../fixtures";
 
@@ -11,6 +14,7 @@ const mocks = vi.hoisted(() => ({
   modelSelectMock: vi.fn(),
   modelEqMock: vi.fn(),
   modelInMock: vi.fn(),
+  modelSingleMock: vi.fn(),
 }));
 
 vi.mock("@/src/business/utils/supabase/server", () => ({
@@ -45,6 +49,7 @@ function createCountQuery() {
 describe("catalog actions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://example.supabase.co";
 
     const modelQuery = createCountQuery();
 
@@ -101,5 +106,58 @@ describe("catalog actions", () => {
       "category-chairs",
       "category-sofas",
     ]);
+  });
+
+  it("loads model detail data with the real creator profile", async () => {
+    const modelRow = {
+      cover_image_path: "user-1/model-1/cover.webp",
+      creator: {
+        avatar_path: "user-1/avatar.webp",
+        username: "anna_kovalenko",
+      },
+      description_en: "Soft sofa for premium interiors.",
+      description_ua: "М'який диван для преміальних інтер'єрів.",
+      download_count: 87,
+      file_format: "fbx",
+      id: "model-1",
+      is_featured: true,
+      minimum_plan: "max",
+      published_at: "2026-05-01T10:00:00.000Z",
+      slug: "cloud-sofa",
+      title_en: "Cloud Sofa",
+      title_ua: "Cloud Sofa",
+    };
+    const modelQuery = {
+      eq: mocks.modelEqMock,
+      single: mocks.modelSingleMock,
+    };
+
+    mocks.modelSelectMock.mockReturnValue(modelQuery);
+    mocks.modelEqMock.mockReturnValue(modelQuery);
+    mocks.modelSingleMock.mockResolvedValue({
+      data: modelRow,
+      error: null,
+    });
+    mocks.fromMock.mockImplementation((table: string) => {
+      if (table === "models") {
+        return { select: mocks.modelSelectMock };
+      }
+
+      throw new Error(`Unexpected table: ${table}`);
+    });
+
+    const model = await fetchModelBySlug("cloud-sofa");
+
+    expect(mocks.modelSelectMock).toHaveBeenCalledWith(
+      expect.stringContaining("creator:profiles"),
+    );
+    expect(model?.creator).toEqual({
+      avatar_path:
+        "https://example.supabase.co/storage/v1/object/public/avatars/user-1/avatar.webp",
+      username: "anna_kovalenko",
+    });
+    expect(model?.cover_image_path).toBe(
+      "https://example.supabase.co/storage/v1/object/public/model-images/user-1/model-1/cover.webp",
+    );
   });
 });

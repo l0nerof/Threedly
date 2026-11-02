@@ -75,6 +75,17 @@ function normalizeAvatarStoragePath(
   return avatarPath;
 }
 
+function revalidateProfileSurfaces(locale: string, usernames: string[]) {
+  revalidatePath(`/${locale}/profile/settings`);
+  revalidatePath(`/${locale}/designers`);
+
+  for (const username of Array.from(new Set(usernames))) {
+    if (username) {
+      revalidatePath(`/${locale}/designers/${username}`);
+    }
+  }
+}
+
 export async function updateProfileAction(
   locale: string,
   formData: FormData,
@@ -103,6 +114,16 @@ export async function updateProfileAction(
     return { ok: false, error: "unauthorized" };
   }
 
+  const { data: existingProfile, error: existingProfileError } = await supabase
+    .from("profiles")
+    .select("username")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (existingProfileError) {
+    return { ok: false, error: "generic" };
+  }
+
   const { error } = await supabase
     .from("profiles")
     .update({
@@ -115,7 +136,10 @@ export async function updateProfileAction(
     return { ok: false, error: "generic" };
   }
 
-  revalidatePath(`/${locale}/profile/settings`);
+  revalidateProfileSurfaces(locale, [
+    existingProfile?.username ?? "",
+    username,
+  ]);
   return { ok: true };
 }
 
@@ -156,7 +180,7 @@ export async function uploadAvatarAction(
 
   const { data: existingProfile, error: existingProfileError } = await supabase
     .from("profiles")
-    .select("avatar_path")
+    .select("avatar_path, username")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -213,7 +237,7 @@ export async function uploadAvatarAction(
     }
   }
 
-  revalidatePath(`/${locale}/profile/settings`);
+  revalidateProfileSurfaces(locale, [existingProfile?.username ?? ""]);
   return { ok: true, avatarPath: storagePath };
 }
 
@@ -235,7 +259,7 @@ export async function removeAvatarAction(
 
   const { data: existingProfile, error: existingProfileError } = await supabase
     .from("profiles")
-    .select("avatar_path")
+    .select("avatar_path, username")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -276,6 +300,6 @@ export async function removeAvatarAction(
     return { ok: false, error: "generic" };
   }
 
-  revalidatePath(`/${locale}/profile/settings`);
+  revalidateProfileSurfaces(locale, [existingProfile?.username ?? ""]);
   return { ok: true, avatarPath: null };
 }

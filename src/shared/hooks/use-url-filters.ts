@@ -39,10 +39,11 @@ export function useUrlFilters(): UseUrlFiltersReturn {
   const urlSearch = searchParams.get("q") ?? "";
   const [searchValue, setSearchValue] = useState(urlSearch);
   const debouncedSearch = useDebounce(searchValue, SEARCH_DEBOUNCE_MS);
-
-  useEffect(() => {
+  const [previousUrlSearch, setPreviousUrlSearch] = useState(urlSearch);
+  if (previousUrlSearch !== urlSearch) {
+    setPreviousUrlSearch(urlSearch);
     setSearchValue(urlSearch);
-  }, [urlSearch]);
+  }
 
   useEffect(() => {
     const effective =

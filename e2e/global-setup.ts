@@ -40,10 +40,6 @@ export default async function globalSetup() {
 
   try {
     await page.goto("/ua/login", { waitUntil: "domcontentloaded" });
-    await page.screenshot({
-      path: "e2e/.auth/debug-login.png",
-      fullPage: true,
-    });
     await page.waitForSelector("#email", { timeout: 20_000 });
 
     await page.locator("#email").fill(email);

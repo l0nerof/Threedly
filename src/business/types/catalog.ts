@@ -32,7 +32,9 @@ export type CatalogModel = Pick<
   | "slug"
   | "title_en"
   | "title_ua"
->;
+> & {
+  creator?: Pick<Tables<"profiles">, "avatar_path" | "username"> | null;
+};
 
 export type CatalogModelsResult = {
   models: CatalogModel[];
