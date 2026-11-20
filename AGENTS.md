@@ -1,5 +1,7 @@
 # Threedly Agent Guide
 
+Shared rules for my projects live in the home repo one level up: `../AGENTS.md` and `../docs/standards/`. Read them first; this file wins where it differs.
+
 ## Product Context
 
 Threedly is a modern 3D model marketplace for designers, 3D visualizers, and studios. It targets Ukrainian and English-speaking users and should feel more premium, stylish, and interactive than older catalog-style competitors.
@@ -46,18 +48,12 @@ The audience is visually demanding. Avoid generic SaaS-looking output.
 
 ## Working Rules
 
-- Always respond in Ukrainian unless the task explicitly requires another language.
 - Write and maintain all repository documentation in English. Preserve locale-specific strings in code examples and UI selectors.
-- Optimize for the smallest possible diff that solves the task.
 - Avoid cosmetic edits, mass renames, formatting-only passes, or repo-wide cleanup unless explicitly requested.
 - Before substantial changes, first outline a short plan, list the files to be changed, and surface any blocking assumptions or questions.
-- Preserve locale-aware routing with `next-intl`.
-- Preserve the `ua` and `en` bilingual direction.
-- Preserve existing behavior unless the task explicitly changes it.
-- Do not invent APIs, schema fields, endpoints, database tables, or response contracts.
+- Do not invent schema fields, endpoints, database tables, or response contracts.
 - Follow the existing repo structure, naming, and implementation patterns before introducing new ones.
 - Prefer `zod` and existing schema/form patterns for validation.
-- Never use `any`. `unknown` is allowed only at external boundaries and must be narrowed before use.
 - Reuse existing Supabase helpers in `src/business/utils/supabase`.
 - Prefer ready-made, maintained building blocks over ad hoc implementations when they fit the need.
 - For UI primitives and common interaction patterns, prefer existing `shadcn/ui` components first.
